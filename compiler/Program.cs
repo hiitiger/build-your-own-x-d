@@ -52,17 +52,19 @@ namespace compiler
                 }
 
                 var parser = new Parser(line);
-                var expression = parser.Parse();
+                var syntaxTree = parser.Parse();
 
                 var color = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                PrettyPrint(expression);
+                PrettyPrint(syntaxTree.Root);
                 Console.ForegroundColor = color;
 
-                if (parser.Diagnostics.Any())
+                if (syntaxTree.Diagnostics.Any())
                 {
                     Console.ForegroundColor = ConsoleColor.DarkRed;
-                    parser.Diagnostics.ToList().ForEach(x => Console.WriteLine(x));
+                    foreach(var x in syntaxTree.Diagnostics) {
+                        Console.WriteLine(x);
+                    }
                     Console.ForegroundColor = color;
                 }
 
@@ -243,6 +245,20 @@ namespace compiler
         }
     }
 
+    sealed class SyntaxTree
+    {
+        public SyntaxTree(IEnumerable<string> diagnostics, ExpressionSyntax root, SyntaxToken eof)
+        {
+            Diagnostics = diagnostics.ToArray();
+            Root = root;
+            Eof = eof;
+        }
+
+        public IReadOnlyList<string> Diagnostics { get; }
+        public ExpressionSyntax Root { get; }
+        public SyntaxToken Eof { get; }
+    }
+
     class Parser
     {
         private readonly SyntaxToken[] _tokens;
@@ -295,7 +311,14 @@ namespace compiler
             _diagnostics.Add($"ERROR: Unexpected token <{Current.Kind}>, expected <{kind}>");
             return new SyntaxToken(kind, Current.Position, null, null);
         }
-        public ExpressionSyntax Parse()
+        public SyntaxTree Parse()
+        {
+            var expression = ParseExpression();
+            var eof = Match(SyntaxKind.EOF);
+            return new SyntaxTree(Diagnostics, expression, eof);
+        }
+
+        public ExpressionSyntax ParseExpression()
         {
             var left = ParsePrimaryExpression();
 
