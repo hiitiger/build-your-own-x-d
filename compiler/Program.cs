@@ -7,21 +7,34 @@ namespace compiler
     class Program
     {
 
-        static void PrettyPrint(SyntaxNode node,  string indent = "")
+        static void PrettyPrint(SyntaxNode node, string indent = "", bool isLast = true)
         {
+            /*
+            ├───
+            │
+            └───
+            ─
+            */
+
+            var marker = isLast ? "└───" : "├───";
             Console.Write(indent);
+            Console.Write(marker);
             Console.Write(node.Kind);
-            if(node is SyntaxToken t && t.Value != null)
+            if (node is SyntaxToken t && t.Value != null)
             {
                 Console.Write(" ");
                 Console.Write(t.Value);
             }
 
             Console.WriteLine();
-            indent += "    ";
 
-            foreach (var child in node.GetChildren()) {
-                PrettyPrint(child, indent);
+            indent += isLast? "    ": "│   ";
+
+            var lastChild = node.GetChildren().LastOrDefault();
+
+            foreach (var child in node.GetChildren())
+            {
+                PrettyPrint(child, indent, child == lastChild);
             }
         }
 
@@ -41,27 +54,10 @@ namespace compiler
                 var parser = new Parser(line);
                 var expression = parser.Parse();
 
-                var color = Console.BackgroundColor;
-                // Console.ForegroundColor = ConsoleColor.DarkGray;
-
+                var color = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Cyan;
                 PrettyPrint(expression);
-
-                // Console.ForegroundColor = color;
-
-                var lexer = new Lexer(line);
-                while (true)
-                {
-                    var token = lexer.nextToken();
-                    if (token.Kind == SyntaxKind.EOF)
-                        break;
-
-                    Console.Write($"{token.Kind}: '{token.Text}' ");
-
-                    if (token.Value != null)
-                        Console.Write($"{token.Value}");
-
-                    Console.WriteLine();
-                }
+                Console.ForegroundColor = color;
             }
         }
     }
