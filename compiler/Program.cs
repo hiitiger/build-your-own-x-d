@@ -28,7 +28,7 @@ namespace compiler
 
             Console.WriteLine();
 
-            indent += isLast? "    ": "│   ";
+            indent += isLast ? "    " : "│   ";
 
             var lastChild = node.GetChildren().LastOrDefault();
 
@@ -58,6 +58,14 @@ namespace compiler
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 PrettyPrint(expression);
                 Console.ForegroundColor = color;
+
+                if (parser.Diagnostics.Any())
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                    parser.Diagnostics.ToList().ForEach(x => Console.WriteLine(x));
+                    Console.ForegroundColor = color;
+                }
+
             }
         }
     }
@@ -103,11 +111,13 @@ namespace compiler
     {
         private readonly string _text;
         private int _position = 0;
+        private List<string> _diagnostics = new List<string>();
         public Lexer(string text)
         {
             _text = text;
         }
 
+        public IEnumerable<string> Diagnostics => _diagnostics;
         private char Current
         {
             get
@@ -178,6 +188,7 @@ namespace compiler
             if (Current == ')')
                 return new SyntaxToken(SyntaxKind.CloseParan, _position++, ")", null);
 
+            _diagnostics.Add($"ERROR: bad character input: '{Current}'");
             return new SyntaxToken(SyntaxKind.BadToken, _position++, _text.Substring(_position - 1, 1), null);
         }
 
@@ -236,6 +247,7 @@ namespace compiler
     {
         private readonly SyntaxToken[] _tokens;
         private int _position;
+        private List<string> _diagnostics = new List<string>();
         public Parser(string text)
         {
             Lexer lexer = new Lexer(text);
@@ -254,6 +266,7 @@ namespace compiler
             } while (token.Kind != SyntaxKind.EOF);
 
             _tokens = tokens.ToArray();
+            _diagnostics.AddRange(lexer.Diagnostics);
         }
 
         private SyntaxToken Peek(int offset)
@@ -267,6 +280,8 @@ namespace compiler
 
         private SyntaxToken Current => Peek(0);
 
+        public IEnumerable<string> Diagnostics => _diagnostics;
+
         private SyntaxToken NextToken()
         {
             var cur = Current;
@@ -277,6 +292,7 @@ namespace compiler
         {
             if (Current.Kind == kind)
                 return NextToken();
+            _diagnostics.Add($"ERROR: Unexpected token <{Current.Kind}>, expected <{kind}>");
             return new SyntaxToken(kind, Current.Position, null, null);
         }
         public ExpressionSyntax Parse()
