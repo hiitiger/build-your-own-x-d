@@ -62,10 +62,17 @@ namespace compiler
                 if (syntaxTree.Diagnostics.Any())
                 {
                     Console.ForegroundColor = ConsoleColor.DarkRed;
-                    foreach(var x in syntaxTree.Diagnostics) {
+                    foreach (var x in syntaxTree.Diagnostics)
+                    {
                         Console.WriteLine(x);
                     }
                     Console.ForegroundColor = color;
+                }
+                else
+                {
+                    var e = new Evaluator(syntaxTree.Root);
+                    var res = e.Evaluate();
+                    Console.WriteLine(res);
                 }
 
             }
@@ -158,8 +165,10 @@ namespace compiler
 
                 var length = _position - start;
                 var text = _text.Substring(start, length);
-
-                int.TryParse(text, out var value);
+                if (!int.TryParse(text, out var value))
+                {
+                    _diagnostics.Add($"Error: the number {_text} isn't a valid integer");
+                }
                 return new SyntaxToken(SyntaxKind.Number, start, text, value);
             }
 
@@ -337,6 +346,55 @@ namespace compiler
         {
             var numberToken = Match(SyntaxKind.Number);
             return new NumberExpressionSyntax(numberToken);
+        }
+    }
+
+    class Evaluator
+    {
+        private readonly ExpressionSyntax _root;
+
+        public Evaluator(ExpressionSyntax root)
+        {
+            this._root = root;
+        }
+
+        public int Evaluate()
+        {
+            return EvalutateExpression(_root);
+        }
+
+        private int EvalutateExpression(ExpressionSyntax root)
+        {
+            if (root is NumberExpressionSyntax n)
+            {
+                return (int)n.NumberToken.Value;
+            }
+
+            if (root is BinaryExpressionSyntax b)
+            {
+                var left = EvalutateExpression(b.Left);
+                var right = EvalutateExpression(b.Right);
+                if (b.OperatorToken.Kind == SyntaxKind.Plus)
+                {
+                    return left + right;
+                }
+                else if (b.OperatorToken.Kind == SyntaxKind.Minus)
+                {
+                    return left - right;
+                }
+                else if (b.OperatorToken.Kind == SyntaxKind.Multiply)
+                {
+                    return left * right;
+                }
+                else if (b.OperatorToken.Kind == SyntaxKind.Devide)
+                {
+                    return left / right;
+                }
+                else
+                    throw new Exception($"Unexpected binary operator {b.OperatorToken.Kind}");
+            }
+
+            throw new Exception($"Unexpected node {root.Kind}");
         }
     }
 }
