@@ -40,7 +40,7 @@ namespace compiler
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            bool showTree = false;
 
             while (true)
             {
@@ -51,16 +51,31 @@ namespace compiler
                     return;
                 }
 
-                var parser = new Parser(line);
-                var syntaxTree = parser.Parse();
+                if (line == "#showTree")
+                {
+                    showTree = !showTree;
+                    Console.WriteLine($"showTree: {showTree}");
+                    continue;
+                }
+                else if (line == "#cls")
+                {
+                    Console.Clear();
+                    continue;
+                }
 
-                var color = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                PrettyPrint(syntaxTree.Root);
-                Console.ForegroundColor = color;
+                var syntaxTree = SyntaxTree.Parse(line);
+
+                if (showTree)
+                {
+                    var color = Console.ForegroundColor;
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    PrettyPrint(syntaxTree.Root);
+                    Console.ForegroundColor = color;
+                }
 
                 if (syntaxTree.Diagnostics.Any())
                 {
+                    var color = Console.ForegroundColor;
                     Console.ForegroundColor = ConsoleColor.DarkRed;
                     foreach (var x in syntaxTree.Diagnostics)
                     {
@@ -87,12 +102,13 @@ namespace compiler
         Minus,
         Star,
         Slash,
-        OpenParen,
-        CloseParan,
+        OpenParenthesis,
+        CloseParenthesis,
         BadToken,
         EOF,
         NumberExpression,
-        BinaryExpression
+        BinaryExpression,
+        ParenthesizedExpression
     }
 
     class SyntaxToken : SyntaxNode
@@ -195,9 +211,9 @@ namespace compiler
             if (Current == '/')
                 return new SyntaxToken(SyntaxKind.Slash, _position++, "/", null);
             if (Current == '(')
-                return new SyntaxToken(SyntaxKind.OpenParen, _position++, "(", null);
+                return new SyntaxToken(SyntaxKind.OpenParenthesis, _position++, "(", null);
             if (Current == ')')
-                return new SyntaxToken(SyntaxKind.CloseParan, _position++, ")", null);
+                return new SyntaxToken(SyntaxKind.CloseParenthesis, _position++, ")", null);
 
             _diagnostics.Add($"ERROR: bad character input: '{Current}'");
             return new SyntaxToken(SyntaxKind.BadToken, _position++, _text.Substring(_position - 1, 1), null);
@@ -254,6 +270,28 @@ namespace compiler
         }
     }
 
+    sealed class ParenthesizedExpression : ExpressionSyntax
+    {
+        public override SyntaxKind Kind => SyntaxKind.ParenthesizedExpression;
+
+        public SyntaxToken OpenParenthesisToken { get; }
+        public ExpressionSyntax Expression { get; }
+        public SyntaxToken CloseParenthesisToken { get; }
+
+        public ParenthesizedExpression(SyntaxToken openParenthesisToken, ExpressionSyntax expression, SyntaxToken closeParenthesisToken)
+        {
+            OpenParenthesisToken = openParenthesisToken;
+            Expression = expression;
+            CloseParenthesisToken = closeParenthesisToken;
+        }
+
+        public override IEnumerable<SyntaxNode> GetChildren()
+        {
+            yield return OpenParenthesisToken;
+            yield return Expression;
+            yield return CloseParenthesisToken;
+        }
+    }
     sealed class SyntaxTree
     {
         public SyntaxTree(IEnumerable<string> diagnostics, ExpressionSyntax root, SyntaxToken eof)
@@ -266,6 +304,12 @@ namespace compiler
         public IReadOnlyList<string> Diagnostics { get; }
         public ExpressionSyntax Root { get; }
         public SyntaxToken Eof { get; }
+
+        public static SyntaxTree Parse(string text)
+        {
+            var parser = new Parser(text);
+            return parser.Parse();
+        }
     }
 
     class Parser
@@ -320,6 +364,11 @@ namespace compiler
             _diagnostics.Add($"ERROR: Unexpected token <{Current.Kind}>, expected <{kind}>");
             return new SyntaxToken(kind, Current.Position, null, null);
         }
+
+        private ExpressionSyntax ParseExpression()
+        {
+            return ParseTerm();
+        }
         public SyntaxTree Parse()
         {
             var expression = ParseTerm();
@@ -346,7 +395,7 @@ namespace compiler
         {
             var left = ParsePrimaryExpression();
 
-            while ( Current.Kind == SyntaxKind.Star
+            while (Current.Kind == SyntaxKind.Star
                 || Current.Kind == SyntaxKind.Slash)
             {
                 var operatorToken = NextToken();
@@ -359,6 +408,14 @@ namespace compiler
 
         public ExpressionSyntax ParsePrimaryExpression()
         {
+            if (Current.Kind == SyntaxKind.OpenParenthesis)
+            {
+                var left = NextToken();
+                var expression = ParseExpression();
+                var right = Match(SyntaxKind.CloseParenthesis);
+                return new ParenthesizedExpression(left, expression, right);
+            }
+
             var numberToken = Match(SyntaxKind.Number);
             return new NumberExpressionSyntax(numberToken);
         }
@@ -407,6 +464,11 @@ namespace compiler
                 }
                 else
                     throw new Exception($"Unexpected binary operator {b.OperatorToken.Kind}");
+            }
+
+            if (root is ParenthesizedExpression p)
+            {
+                return EvalutateExpression(p.Expression);
             }
 
             throw new Exception($"Unexpected node {root.Kind}");
