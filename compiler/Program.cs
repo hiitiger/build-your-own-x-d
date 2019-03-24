@@ -85,8 +85,8 @@ namespace compiler
         WhiteSpace,
         Plus,
         Minus,
-        Multiply,
-        Devide,
+        Star,
+        Slash,
         OpenParen,
         CloseParan,
         BadToken,
@@ -191,9 +191,9 @@ namespace compiler
             if (Current == '-')
                 return new SyntaxToken(SyntaxKind.Minus, _position++, "-", null);
             if (Current == '*')
-                return new SyntaxToken(SyntaxKind.Multiply, _position++, "*", null);
+                return new SyntaxToken(SyntaxKind.Star, _position++, "*", null);
             if (Current == '/')
-                return new SyntaxToken(SyntaxKind.Devide, _position++, "/", null);
+                return new SyntaxToken(SyntaxKind.Slash, _position++, "/", null);
             if (Current == '(')
                 return new SyntaxToken(SyntaxKind.OpenParen, _position++, "(", null);
             if (Current == ')')
@@ -322,17 +322,32 @@ namespace compiler
         }
         public SyntaxTree Parse()
         {
-            var expression = ParseExpression();
+            var expression = ParseTerm();
             var eof = Match(SyntaxKind.EOF);
             return new SyntaxTree(Diagnostics, expression, eof);
         }
 
-        public ExpressionSyntax ParseExpression()
+        public ExpressionSyntax ParseTerm()
         {
-            var left = ParsePrimaryExpression();
+            var left = ParseFactor();
 
             while (Current.Kind == SyntaxKind.Plus
                 || Current.Kind == SyntaxKind.Minus)
+            {
+                var operatorToken = NextToken();
+                var right = ParseFactor();
+                left = new BinaryExpressionSyntax(left, operatorToken, right);
+            }
+
+            return left;
+        }
+
+        public ExpressionSyntax ParseFactor()
+        {
+            var left = ParsePrimaryExpression();
+
+            while ( Current.Kind == SyntaxKind.Star
+                || Current.Kind == SyntaxKind.Slash)
             {
                 var operatorToken = NextToken();
                 var right = ParsePrimaryExpression();
@@ -382,11 +397,11 @@ namespace compiler
                 {
                     return left - right;
                 }
-                else if (b.OperatorToken.Kind == SyntaxKind.Multiply)
+                else if (b.OperatorToken.Kind == SyntaxKind.Star)
                 {
                     return left * right;
                 }
-                else if (b.OperatorToken.Kind == SyntaxKind.Devide)
+                else if (b.OperatorToken.Kind == SyntaxKind.Slash)
                 {
                     return left / right;
                 }
