@@ -3,7 +3,7 @@ namespace MCompiler.CodeAnalysis
     using System.Collections.Generic;
     using System.Linq;
 
-    sealed class SyntaxTree
+    public sealed class SyntaxTree
     {
         public SyntaxTree(IEnumerable<string> diagnostics, ExpressionSyntax root, SyntaxToken eof)
         {

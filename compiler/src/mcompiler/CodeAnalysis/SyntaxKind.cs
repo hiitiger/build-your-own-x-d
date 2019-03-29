@@ -1,6 +1,6 @@
 namespace MCompiler.CodeAnalysis
 {
-    enum SyntaxKind
+    public enum SyntaxKind
     {
         Number,
         WhiteSpace,
@@ -12,7 +12,7 @@ namespace MCompiler.CodeAnalysis
         CloseParenthesis,
         BadToken,
         EOF,
-        NumberExpression,
+        LiteralExpression,
         BinaryExpression,
         ParenthesizedExpression
     }

@@ -2,7 +2,7 @@ namespace MCompiler.CodeAnalysis
 {
     using System.Collections.Generic;
 
-    sealed class ParenthesizedExpression : ExpressionSyntax
+    internal sealed class ParenthesizedExpression : ExpressionSyntax
     {
         public override SyntaxKind Kind => SyntaxKind.ParenthesizedExpression;
 

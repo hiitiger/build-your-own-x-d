@@ -4,10 +4,10 @@ using MCompiler.CodeAnalysis;
 
 namespace MCompiler
 {
-    class Program
+    internal static class Program
     {
 
-        static void PrettyPrint(SyntaxNode node, string indent = "", bool isLast = true)
+        private static void PrettyPrint(SyntaxNode node, string indent = "", bool isLast = true)
         {
             /*
             ├───
@@ -70,7 +70,7 @@ namespace MCompiler
                     var color = Console.ForegroundColor;
                     Console.ForegroundColor = ConsoleColor.Cyan;
                     PrettyPrint(syntaxTree.Root);
-                    Console.ForegroundColor = color;
+                    Console.ResetColor();
                 }
 
                 if (syntaxTree.Diagnostics.Any())
@@ -81,7 +81,7 @@ namespace MCompiler
                     {
                         Console.WriteLine(x);
                     }
-                    Console.ForegroundColor = color;
+                    Console.ResetColor();
                 }
                 else
                 {

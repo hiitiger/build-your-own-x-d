@@ -3,7 +3,7 @@
     using System;
 
 
-    class Evaluator
+    public class Evaluator
     {
         private readonly ExpressionSyntax _root;
 
@@ -19,9 +19,9 @@
 
         private int EvalutateExpression(ExpressionSyntax root)
         {
-            if (root is NumberExpressionSyntax n)
+            if (root is LiteralExpressionSyntax n)
             {
-                return (int)n.NumberToken.Value;
+                return (int)n.LiteralToken.Value;
             }
 
             if (root is BinaryExpressionSyntax b)
