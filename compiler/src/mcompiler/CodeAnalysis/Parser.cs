@@ -62,7 +62,17 @@ namespace MCompiler.CodeAnalysis
         }
         private ExpressionSyntax ParseExpression(int parentPrecedence = 0)
         {
-            var left = ParsePrimaryExpression();
+            ExpressionSyntax left;
+            var unaryOperaorPrecedence = Current.Kind.GetUnaryOperatorPrecedence();
+            if (unaryOperaorPrecedence != 0 && unaryOperaorPrecedence >= parentPrecedence){
+                var operatorToken = NextToken();
+                var operand = ParseExpression(unaryOperaorPrecedence);
+                left = new UnaryExpressionSyntax(operatorToken, operand);
+            }
+            else
+            {
+                left = ParsePrimaryExpression();
+            }
             while (true)
             {
                 var precedence = Current.Kind.GetBinaryOperatorPrecedence();
@@ -75,35 +85,35 @@ namespace MCompiler.CodeAnalysis
 
             return left;
         }
-        private ExpressionSyntax ParseTerm()
-        {
-            var left = ParseFactor();
+        // private ExpressionSyntax ParseTerm()
+        // {
+        //     var left = ParseFactor();
 
-            while (Current.Kind == SyntaxKind.Plus
-                || Current.Kind == SyntaxKind.Minus)
-            {
-                var operatorToken = NextToken();
-                var right = ParseFactor();
-                left = new BinaryExpressionSyntax(left, operatorToken, right);
-            }
+        //     while (Current.Kind == SyntaxKind.Plus
+        //         || Current.Kind == SyntaxKind.Minus)
+        //     {
+        //         var operatorToken = NextToken();
+        //         var right = ParseFactor();
+        //         left = new BinaryExpressionSyntax(left, operatorToken, right);
+        //     }
 
-            return left;
-        }
+        //     return left;
+        // }
 
-        private ExpressionSyntax ParseFactor()
-        {
-            var left = ParsePrimaryExpression();
+        // private ExpressionSyntax ParseFactor()
+        // {
+        //     var left = ParsePrimaryExpression();
 
-            while (Current.Kind == SyntaxKind.Star
-                || Current.Kind == SyntaxKind.Slash)
-            {
-                var operatorToken = NextToken();
-                var right = ParsePrimaryExpression();
-                left = new BinaryExpressionSyntax(left, operatorToken, right);
-            }
+        //     while (Current.Kind == SyntaxKind.Star
+        //         || Current.Kind == SyntaxKind.Slash)
+        //     {
+        //         var operatorToken = NextToken();
+        //         var right = ParsePrimaryExpression();
+        //         left = new BinaryExpressionSyntax(left, operatorToken, right);
+        //     }
 
-            return left;
-        }
+        //     return left;
+        // }
 
         private ExpressionSyntax ParsePrimaryExpression()
         {

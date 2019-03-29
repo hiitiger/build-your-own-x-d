@@ -24,6 +24,17 @@
                 return (int)n.LiteralToken.Value;
             }
 
+            if (root is UnaryExpressionSyntax u)
+            {
+                var operand = EvalutateExpression(u.Operand);
+                if (u.OperatorToken.Kind == SyntaxKind.Plus)
+                    return operand;
+                else if (u.OperatorToken.Kind == SyntaxKind.Minus)
+                    return -operand;
+                else
+                    throw new Exception($"Unexpected unary operator {u.OperatorToken.Kind}");
+            }
+
             if (root is BinaryExpressionSyntax b)
             {
                 var left = EvalutateExpression(b.Left);

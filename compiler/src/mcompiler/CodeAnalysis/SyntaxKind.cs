@@ -14,7 +14,8 @@ namespace MCompiler.CodeAnalysis
         EOF,
         LiteralExpression,
         BinaryExpression,
-        ParenthesizedExpression
+        UnaryExpression,
+        ParenthesizedExpression,
     }
 
 }
