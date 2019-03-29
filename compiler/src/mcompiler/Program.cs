@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using MCompiler.CodeAnalysis;
+using MCompiler.CodeAnalysis.Syntax;
 
 namespace MCompiler
 {

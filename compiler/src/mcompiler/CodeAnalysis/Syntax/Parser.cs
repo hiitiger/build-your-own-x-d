@@ -1,4 +1,4 @@
-namespace MCompiler.CodeAnalysis
+namespace MCompiler.CodeAnalysis.Syntax
 {
     using System.Collections.Generic;
 
@@ -64,7 +64,8 @@ namespace MCompiler.CodeAnalysis
         {
             ExpressionSyntax left;
             var unaryOperaorPrecedence = Current.Kind.GetUnaryOperatorPrecedence();
-            if (unaryOperaorPrecedence != 0 && unaryOperaorPrecedence >= parentPrecedence){
+            if (unaryOperaorPrecedence != 0 && unaryOperaorPrecedence >= parentPrecedence)
+            {
                 var operatorToken = NextToken();
                 var operand = ParseExpression(unaryOperaorPrecedence);
                 left = new UnaryExpressionSyntax(operatorToken, operand);
@@ -73,6 +74,7 @@ namespace MCompiler.CodeAnalysis
             {
                 left = ParsePrimaryExpression();
             }
+
             while (true)
             {
                 var precedence = Current.Kind.GetBinaryOperatorPrecedence();

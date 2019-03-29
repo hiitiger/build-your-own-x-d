@@ -1,4 +1,4 @@
-namespace MCompiler.CodeAnalysis
+namespace MCompiler.CodeAnalysis.Syntax
 {
     internal static class SyntaxFacts
     {
