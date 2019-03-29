@@ -16,7 +16,7 @@ namespace MCompiler.CodeAnalysis
 
             do
             {
-                token = lexer.nextToken();
+                token = lexer.Lex();
                 if (token.Kind != SyntaxKind.WhiteSpace
                 && token.Kind != SyntaxKind.BadToken)
                 {
@@ -54,20 +54,28 @@ namespace MCompiler.CodeAnalysis
             _diagnostics.Add($"ERROR: Unexpected token <{Current.Kind}>, expected <{kind}>");
             return new SyntaxToken(kind, Current.Position, null, null);
         }
-
-
         public SyntaxTree Parse()
         {
             var expression = ParseExpression();
             var eof = MatchToken(SyntaxKind.EOF);
             return new SyntaxTree(Diagnostics, expression, eof);
         }
-        private ExpressionSyntax ParseExpression()
+        private ExpressionSyntax ParseExpression(int parentPrecedence = 0)
         {
-            return ParseTerm();
-        }
+            var left = ParsePrimaryExpression();
+            while (true)
+            {
+                var precedence = Current.Kind.GetBinaryOperatorPrecedence();
+                if (precedence == 0 || precedence <= parentPrecedence)
+                    break;
+                var operatorToken = NextToken();
+                var right = ParseExpression(precedence);
+                left = new BinaryExpressionSyntax(left, operatorToken, right);
+            }
 
-        public ExpressionSyntax ParseTerm()
+            return left;
+        }
+        private ExpressionSyntax ParseTerm()
         {
             var left = ParseFactor();
 
@@ -82,7 +90,7 @@ namespace MCompiler.CodeAnalysis
             return left;
         }
 
-        public ExpressionSyntax ParseFactor()
+        private ExpressionSyntax ParseFactor()
         {
             var left = ParsePrimaryExpression();
 
@@ -97,7 +105,7 @@ namespace MCompiler.CodeAnalysis
             return left;
         }
 
-        public ExpressionSyntax ParsePrimaryExpression()
+        private ExpressionSyntax ParsePrimaryExpression()
         {
             if (Current.Kind == SyntaxKind.OpenParenthesis)
             {

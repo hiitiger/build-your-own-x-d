@@ -30,12 +30,8 @@ namespace MCompiler.CodeAnalysis
             _position += 1;
         }
 
-        public SyntaxToken nextToken()
+        public SyntaxToken Lex()
         {
-            // <numbers>
-            // +-*/()
-            // <whitespace>
-
             if (Current == '\0')
             {
                 return new SyntaxToken(SyntaxKind.EOF, _position, "\0", null);
@@ -72,18 +68,21 @@ namespace MCompiler.CodeAnalysis
                 return new SyntaxToken(SyntaxKind.WhiteSpace, start, text, null);
             }
 
-            if (Current == '+')
-                return new SyntaxToken(SyntaxKind.Plus, _position++, "+", null);
-            if (Current == '-')
-                return new SyntaxToken(SyntaxKind.Minus, _position++, "-", null);
-            if (Current == '*')
-                return new SyntaxToken(SyntaxKind.Star, _position++, "*", null);
-            if (Current == '/')
-                return new SyntaxToken(SyntaxKind.Slash, _position++, "/", null);
-            if (Current == '(')
-                return new SyntaxToken(SyntaxKind.OpenParenthesis, _position++, "(", null);
-            if (Current == ')')
-                return new SyntaxToken(SyntaxKind.CloseParenthesis, _position++, ")", null);
+            switch (Current)
+            {
+                case '+':
+                    return new SyntaxToken(SyntaxKind.Plus, _position++, "+", null);
+                case '-':
+                    return new SyntaxToken(SyntaxKind.Minus, _position++, "-", null);
+                case '*':
+                    return new SyntaxToken(SyntaxKind.Star, _position++, "*", null);
+                case '/':
+                    return new SyntaxToken(SyntaxKind.Slash, _position++, "/", null);
+                case '(':
+                    return new SyntaxToken(SyntaxKind.OpenParenthesis, _position++, "(", null);
+                case ')':
+                    return new SyntaxToken(SyntaxKind.CloseParenthesis, _position++, ")", null);
+            }
 
             _diagnostics.Add($"ERROR: bad character input: '{Current}'");
             return new SyntaxToken(SyntaxKind.BadToken, _position++, _text.Substring(_position - 1, 1), null);
