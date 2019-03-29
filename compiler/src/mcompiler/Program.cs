@@ -7,7 +7,6 @@ namespace MCompiler
 {
     internal static class Program
     {
-
         private static void PrettyPrint(SyntaxNode node, string indent = "", bool isLast = true)
         {
             /*
@@ -65,6 +64,9 @@ namespace MCompiler
                 }
 
                 var syntaxTree = SyntaxTree.Parse(line);
+                var binder = new CodeAnalysis.Binding.Binder();
+                var boundExpression = binder.BindExpression(syntaxTree.Root);
+                var diagnostics = syntaxTree.Diagnostics.Concat(binder.Diagnostics).ToArray();
 
                 if (showTree)
                 {
@@ -74,11 +76,11 @@ namespace MCompiler
                     Console.ResetColor();
                 }
 
-                if (syntaxTree.Diagnostics.Any())
+                if (diagnostics.Any())
                 {
                     var color = Console.ForegroundColor;
                     Console.ForegroundColor = ConsoleColor.DarkRed;
-                    foreach (var x in syntaxTree.Diagnostics)
+                    foreach (var x in diagnostics)
                     {
                         Console.WriteLine(x);
                     }
@@ -86,7 +88,7 @@ namespace MCompiler
                 }
                 else
                 {
-                    var e = new Evaluator(syntaxTree.Root);
+                    var e = new Evaluator(boundExpression);
                     var res = e.Evaluate();
                     Console.WriteLine(res);
                 }
