@@ -1,6 +1,7 @@
 ﻿namespace MCompiler.CodeAnalysis
 {
     using System;
+    using System.Linq;
     using MCompiler.CodeAnalysis.Binding;
     using MCompiler.CodeAnalysis.Syntax;
 

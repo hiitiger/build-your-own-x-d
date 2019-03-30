@@ -5,14 +5,14 @@ namespace MCompiler.CodeAnalysis.Syntax
 
     public sealed class SyntaxTree
     {
-        public SyntaxTree(IEnumerable<string> diagnostics, ExpressionSyntax root, SyntaxToken eof)
+        public SyntaxTree(IEnumerable<Diagnostic> diagnostics, ExpressionSyntax root, SyntaxToken eof)
         {
             Diagnostics = diagnostics.ToArray();
             Root = root;
             Eof = eof;
         }
 
-        public IReadOnlyList<string> Diagnostics { get; }
+        public IReadOnlyList<Diagnostic> Diagnostics { get; }
         public ExpressionSyntax Root { get; }
         public SyntaxToken Eof { get; }
 

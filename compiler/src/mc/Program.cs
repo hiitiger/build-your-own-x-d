@@ -64,9 +64,9 @@ namespace MCompiler
                 }
 
                 var syntaxTree = SyntaxTree.Parse(line);
-                var binder = new CodeAnalysis.Binding.Binder();
-                var boundExpression = binder.BindExpression(syntaxTree.Root);
-                var diagnostics = syntaxTree.Diagnostics.Concat(binder.Diagnostics).ToArray();
+                var complilation = new Complilation(syntaxTree);
+                var result = complilation.Evaluate();
+                var diagnostics = result.Diagnostics.ToArray();
 
                 if (showTree)
                 {
@@ -78,23 +78,31 @@ namespace MCompiler
 
                 if (diagnostics.Any())
                 {
-                    var color = Console.ForegroundColor;
-                    Console.ForegroundColor = ConsoleColor.DarkRed;
                     foreach (var x in diagnostics)
                     {
+                        var prefix = line.Substring(0, x.Span.Start);
+                        var error = line.Substring(x.Span.Start, x.Span.Length);
+                        var suffix = line.Substring(x.Span.End);
+
+                        Console.ForegroundColor = ConsoleColor.DarkRed;
                         Console.WriteLine(x);
+                        Console.ResetColor();
+
+                        Console.Write("    ");
+                        Console.Write(prefix);
+                        Console.ForegroundColor = ConsoleColor.DarkRed;
+                        Console.Write(error);
+                        Console.ResetColor();
+                        Console.Write(suffix);
+
+                        Console.WriteLine();
                     }
-                    Console.ResetColor();
                 }
                 else
                 {
-                    var e = new Evaluator(boundExpression);
-                    var res = e.Evaluate();
-                    Console.WriteLine(res);
+                    Console.WriteLine(result.Value);
                 }
-
             }
         }
     }
-
 }

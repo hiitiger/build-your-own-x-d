@@ -6,7 +6,7 @@ namespace MCompiler.CodeAnalysis.Syntax
     {
         private readonly SyntaxToken[] _tokens;
         private int _position;
-        private List<string> _diagnostics = new List<string>();
+        private DiagnosticBag _diagnostics = new DiagnosticBag();
         public Parser(string text)
         {
             Lexer lexer = new Lexer(text);
@@ -39,7 +39,7 @@ namespace MCompiler.CodeAnalysis.Syntax
 
         private SyntaxToken Current => Peek(0);
 
-        public IEnumerable<string> Diagnostics => _diagnostics;
+        public DiagnosticBag Diagnostics => _diagnostics;
 
         private SyntaxToken NextToken()
         {
@@ -51,7 +51,7 @@ namespace MCompiler.CodeAnalysis.Syntax
         {
             if (Current.Kind == kind)
                 return NextToken();
-            _diagnostics.Add($"ERROR: Unexpected token <{Current.Kind}>, expected <{kind}>");
+            _diagnostics.ReportUnexpectedToken(Current.span, Current.Kind, kind);
             return new SyntaxToken(kind, Current.Position, null, null);
         }
         public SyntaxTree Parse()
@@ -133,7 +133,7 @@ namespace MCompiler.CodeAnalysis.Syntax
                 case SyntaxKind.FalseKeyword:
                     {
                         var value = Current.Kind == SyntaxKind.TrueKeyword;
-                        return new LiteralExpressionSyntax(NextToken(), value);
+                        return new LiteralExpressionSyntax(literalToken: NextToken(), value: value);
                     }
                 default:
                     var numberToken = MatchToken(SyntaxKind.Number);
