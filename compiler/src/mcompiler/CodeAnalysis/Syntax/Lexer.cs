@@ -97,8 +97,6 @@ namespace MCompiler.CodeAnalysis.Syntax
                     return new SyntaxToken(SyntaxKind.OpenParenthesis, _position++, "(", null);
                 case ')':
                     return new SyntaxToken(SyntaxKind.CloseParenthesis, _position++, ")", null);
-                case '!':
-                    return new SyntaxToken(SyntaxKind.Bang, _position++, "!", null);
                 case '&':
                     {
                         if (Lookahead == '&')
@@ -111,7 +109,19 @@ namespace MCompiler.CodeAnalysis.Syntax
                             return new SyntaxToken(SyntaxKind.PipePipe, _position += 2, "||", null);
                         break;
                     }
-
+                case '=':
+                    {
+                        if (Lookahead == '=')
+                            return new SyntaxToken(SyntaxKind.EqualsEquals, _position += 2, "==", null);
+                        break;
+                    }
+                case '!':
+                    {
+                        if (Lookahead == '=')
+                            return new SyntaxToken(SyntaxKind.BangEquals, _position += 2, "!=", null);
+                        else
+                            return new SyntaxToken(SyntaxKind.Bang, _position++, "!", null);
+                    }
             }
 
             _diagnostics.Add($"ERROR: bad character input: '{Current}'");

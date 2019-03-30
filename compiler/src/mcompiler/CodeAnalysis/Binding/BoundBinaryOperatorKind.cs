@@ -7,6 +7,9 @@ namespace MCompiler.CodeAnalysis.Binding
         Multiplication,
         Devision,
         LogicalAnd,
-        LogicalOr
+        LogicalOr,
+
+        Equals,
+        NotEquals
     }
 }

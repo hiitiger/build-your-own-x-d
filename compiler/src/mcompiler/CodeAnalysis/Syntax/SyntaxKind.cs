@@ -13,6 +13,9 @@ namespace MCompiler.CodeAnalysis.Syntax
         BadToken,
         EOF,
 
+        EqualsEquals,
+        BangEquals,
+
         //
         TrueKeyword,
         FalseKeyword,

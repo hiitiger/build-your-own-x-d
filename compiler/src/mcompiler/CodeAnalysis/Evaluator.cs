@@ -28,7 +28,7 @@
             if (root is BoundUnaryExpression u)
             {
                 var operand = EvalutateExpression(u.Operand);
-                switch (u.OperatorKind)
+                switch (u.Op.Kind)
                 {
                     case BoundUnaryOperatorKind.Indentity:
                         return (int)operand;
@@ -37,7 +37,7 @@
                     case BoundUnaryOperatorKind.LogicalNegation:
                         return (bool)operand;
                     default:
-                        throw new Exception($"Unexpected unary operator {u.OperatorKind}");
+                        throw new Exception($"Unexpected unary operator {u.Op.Kind}");
                 }
             }
 
@@ -45,7 +45,7 @@
             {
                 var left = EvalutateExpression(b.Left);
                 var right = EvalutateExpression(b.Right);
-                switch (b.OperatorKind)
+                switch (b.Op.Kind)
                 {
                     case BoundBinaryOperatorKind.Addition:
                         return (int)left + (int)right;
@@ -59,8 +59,12 @@
                         return (bool)left && (bool)right;
                     case BoundBinaryOperatorKind.LogicalOr:
                         return (bool)left || (bool)right;
+                    case BoundBinaryOperatorKind.Equals:
+                        return object.Equals(left, right);
+                    case BoundBinaryOperatorKind.NotEquals:
+                        return !object.Equals(left, right);
                     default:
-                        throw new Exception($"Unexpected binary operator {b.OperatorKind}");
+                        throw new Exception($"Unexpected binary operator {b.Op.Kind}");
                 }
             }
 

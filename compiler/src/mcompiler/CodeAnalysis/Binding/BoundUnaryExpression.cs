@@ -4,16 +4,17 @@ namespace MCompiler.CodeAnalysis.Binding
 {
     internal sealed class BoundUnaryExpression : BoundExpression
     {
-        public BoundUnaryExpression(BoundUnaryOperatorKind operatorKind, BoundExpression operand)
+        public BoundUnaryExpression(BoundUnaryOperator op, BoundExpression operand)
         {
-            OperatorKind = operatorKind;
+            Op = op;
             Operand = operand;
         }
 
         public override BoundNodeKind Kind => BoundNodeKind.UnaryExpression;
         public override Type Type => Operand.Type;
 
-        public BoundUnaryOperatorKind OperatorKind { get; }
+        public BoundUnaryOperator Op { get; }
+        public BoundUnaryOperatorKind OperatorKind => Op.Kind;
         public BoundExpression Operand { get; }
     }
 }
