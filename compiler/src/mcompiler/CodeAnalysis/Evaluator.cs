@@ -13,21 +13,21 @@
             _root = root;
         }
 
-        public int Evaluate()
+        public object Evaluate()
         {
             return EvalutateExpression(_root);
         }
 
-        private int EvalutateExpression(BoundExpression root)
+        private object EvalutateExpression(BoundExpression root)
         {
             if (root is BoundLiteralExpression n)
             {
-                return (int)n.Value;
+                return n.Value;
             }
 
             if (root is BoundUnaryExpression u)
             {
-                var operand = EvalutateExpression(u.Operand);
+                var operand = (int)EvalutateExpression(u.Operand);
                 if (u.OperatorKind == BoundUnaryOperatorKind.Indentity)
                     return operand;
                 else if (u.OperatorKind == BoundUnaryOperatorKind.Negation)
@@ -38,8 +38,8 @@
 
             if (root is BoundBinaryExpression b)
             {
-                var left = EvalutateExpression(b.Left);
-                var right = EvalutateExpression(b.Right);
+                var left = (int)EvalutateExpression(b.Left);
+                var right = (int)EvalutateExpression(b.Right);
                 if (b.OperatorKind == BoundBinaryOperatorKind.Addition)
                 {
                     return left + right;

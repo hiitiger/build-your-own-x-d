@@ -12,10 +12,18 @@ namespace MCompiler.CodeAnalysis.Syntax
         CloseParenthesis,
         BadToken,
         EOF,
+
+        //
+        TrueKeyword,
+        FalseKeyword,
+        IndentifierToken,
+
+        //
         LiteralExpression,
         BinaryExpression,
         UnaryExpression,
         ParenthesizedExpression,
+        
     }
 
 }

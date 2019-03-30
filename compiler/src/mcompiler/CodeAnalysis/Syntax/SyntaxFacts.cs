@@ -1,3 +1,5 @@
+using System;
+
 namespace MCompiler.CodeAnalysis.Syntax
 {
     internal static class SyntaxFacts
@@ -27,6 +29,19 @@ namespace MCompiler.CodeAnalysis.Syntax
                     return 1;
                 default:
                     return 0;
+            }
+        }
+
+        internal static SyntaxKind GetKeywordKind(string text)
+        {
+            switch (text)
+            {
+                case "true":
+                    return SyntaxKind.TrueKeyword;
+                case "false":
+                    return SyntaxKind.FalseKeyword;
+                default:
+                    return SyntaxKind.IndentifierToken;
             }
         }
     }

@@ -119,17 +119,26 @@ namespace MCompiler.CodeAnalysis.Syntax
 
         private ExpressionSyntax ParsePrimaryExpression()
         {
-            if (Current.Kind == SyntaxKind.OpenParenthesis)
+            switch (Current.Kind)
             {
-                var left = NextToken();
-                var expression = ParseExpression();
-                var right = MatchToken(SyntaxKind.CloseParenthesis);
-                return new ParenthesizedExpression(left, expression, right);
-            }
+                case SyntaxKind.OpenParenthesis:
+                    {
+                        var left = NextToken();
+                        var expression = ParseExpression();
+                        var right = MatchToken(SyntaxKind.CloseParenthesis);
+                        return new ParenthesizedExpression(left, expression, right);
+                    }
 
-            var numberToken = MatchToken(SyntaxKind.Number);
-            return new LiteralExpressionSyntax(numberToken);
+                case SyntaxKind.TrueKeyword:
+                case SyntaxKind.FalseKeyword:
+                    {
+                        var value = Current.Kind == SyntaxKind.TrueKeyword;
+                        return new LiteralExpressionSyntax(NextToken(), value);
+                    }
+                default:
+                    var numberToken = MatchToken(SyntaxKind.Number);
+                    return new LiteralExpressionSyntax(numberToken);
+            }
         }
     }
-
 }
