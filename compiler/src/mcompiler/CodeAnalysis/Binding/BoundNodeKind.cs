@@ -4,6 +4,8 @@ namespace MCompiler.CodeAnalysis.Binding
     {
         LiteralExpression,
         UnaryExpression,
-        BinaryExpression
+        BinaryExpression,
+        VariableExpression,
+        AssignmentExpression
     }
 }

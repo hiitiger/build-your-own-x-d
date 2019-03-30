@@ -9,10 +9,10 @@ namespace MCompiler.CodeAnalysis.Syntax
         {
             switch (kind)
             {
-                case SyntaxKind.Plus:
-                case SyntaxKind.Minus:
+                case SyntaxKind.PlusToken:
+                case SyntaxKind.MinusToken:
                     return 6;
-                case SyntaxKind.Bang:
+                case SyntaxKind.BangToken:
                     return 6;
                 default:
                     return 0;
@@ -23,18 +23,18 @@ namespace MCompiler.CodeAnalysis.Syntax
         {
             switch (kind)
             {
-                case SyntaxKind.Star:
-                case SyntaxKind.Slash:
+                case SyntaxKind.StarToken:
+                case SyntaxKind.SlashToken:
                     return 5;
-                case SyntaxKind.Plus:
-                case SyntaxKind.Minus:
+                case SyntaxKind.PlusToken:
+                case SyntaxKind.MinusToken:
                     return 4;
-                case SyntaxKind.EqualsEquals:
-                case SyntaxKind.BangEquals:
+                case SyntaxKind.EqualsEqualsToken:
+                case SyntaxKind.BangEqualsToken:
                     return 3;
-                case SyntaxKind.AmpersandAmpersand:
+                case SyntaxKind.AmpersandAmpersandToken:
                     return 2;
-                case SyntaxKind.PipePipe:
+                case SyntaxKind.PipePipeToken:
                     return 1;
                 default:
                     return 0;

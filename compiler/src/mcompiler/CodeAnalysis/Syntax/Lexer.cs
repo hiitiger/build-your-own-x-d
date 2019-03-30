@@ -34,7 +34,7 @@ namespace MCompiler.CodeAnalysis.Syntax
         {
             if (Current == '\0')
             {
-                return new SyntaxToken(SyntaxKind.EOF, _position, "\0", null);
+                return new SyntaxToken(SyntaxKind.EOFToken, _position, "\0", null);
             }
             var start = _position;
 
@@ -51,7 +51,7 @@ namespace MCompiler.CodeAnalysis.Syntax
                 {
                     _diagnostics.ReportInvalidNumber(new TextSpan(start, length), _text, typeof(int));
                 }
-                return new SyntaxToken(SyntaxKind.Number, start, text, value);
+                return new SyntaxToken(SyntaxKind.NumberToken, start, text, value);
             }
 
             if (char.IsWhiteSpace(Current))
@@ -64,7 +64,7 @@ namespace MCompiler.CodeAnalysis.Syntax
                 var length = _position - start;
                 var text = _text.Substring(start, length);
 
-                return new SyntaxToken(SyntaxKind.WhiteSpace, start, text, null);
+                return new SyntaxToken(SyntaxKind.WhiteSpaceToken, start, text, null);
             }
 
             if (char.IsLetter(Current))
@@ -84,23 +84,23 @@ namespace MCompiler.CodeAnalysis.Syntax
             switch (Current)
             {
                 case '+':
-                    return new SyntaxToken(SyntaxKind.Plus, _position++, "+", null);
+                    return new SyntaxToken(SyntaxKind.PlusToken, _position++, "+", null);
                 case '-':
-                    return new SyntaxToken(SyntaxKind.Minus, _position++, "-", null);
+                    return new SyntaxToken(SyntaxKind.MinusToken, _position++, "-", null);
                 case '*':
-                    return new SyntaxToken(SyntaxKind.Star, _position++, "*", null);
+                    return new SyntaxToken(SyntaxKind.StarToken, _position++, "*", null);
                 case '/':
-                    return new SyntaxToken(SyntaxKind.Slash, _position++, "/", null);
+                    return new SyntaxToken(SyntaxKind.SlashToken, _position++, "/", null);
                 case '(':
-                    return new SyntaxToken(SyntaxKind.OpenParenthesis, _position++, "(", null);
+                    return new SyntaxToken(SyntaxKind.OpenParenthesisToken, _position++, "(", null);
                 case ')':
-                    return new SyntaxToken(SyntaxKind.CloseParenthesis, _position++, ")", null);
+                    return new SyntaxToken(SyntaxKind.CloseParenthesisToken, _position++, ")", null);
                 case '&':
                     {
                         if (Lookahead == '&')
                         {
                             _position += 2;
-                            return new SyntaxToken(SyntaxKind.AmpersandAmpersand, start, "&&", null);
+                            return new SyntaxToken(SyntaxKind.AmpersandAmpersandToken, start, "&&", null);
                         }
                         break;
                     }
@@ -109,7 +109,7 @@ namespace MCompiler.CodeAnalysis.Syntax
                         if (Lookahead == '|')
                         {
                             _position += 2;
-                            return new SyntaxToken(SyntaxKind.PipePipe, start, "||", null);
+                            return new SyntaxToken(SyntaxKind.PipePipeToken, start, "||", null);
                         }
                         break;
                     }
@@ -118,7 +118,12 @@ namespace MCompiler.CodeAnalysis.Syntax
                         if (Lookahead == '=')
                         {
                             _position += 2;
-                            return new SyntaxToken(SyntaxKind.EqualsEquals, start, "==", null);
+                            return new SyntaxToken(SyntaxKind.EqualsEqualsToken, start, "==", null);
+                        }
+                        else
+                        {
+                            _position += 1;
+                            return new SyntaxToken(SyntaxKind.EqualsToken, start, "=", null);
                         }
                         break;
                     }
@@ -127,10 +132,10 @@ namespace MCompiler.CodeAnalysis.Syntax
                         if (Lookahead == '=')
                         {
                             _position += 2;
-                            return new SyntaxToken(SyntaxKind.BangEquals, start, "!=", null);
+                            return new SyntaxToken(SyntaxKind.BangEqualsToken, start, "!=", null);
                         }
                         else
-                            return new SyntaxToken(SyntaxKind.Bang, _position++, "!", null);
+                            return new SyntaxToken(SyntaxKind.BangToken, _position++, "!", null);
                     }
             }
 

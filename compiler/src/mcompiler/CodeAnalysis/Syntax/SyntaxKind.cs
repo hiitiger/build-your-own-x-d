@@ -2,19 +2,26 @@ namespace MCompiler.CodeAnalysis.Syntax
 {
     public enum SyntaxKind
     {
-        Number,
-        WhiteSpace,
-        Plus,
-        Minus,
-        Star,
-        Slash,
-        OpenParenthesis,
-        CloseParenthesis,
+        NumberToken,
+        WhiteSpaceToken,
+        PlusToken,
+        MinusToken,
+        StarToken,
+        SlashToken,
+        OpenParenthesisToken,
+        CloseParenthesisToken,
         BadToken,
-        EOF,
+        EOFToken,
 
-        EqualsEquals,
-        BangEquals,
+
+        BangToken,
+        AmpersandAmpersandToken,
+        PipePipeToken,
+
+        EqualsEqualsToken,
+        BangEqualsToken,
+
+        EqualsToken,
 
         //
         TrueKeyword,
@@ -28,9 +35,8 @@ namespace MCompiler.CodeAnalysis.Syntax
         ParenthesizedExpression,
 
         //
-        Bang,
-        AmpersandAmpersand,
-        PipePipe,
+        NameExpression,
+        AssignmentExpression,
     }
 
 }

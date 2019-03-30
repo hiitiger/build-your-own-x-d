@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using MCompiler.CodeAnalysis;
 using MCompiler.CodeAnalysis.Syntax;
@@ -41,6 +42,7 @@ namespace MCompiler
         static void Main(string[] args)
         {
             bool showTree = false;
+            var variables = new Dictionary<VariableSymbol, object>();
 
             while (true)
             {
@@ -65,7 +67,7 @@ namespace MCompiler
 
                 var syntaxTree = SyntaxTree.Parse(line);
                 var complilation = new Complilation(syntaxTree);
-                var result = complilation.Evaluate();
+                var result = complilation.Evaluate(variables);
                 var diagnostics = result.Diagnostics.ToArray();
 
                 if (showTree)
