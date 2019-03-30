@@ -1,2 +1,2 @@
-# some implemetation of build your own x
+# some implemetation of build-your-own-x
 
