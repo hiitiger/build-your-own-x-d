@@ -11,7 +11,9 @@ namespace MCompiler.CodeAnalysis.Syntax
             {
                 case SyntaxKind.Plus:
                 case SyntaxKind.Minus:
-                    return 3;
+                    return 5;
+                case SyntaxKind.Bang:
+                    return 5;
                 default:
                     return 0;
             }
@@ -23,9 +25,13 @@ namespace MCompiler.CodeAnalysis.Syntax
             {
                 case SyntaxKind.Star:
                 case SyntaxKind.Slash:
-                    return 2;
+                    return 4;
                 case SyntaxKind.Plus:
                 case SyntaxKind.Minus:
+                    return 3;
+                case SyntaxKind.AmpersandAmpersand:
+                    return 2;
+                case SyntaxKind.PipePipe:
                     return 1;
                 default:
                     return 0;

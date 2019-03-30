@@ -43,18 +43,30 @@ namespace MCompiler.CodeAnalysis.Binding
 
         private BoundUnaryOperatorKind? BindUnaryOperatorKind(SyntaxKind kind, Type operandType)
         {
-            if (operandType != typeof(int))
-                return null;
-
-            switch (kind)
+            if (operandType == typeof(int))
             {
-                case SyntaxKind.Plus:
-                    return BoundUnaryOperatorKind.Indentity;
-                case SyntaxKind.Minus:
-                    return BoundUnaryOperatorKind.Negation;
-                default:
-                    throw new Exception($"Unexpected unary operator syntax {kind}");
+                switch (kind)
+                {
+                    case SyntaxKind.Plus:
+                        return BoundUnaryOperatorKind.Indentity;
+                    case SyntaxKind.Minus:
+                        return BoundUnaryOperatorKind.Negation;
+                    default:
+                        throw new Exception($"Unexpected unary operator syntax {kind}");
+                }
             }
+            else if (operandType == typeof(bool))
+            {
+                switch (kind)
+                {
+                    case SyntaxKind.Bang:
+                        return BoundUnaryOperatorKind.LogicalNegation;
+                    default:
+                        throw new Exception($"Unexpected unary operator syntax {kind}");
+                }
+            }
+
+            return null;
         }
 
         private BoundExpression BindBinaryExpression(BinaryExpressionSyntax syntax)
@@ -72,21 +84,37 @@ namespace MCompiler.CodeAnalysis.Binding
 
         private BoundBinaryOperatorKind? BindBinaryOperatorKind(SyntaxKind kind, Type leftType, Type rightType)
         {
-            if (leftType != typeof(int) || rightType != typeof(int))
-                return null;
-
-            switch (kind)
+            if (leftType == typeof(int) && rightType == typeof(int))
             {
-                case SyntaxKind.Plus:
-                    return BoundBinaryOperatorKind.Addition;
-                case SyntaxKind.Minus:
-                    return BoundBinaryOperatorKind.Subtraction;
-                case SyntaxKind.Star:
-                    return BoundBinaryOperatorKind.Multiplication;
-                case SyntaxKind.Slash:
-                    return BoundBinaryOperatorKind.Devision;
-                default:
-                    throw new Exception($"Unexpected binary operator syntax {kind}");
+                switch (kind)
+                {
+                    case SyntaxKind.Plus:
+                        return BoundBinaryOperatorKind.Addition;
+                    case SyntaxKind.Minus:
+                        return BoundBinaryOperatorKind.Subtraction;
+                    case SyntaxKind.Star:
+                        return BoundBinaryOperatorKind.Multiplication;
+                    case SyntaxKind.Slash:
+                        return BoundBinaryOperatorKind.Devision;
+                    default:
+                        throw new Exception($"Unexpected binary operator syntax {kind}");
+                }
+            }
+            else if (leftType == typeof(bool) && rightType == typeof(bool))
+            {
+                 switch (kind)
+                {
+                    case SyntaxKind.AmpersandAmpersand:
+                        return BoundBinaryOperatorKind.LogicalAnd;
+                    case SyntaxKind.PipePipe:
+                        return BoundBinaryOperatorKind.LogicalOr;
+                    default:
+                        throw new Exception($"Unexpected binary operator syntax {kind}");
+                }
+            }
+            else
+            {
+                return null;
             }
         }
     }

@@ -5,6 +5,8 @@ namespace MCompiler.CodeAnalysis.Binding
         Addition,
         Subtraction,
         Multiplication,
-        Devision
+        Devision,
+        LogicalAnd,
+        LogicalOr
     }
 }

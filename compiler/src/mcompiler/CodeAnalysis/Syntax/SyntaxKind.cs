@@ -23,7 +23,11 @@ namespace MCompiler.CodeAnalysis.Syntax
         BinaryExpression,
         UnaryExpression,
         ParenthesizedExpression,
-        
+
+        //
+        Bang,
+        AmpersandAmpersand,
+        PipePipe,
     }
 
 }

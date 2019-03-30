@@ -27,37 +27,41 @@
 
             if (root is BoundUnaryExpression u)
             {
-                var operand = (int)EvalutateExpression(u.Operand);
-                if (u.OperatorKind == BoundUnaryOperatorKind.Indentity)
-                    return operand;
-                else if (u.OperatorKind == BoundUnaryOperatorKind.Negation)
-                    return -operand;
-                else
-                    throw new Exception($"Unexpected unary operator {u.OperatorKind}");
+                var operand = EvalutateExpression(u.Operand);
+                switch (u.OperatorKind)
+                {
+                    case BoundUnaryOperatorKind.Indentity:
+                        return (int)operand;
+                    case BoundUnaryOperatorKind.Negation:
+                        return -(int)operand;
+                    case BoundUnaryOperatorKind.LogicalNegation:
+                        return (bool)operand;
+                    default:
+                        throw new Exception($"Unexpected unary operator {u.OperatorKind}");
+                }
             }
 
             if (root is BoundBinaryExpression b)
             {
-                var left = (int)EvalutateExpression(b.Left);
-                var right = (int)EvalutateExpression(b.Right);
-                if (b.OperatorKind == BoundBinaryOperatorKind.Addition)
+                var left = EvalutateExpression(b.Left);
+                var right = EvalutateExpression(b.Right);
+                switch (b.OperatorKind)
                 {
-                    return left + right;
+                    case BoundBinaryOperatorKind.Addition:
+                        return (int)left + (int)right;
+                    case BoundBinaryOperatorKind.Subtraction:
+                        return (int)left - (int)right;
+                    case BoundBinaryOperatorKind.Multiplication:
+                        return (int)left * (int)right;
+                    case BoundBinaryOperatorKind.Devision:
+                        return (int)left / (int)right;
+                    case BoundBinaryOperatorKind.LogicalAnd:
+                        return (bool)left && (bool)right;
+                    case BoundBinaryOperatorKind.LogicalOr:
+                        return (bool)left || (bool)right;
+                    default:
+                        throw new Exception($"Unexpected binary operator {b.OperatorKind}");
                 }
-                else if (b.OperatorKind == BoundBinaryOperatorKind.Subtraction)
-                {
-                    return left - right;
-                }
-                else if (b.OperatorKind == BoundBinaryOperatorKind.Multiplication)
-                {
-                    return left * right;
-                }
-                else if (b.OperatorKind == BoundBinaryOperatorKind.Devision)
-                {
-                    return left / right;
-                }
-                else
-                    throw new Exception($"Unexpected binary operator {b.OperatorKind}");
             }
 
             throw new Exception($"Unexpected node {root.Kind}");
