@@ -125,7 +125,6 @@ namespace MCompiler.CodeAnalysis.Syntax
                             _position += 1;
                             return new SyntaxToken(SyntaxKind.EqualsToken, start, "=", null);
                         }
-                        break;
                     }
                 case '!':
                     {
@@ -135,7 +134,10 @@ namespace MCompiler.CodeAnalysis.Syntax
                             return new SyntaxToken(SyntaxKind.BangEqualsToken, start, "!=", null);
                         }
                         else
-                            return new SyntaxToken(SyntaxKind.BangToken, _position++, "!", null);
+                        {
+                            _position += 1;
+                            return new SyntaxToken(SyntaxKind.BangToken, start, "!", null);
+                        }
                     }
             }
 
