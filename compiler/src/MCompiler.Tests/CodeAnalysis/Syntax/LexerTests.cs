@@ -7,7 +7,8 @@ using System.Linq;
 
 namespace MCompiler.Tests.CodeAnalysis.Syntax
 {
-    public class LexerTest
+
+    public class LexerTests
     {
         [Theory]
         [MemberData(nameof(GetTokensData))]
