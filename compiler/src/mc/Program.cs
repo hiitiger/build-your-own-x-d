@@ -66,7 +66,7 @@ namespace MCompiler
                 }
 
                 var syntaxTree = SyntaxTree.Parse(line);
-                var complilation = new Complilation(syntaxTree);
+                var complilation = new Compilation(syntaxTree);
                 var result = complilation.Evaluate(variables);
                 var diagnostics = result.Diagnostics.ToArray();
 

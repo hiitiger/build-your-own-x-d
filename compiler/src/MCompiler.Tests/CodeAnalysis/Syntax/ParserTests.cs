@@ -82,7 +82,7 @@ namespace MCompiler.Tests.CodeAnalysis.Syntax
         [MemberData(nameof(GetUnaryOperatorPairsData))]
         public void Parser_UnaryExpression_HonorsPrecedences(SyntaxKind op1, SyntaxKind op2)
         {
-            var op1Precedence = SyntaxFacts.GetBinaryOperatorPrecedence(op1);
+            var op1Precedence = SyntaxFacts.GetUnaryOperatorPrecedence(op1);
             var op2Precedence = SyntaxFacts.GetBinaryOperatorPrecedence(op2);
             var op1Text = SyntaxFacts.GetText(op1);
             var op2Text = SyntaxFacts.GetText(op2);

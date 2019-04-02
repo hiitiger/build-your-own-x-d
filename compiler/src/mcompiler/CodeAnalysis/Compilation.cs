@@ -1,4 +1,4 @@
-namespace MCompiler.CodeAnalysis
+﻿namespace MCompiler.CodeAnalysis
 {
     using System;
     using System.Collections.Generic;
@@ -6,9 +6,9 @@ namespace MCompiler.CodeAnalysis
     using MCompiler.CodeAnalysis.Binding;
     using MCompiler.CodeAnalysis.Syntax;
 
-    public class Complilation
+    public class Compilation
     {
-        public Complilation(SyntaxTree syntaxTree)
+        public Compilation(SyntaxTree syntaxTree)
         {
             SyntaxTree = syntaxTree;
         }
