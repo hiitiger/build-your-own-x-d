@@ -1,3 +1,5 @@
+using MCompiler.CodeAnalysis.Text;
+
 namespace MCompiler.CodeAnalysis
 {
     public sealed class Diagnostic

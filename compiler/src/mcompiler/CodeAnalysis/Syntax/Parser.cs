@@ -2,13 +2,16 @@ namespace MCompiler.CodeAnalysis.Syntax
 {
     using System.Collections.Generic;
     using System.Collections.Immutable;
+    using MCompiler.CodeAnalysis.Text;
 
     internal sealed class Parser
     {
         private readonly ImmutableArray<SyntaxToken> _tokens;
         private int _position;
         private readonly DiagnosticBag _diagnostics = new DiagnosticBag();
-        public Parser(string text)
+        private readonly SourceText _text;
+
+        public Parser(SourceText text)
         {
             Lexer lexer = new Lexer(text);
 
@@ -27,6 +30,7 @@ namespace MCompiler.CodeAnalysis.Syntax
 
             _tokens = tokens.ToImmutableArray();
             _diagnostics.AddRange(lexer.Diagnostics);
+            _text = text;
         }
 
         private SyntaxToken Peek(int offset)
@@ -59,7 +63,7 @@ namespace MCompiler.CodeAnalysis.Syntax
         {
             var expression = ParseExpression();
             var eof = MatchToken(SyntaxKind.EOFToken);
-            return new SyntaxTree(Diagnostics.ToImmutableArray(), expression, eof);
+            return new SyntaxTree(_text, Diagnostics.ToImmutableArray(), expression, eof);
         }
 
         private ExpressionSyntax ParseExpression()
