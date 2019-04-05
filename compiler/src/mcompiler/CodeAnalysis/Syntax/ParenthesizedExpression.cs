@@ -1,7 +1,5 @@
 namespace MCompiler.CodeAnalysis.Syntax
 {
-    using System.Collections.Generic;
-
     internal sealed class ParenthesizedExpression : ExpressionSyntax
     {
         public override SyntaxKind Kind => SyntaxKind.ParenthesizedExpression;
@@ -17,12 +15,6 @@ namespace MCompiler.CodeAnalysis.Syntax
             CloseParenthesisToken = closeParenthesisToken;
         }
 
-        public override IEnumerable<SyntaxNode> GetChildren()
-        {
-            yield return OpenParenthesisToken;
-            yield return Expression;
-            yield return CloseParenthesisToken;
-        }
     }
 
 }

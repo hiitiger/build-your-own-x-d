@@ -63,7 +63,7 @@ namespace MCompiler.CodeAnalysis.Binding
             var variable = _variables.Keys.FirstOrDefault(k => k.Name == name);
             if (variable == null)
             {
-                _diagnostics.ReportUndefinedName(syntax.IdentifierToken.span, name);
+                _diagnostics.ReportUndefinedName(syntax.IdentifierToken.Span, name);
                 return new BoundLiteralExpression(0);
             }
 
@@ -82,7 +82,7 @@ namespace MCompiler.CodeAnalysis.Binding
             var boundOperator = BoundUnaryOperator.Bind(syntax.OperatorToken.Kind, boundOperand.Type);
             if (boundOperator == null)
             {
-                _diagnostics.ReportUndefinedUnaryOperator(syntax.OperatorToken.span, syntax.OperatorToken.Text, boundOperand.Type);
+                _diagnostics.ReportUndefinedUnaryOperator(syntax.OperatorToken.Span, syntax.OperatorToken.Text, boundOperand.Type);
                 return boundOperand;
             }
             return new BoundUnaryExpression(boundOperator, boundOperand);
@@ -95,7 +95,7 @@ namespace MCompiler.CodeAnalysis.Binding
             var boundOperator = BoundBinaryOperator.Bind(syntax.OperatorToken.Kind, boundLeftOperand.Type, boundRightOperand.Type);
             if (boundOperator == null)
             {
-                _diagnostics.ReportUndefinedBinaryOperator(syntax.OperatorToken.span, syntax.OperatorToken.Text, boundRightOperand.Type, boundRightOperand.Type);
+                _diagnostics.ReportUndefinedBinaryOperator(syntax.OperatorToken.Span, syntax.OperatorToken.Text, boundRightOperand.Type, boundRightOperand.Type);
                 return boundLeftOperand;
             }
             return new BoundBinaryExpression(boundLeftOperand, boundOperator, boundRightOperand);

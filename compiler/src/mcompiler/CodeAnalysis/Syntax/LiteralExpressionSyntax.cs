@@ -1,7 +1,5 @@
 namespace MCompiler.CodeAnalysis.Syntax
 {
-    using System.Collections.Generic;
-
     public sealed class LiteralExpressionSyntax : ExpressionSyntax
     {
         public LiteralExpressionSyntax(SyntaxToken literalToken)
@@ -17,10 +15,5 @@ namespace MCompiler.CodeAnalysis.Syntax
         public SyntaxToken LiteralToken { get; }
         public object Value { get; }
 
-        public override IEnumerable<SyntaxNode> GetChildren()
-        {
-            yield return LiteralToken;
-        }
     }
-
 }

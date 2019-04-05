@@ -1,7 +1,5 @@
 namespace MCompiler.CodeAnalysis.Syntax
 {
-    using System.Collections.Generic;
-
     public sealed class UnaryExpressionSyntax : ExpressionSyntax
     {
         public UnaryExpressionSyntax(SyntaxToken operatorToken, ExpressionSyntax operand)
@@ -13,11 +11,6 @@ namespace MCompiler.CodeAnalysis.Syntax
         public SyntaxToken OperatorToken { get; }
         public ExpressionSyntax Operand { get; }
 
-        public override IEnumerable<SyntaxNode> GetChildren()
-        {
-            yield return OperatorToken;
-            yield return Operand;
-        }
     }
 
 }

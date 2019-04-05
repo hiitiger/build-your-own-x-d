@@ -52,7 +52,7 @@ namespace MCompiler.CodeAnalysis.Syntax
         {
             if (Current.Kind == kind)
                 return NextToken();
-            _diagnostics.ReportUnexpectedToken(Current.span, Current.Kind, kind);
+            _diagnostics.ReportUnexpectedToken(Current.Span, Current.Kind, kind);
             return new SyntaxToken(kind, Current.Position, null, null);
         }
         public SyntaxTree Parse()

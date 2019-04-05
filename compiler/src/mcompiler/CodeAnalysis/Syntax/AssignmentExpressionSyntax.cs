@@ -1,7 +1,5 @@
 namespace MCompiler.CodeAnalysis.Syntax
 {
-    using System.Collections.Generic;
-
     public class AssignmentExpressionSyntax : ExpressionSyntax
     {
         public AssignmentExpressionSyntax(SyntaxToken identifierToken, SyntaxToken equalsToken, ExpressionSyntax expression)
@@ -16,13 +14,6 @@ namespace MCompiler.CodeAnalysis.Syntax
         public ExpressionSyntax Expression { get; }
 
         public override SyntaxKind Kind => SyntaxKind.AssignmentExpression;
-
-        public override IEnumerable<SyntaxNode> GetChildren()
-        {
-            yield return IdentifierToken;
-            yield return EqualsToken;
-            yield return Expression;
-        }
     }
 
 }
