@@ -1,12 +1,13 @@
 namespace MCompiler.CodeAnalysis.Syntax
 {
     using System.Collections.Generic;
+    using System.Collections.Immutable;
 
     internal sealed class Parser
     {
-        private readonly SyntaxToken[] _tokens;
+        private readonly ImmutableArray<SyntaxToken> _tokens;
         private int _position;
-        private DiagnosticBag _diagnostics = new DiagnosticBag();
+        private readonly DiagnosticBag _diagnostics = new DiagnosticBag();
         public Parser(string text)
         {
             Lexer lexer = new Lexer(text);
@@ -24,7 +25,7 @@ namespace MCompiler.CodeAnalysis.Syntax
                 }
             } while (token.Kind != SyntaxKind.EOFToken);
 
-            _tokens = tokens.ToArray();
+            _tokens = tokens.ToImmutableArray();
             _diagnostics.AddRange(lexer.Diagnostics);
         }
 
@@ -58,7 +59,7 @@ namespace MCompiler.CodeAnalysis.Syntax
         {
             var expression = ParseExpression();
             var eof = MatchToken(SyntaxKind.EOFToken);
-            return new SyntaxTree(Diagnostics, expression, eof);
+            return new SyntaxTree(Diagnostics.ToImmutableArray(), expression, eof);
         }
 
         private ExpressionSyntax ParseExpression()
@@ -113,28 +114,43 @@ namespace MCompiler.CodeAnalysis.Syntax
             switch (Current.Kind)
             {
                 case SyntaxKind.OpenParenthesisToken:
-                    {
-                        var left = NextToken();
-                        var expression = ParseExpression();
-                        var right = MatchToken(SyntaxKind.CloseParenthesisToken);
-                        return new ParenthesizedExpression(left, expression, right);
-                    }
-
+                    return ParseParenthesizedExpression();
                 case SyntaxKind.TrueKeyword:
                 case SyntaxKind.FalseKeyword:
-                    {
-                        var value = Current.Kind == SyntaxKind.TrueKeyword;
-                        return new LiteralExpressionSyntax(literalToken: NextToken(), value: value);
-                    }
+                    return ParseBooleanLiteral();
+                case SyntaxKind.NumberToken:
+                    return ParseNumberLiteral();
                 case SyntaxKind.IndentifierToken:
-                    {
-                        var indentifierToken = NextToken();
-                        return new NameExpressionSyntax(indentifierToken);
-                    }
                 default:
-                    var numberToken = MatchToken(SyntaxKind.NumberToken);
-                    return new LiteralExpressionSyntax(numberToken);
+                    return ParseNameExpression();
             }
+        }
+
+        private ExpressionSyntax ParseNumberLiteral()
+        {
+            var numberToken = MatchToken(SyntaxKind.NumberToken);
+            return new LiteralExpressionSyntax(numberToken);
+        }
+
+        private ExpressionSyntax ParseParenthesizedExpression()
+        {
+            var left = MatchToken(SyntaxKind.OpenParenthesisToken);
+            var expression = ParseExpression();
+            var right = MatchToken(SyntaxKind.CloseParenthesisToken);
+            return new ParenthesizedExpression(left, expression, right);
+        }
+
+        private ExpressionSyntax ParseBooleanLiteral()
+        {
+            bool isTrue = Current.Kind == SyntaxKind.TrueKeyword;
+            var token = isTrue ? MatchToken(SyntaxKind.TrueKeyword) : MatchToken(SyntaxKind.FalseKeyword);
+            return new LiteralExpressionSyntax(token, isTrue);
+        }
+
+        private ExpressionSyntax ParseNameExpression()
+        {
+            var indentifierToken = MatchToken(SyntaxKind.IndentifierToken);
+            return new NameExpressionSyntax(indentifierToken);
         }
     }
 }

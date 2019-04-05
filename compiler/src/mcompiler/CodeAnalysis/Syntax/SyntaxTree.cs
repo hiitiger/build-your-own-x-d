@@ -1,18 +1,19 @@
 namespace MCompiler.CodeAnalysis.Syntax
 {
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.Linq;
 
     public sealed class SyntaxTree
     {
-        public SyntaxTree(IEnumerable<Diagnostic> diagnostics, ExpressionSyntax root, SyntaxToken eof)
+        public SyntaxTree(ImmutableArray<Diagnostic> diagnostics, ExpressionSyntax root, SyntaxToken eof)
         {
-            Diagnostics = diagnostics.ToArray();
+            Diagnostics = diagnostics;
             Root = root;
             Eof = eof;
         }
 
-        public IReadOnlyList<Diagnostic> Diagnostics { get; }
+        public ImmutableArray<Diagnostic> Diagnostics { get; }
         public ExpressionSyntax Root { get; }
         public SyntaxToken Eof { get; }
 
