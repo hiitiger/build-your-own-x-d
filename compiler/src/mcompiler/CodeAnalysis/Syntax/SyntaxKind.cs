@@ -41,6 +41,9 @@ namespace MCompiler.CodeAnalysis.Syntax
         //
         NameExpression,
         AssignmentExpression,
+
+        //
+        CompilationUnit,
     }
 
 }

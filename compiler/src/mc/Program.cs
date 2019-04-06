@@ -14,6 +14,7 @@ namespace MCompiler
             bool showTree = false;
             var variables = new Dictionary<VariableSymbol, object>();
             var textBuilder = new StringBuilder();
+            Compilation previous = null;
 
             while (true)
             {
@@ -44,6 +45,12 @@ namespace MCompiler
                         Console.Clear();
                         continue;
                     }
+                    else if (input == "#reset")
+                    {
+                        previous = null;
+                        variables.Clear();
+                        continue;
+                    }
                 }
 
                 textBuilder.AppendLine(input);
@@ -52,7 +59,8 @@ namespace MCompiler
                 if (!isBlank && syntaxTree.Diagnostics.Any())
                     continue;
 
-                var complilation = new Compilation(syntaxTree);
+                var complilation = previous == null ? new Compilation(syntaxTree) : previous.ContinueWith(syntaxTree);
+
                 var result = complilation.Evaluate(variables);
                 var diagnostics = result.Diagnostics.ToArray();
                 var text = syntaxTree.Text;
@@ -69,6 +77,8 @@ namespace MCompiler
                     Console.ForegroundColor = ConsoleColor.Magenta;
                     Console.WriteLine(result.Value);
                     Console.ResetColor();
+                    //only when complile with no errors
+                    previous = complilation;
                 }
                 else
                 {

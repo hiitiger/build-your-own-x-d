@@ -1,5 +1,6 @@
 namespace MCompiler.CodeAnalysis.Syntax
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using MCompiler.CodeAnalysis.Text;
@@ -9,6 +10,7 @@ namespace MCompiler.CodeAnalysis.Syntax
         private readonly ImmutableArray<SyntaxToken> _tokens;
         private int _position;
         private readonly DiagnosticBag _diagnostics = new DiagnosticBag();
+
         private readonly SourceText _text;
 
         public Parser(SourceText text)
@@ -59,11 +61,11 @@ namespace MCompiler.CodeAnalysis.Syntax
             _diagnostics.ReportUnexpectedToken(Current.Span, Current.Kind, kind);
             return new SyntaxToken(kind, Current.Position, null, null);
         }
-        public SyntaxTree Parse()
+        public CompilationUnitSyntax ParseCompilationUnit()
         {
             var expression = ParseExpression();
             var eof = MatchToken(SyntaxKind.EOFToken);
-            return new SyntaxTree(_text, Diagnostics.ToImmutableArray(), expression, eof);
+            return new CompilationUnitSyntax(expression, eof);
         }
 
         private ExpressionSyntax ParseExpression()

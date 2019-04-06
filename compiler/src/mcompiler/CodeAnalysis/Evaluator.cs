@@ -6,7 +6,7 @@
     using MCompiler.CodeAnalysis.Binding;
     using MCompiler.CodeAnalysis.Syntax;
 
-    public class Evaluator
+    internal class Evaluator
     {
         private readonly BoundExpression _root;
         private readonly Dictionary<VariableSymbol, object> _variables;

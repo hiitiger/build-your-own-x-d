@@ -57,5 +57,17 @@ namespace MCompiler.CodeAnalysis
            var message = $"Undefined variable name '{name}'";
             Report(span, message);
         }
+
+        internal void ReportVariableAlreadyDeclared(TextSpan span, string name)
+        {
+            var message = $"Variable name '{name}' already declared";
+            Report(span, message);
+        }
+
+        internal void ReportCannotConvert(TextSpan span, Type type1, Type type2)
+        {
+            var message = $"Cannot convert from {type1} to {type2}";
+            Report(span, message);
+        }
     }
 }

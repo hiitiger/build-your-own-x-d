@@ -7,19 +7,21 @@ namespace MCompiler.CodeAnalysis.Syntax
 
     public sealed class SyntaxTree
     {
-        public SyntaxTree(SourceText text, ImmutableArray<Diagnostic> diagnostics, ExpressionSyntax root, SyntaxToken eof)
+        private SyntaxTree(SourceText text)
         {
+
+            var parser = new Parser(text);
+            var root = parser.ParseCompilationUnit();
+            var diagnostics = parser.Diagnostics.ToImmutableArray();
+
             Text = text;
             Diagnostics = diagnostics;
             Root = root;
-            Eof = eof;
         }
 
         public SourceText Text { get; }
         public ImmutableArray<Diagnostic> Diagnostics { get; }
-        public ExpressionSyntax Root { get; }
-        public SyntaxToken Eof { get; }
-
+        public CompilationUnitSyntax Root { get; }
 
         public static SyntaxTree Parse(string text)
         {
@@ -29,8 +31,7 @@ namespace MCompiler.CodeAnalysis.Syntax
 
         public static SyntaxTree Parse(SourceText text)
         {
-            var parser = new Parser(text);
-            return parser.Parse();
+            return new SyntaxTree(text);
         }
 
         public static IEnumerable<SyntaxToken> ParseTokens(string text)
