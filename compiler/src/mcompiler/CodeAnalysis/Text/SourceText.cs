@@ -33,7 +33,7 @@ namespace MCompiler.CodeAnalysis.Text
                 }
             }
 
-            if (position > lineStart)
+            if (position >= lineStart)
                 AddTextLine(sourceText, result, lineStart, position, 0);
 
             return result.ToImmutable();
@@ -69,7 +69,7 @@ namespace MCompiler.CodeAnalysis.Text
             {
                 var index = (lower + upper) / 2;
                 var start = Lines[index].Start;
-                var end = Lines[index].Start + Lines[index].LengthIncludingLineBreak;
+                var end = Lines[index].End;
 
                 if (start > position)
                 {

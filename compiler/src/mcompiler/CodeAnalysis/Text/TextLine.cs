@@ -14,7 +14,8 @@ namespace MCompiler.CodeAnalysis.Text
         public int Start { get; }
         public int Length { get; }
         public int LengthIncludingLineBreak { get; }
-        public int End => Start + LengthIncludingLineBreak;
+        public int End => Start + Length;
+        public int EndIncludingLineBreak => Start + LengthIncludingLineBreak;
         public TextSpan Span => new TextSpan(Start, Length);
         public TextSpan SpanIncludingLineBreak => new TextSpan(Start, LengthIncludingLineBreak);
 
