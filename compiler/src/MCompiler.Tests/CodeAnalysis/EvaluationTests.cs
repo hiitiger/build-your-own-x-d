@@ -33,6 +33,7 @@ namespace MCompiler.Tests.CodeAnalysis.Syntax
         [InlineData("false || false", false)]
         [InlineData("true || false", true)]
         [InlineData("true || true", true)]
+        [InlineData("{var x = 10 (x = 5) * 5}", 25)]
 
         public void EvaluationTests_GetText_RoundTrips(string text, object value)
         {

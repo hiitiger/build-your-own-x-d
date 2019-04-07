@@ -98,8 +98,8 @@ namespace MCompiler.Tests.CodeAnalysis.Syntax
             var dynamicTokens = new[] {
                 (SyntaxKind.NumberToken, "1"),
                 (SyntaxKind.NumberToken, "12"),
-                (SyntaxKind.IndentifierToken, "a"),
-                (SyntaxKind.IndentifierToken, "abc"),
+                (SyntaxKind.IdentifierToken, "a"),
+                (SyntaxKind.IdentifierToken, "abc"),
             };
 
 
@@ -122,16 +122,16 @@ namespace MCompiler.Tests.CodeAnalysis.Syntax
             var t1IsKeyword = kind1.ToString().EndsWith("Keyword");
             var t2IsKeyword = kind2.ToString().EndsWith("Keyword");
 
-            if (kind1 == SyntaxKind.IndentifierToken && kind2 == SyntaxKind.IndentifierToken)
+            if (kind1 == SyntaxKind.IdentifierToken && kind2 == SyntaxKind.IdentifierToken)
                 return true;
 
             if (t1IsKeyword && t2IsKeyword)
                 return true;
 
-            if (t1IsKeyword && kind2 == SyntaxKind.IndentifierToken)
+            if (t1IsKeyword && kind2 == SyntaxKind.IdentifierToken)
                 return true;
 
-            if (kind1 == SyntaxKind.IndentifierToken && t2IsKeyword)
+            if (kind1 == SyntaxKind.IdentifierToken && t2IsKeyword)
                 return true;
 
             if (kind1 == SyntaxKind.NumberToken && kind2 == SyntaxKind.NumberToken)

@@ -10,6 +10,7 @@ namespace MCompiler.CodeAnalysis.Binding
 
         //
         BlockStatement,
-        ExpressionStatement
+        ExpressionStatement,
+        VariableDeclarationStatement
     }
 }

@@ -31,7 +31,9 @@ namespace MCompiler.CodeAnalysis.Syntax
         //
         TrueKeyword,
         FalseKeyword,
-        IndentifierToken,
+        LetKeyword,
+        VarKeyword,
+        IdentifierToken,
 
         //
         LiteralExpression,
@@ -39,15 +41,18 @@ namespace MCompiler.CodeAnalysis.Syntax
         UnaryExpression,
         ParenthesizedExpression,
 
-        //
+        //expression
         NameExpression,
         AssignmentExpression,
 
         //
         CompilationUnit,
+
+        //statament
         BlockStatement,
         ExpressionStatement,
-
+        VariableDeclarationStatement,
+        
     }
 
 }

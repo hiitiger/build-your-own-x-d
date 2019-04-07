@@ -24,7 +24,7 @@ namespace MCompiler.CodeAnalysis.Binding
             var statement = binder.BindStatement(syntax.Statement);
             var variables = binder._scope.GetDeclaredVariables();
             var diagnostics = binder.Diagnostics.ToImmutableArray();
-            if(previous != null)
+            if (previous != null)
                 diagnostics = diagnostics.InsertRange(0, previous.Diagnostics);
 
             return new BoundGlobalScope(previous, diagnostics, variables, statement);
@@ -33,18 +33,18 @@ namespace MCompiler.CodeAnalysis.Binding
         private static BoundScope CreateParentScopes(BoundGlobalScope previous)
         {
             var stack = new Stack<BoundGlobalScope>();
-            while(previous != null)
+            while (previous != null)
             {
                 stack.Push(previous);
                 previous = previous.Previous;
             }
 
             BoundScope parent = null;
-            while(stack.Count > 0)
+            while (stack.Count > 0)
             {
                 var prev = stack.Pop();
                 var scope = new BoundScope(parent);
-                foreach(var v in prev.Variables)
+                foreach (var v in prev.Variables)
                     scope.TryDeclare(v);
 
                 parent = scope;
@@ -54,7 +54,7 @@ namespace MCompiler.CodeAnalysis.Binding
         }
 
 
-          public BoundStatement BindStatement(StatementSyntax syntax)
+        public BoundStatement BindStatement(StatementSyntax syntax)
         {
             switch (syntax.Kind)
             {
@@ -62,20 +62,38 @@ namespace MCompiler.CodeAnalysis.Binding
                     return BindBlockstatement((BlockStatementSyntax)syntax);
                 case SyntaxKind.ExpressionStatement:
                     return BindExpressionStatement((ExpressionStatementSyntax)syntax);
+                case SyntaxKind.VariableDeclarationStatement:
+                    return BindVariableDeclarationStatement((VariableDeclarationStatementSyntax)syntax);
                 default:
                     throw new Exception($"Unexpected syntax {syntax.Kind}");
             }
         }
 
+        private BoundVariableDeclarationStatement BindVariableDeclarationStatement(VariableDeclarationStatementSyntax syntax)
+        {
+            var name = syntax.IdentifierToken.Text;
+            var isReadonly = syntax.KeywordToken.Kind == SyntaxKind.LetKeyword;
+            var initializer = BindExpression(syntax.Initializer);
+            var variable = new VariableSymbol(name, isReadonly, initializer.Type);
+
+            if (!_scope.TryDeclare(variable))
+            {
+                _diagnostics.ReportVariableAlreadyDeclared(syntax.IdentifierToken.Span, name);
+            }
+
+            return new BoundVariableDeclarationStatement(variable, initializer);
+        }
+
         private BoundBlockStatement BindBlockstatement(BlockStatementSyntax syntax)
         {
             var statements = ImmutableArray.CreateBuilder<BoundStatement>();
-            foreach(var statementSyntax in syntax.Statements)
+            _scope = new BoundScope(_scope);
+            foreach (var statementSyntax in syntax.Statements)
             {
                 var statement = BindStatement(statementSyntax);
                 statements.Add(statement);
             }
-
+            _scope = _scope.Parent;
             return new BoundBlockStatement(statements.ToImmutable());
         }
 
@@ -116,10 +134,16 @@ namespace MCompiler.CodeAnalysis.Binding
             var name = syntax.IdentifierToken.Text;
             var boundExpression = BindExpression(syntax.Expression);
 
-            if(!_scope.TryLookup(name, out var variable))
+            if (!_scope.TryLookup(name, out var variable))
             {
-                variable = new VariableSymbol(name, boundExpression.Type);
-                _scope.TryDeclare(variable);
+                _diagnostics.ReportUndefinedName(syntax.IdentifierToken.Span, name);
+                return boundExpression;
+            }
+
+            if (variable.IsReadonly)
+            {
+                _diagnostics.ReportCannotAssign(syntax.EqualsToken.Span, name);
+                return boundExpression;
             }
 
             if (boundExpression.Type != variable.Type)

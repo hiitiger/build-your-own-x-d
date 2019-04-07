@@ -35,9 +35,19 @@
                 case BoundNodeKind.ExpressionStatement:
                     EvaluateExpressionStatement((BoundExpressionStatement)statement);
                     break;
+                case BoundNodeKind.VariableDeclarationStatement:
+                    EvaluateVariableDeclarationStatement((BoundVariableDeclarationStatement)statement);
+                    break;
                 default:
                     throw new Exception($"Unexpected node {statement.Kind}");
             }
+        }
+
+        private void EvaluateVariableDeclarationStatement(BoundVariableDeclarationStatement statement)
+        {
+            var value = EvaluateExpression(statement.Initializer);
+            _variables[statement.Variable] = value;
+            _lastValue = value;
         }
 
         private void EvaluateBoundBlockStatement(BoundBlockStatement node)

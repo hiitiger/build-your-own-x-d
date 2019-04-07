@@ -36,13 +36,13 @@ namespace MCompiler.Tests.CodeAnalysis.Syntax
                     e.AssertNode(SyntaxKind.BinaryExpression);
                     e.AssertNode(SyntaxKind.BinaryExpression);
                     e.AssertNode(SyntaxKind.NameExpression);
-                    e.AssertToken(SyntaxKind.IndentifierToken, "a");
+                    e.AssertToken(SyntaxKind.IdentifierToken, "a");
                     e.AssertToken(op1, op1Text);
                     e.AssertNode(SyntaxKind.NameExpression);
-                    e.AssertToken(SyntaxKind.IndentifierToken, "b");
+                    e.AssertToken(SyntaxKind.IdentifierToken, "b");
                     e.AssertToken(op2, op2Text);
                     e.AssertNode(SyntaxKind.NameExpression);
-                    e.AssertToken(SyntaxKind.IndentifierToken, "c");
+                    e.AssertToken(SyntaxKind.IdentifierToken, "c");
                 }
             }
             else
@@ -65,14 +65,14 @@ namespace MCompiler.Tests.CodeAnalysis.Syntax
                 {
                     e.AssertNode(SyntaxKind.BinaryExpression);
                     e.AssertNode(SyntaxKind.NameExpression);
-                    e.AssertToken(SyntaxKind.IndentifierToken, "a");
+                    e.AssertToken(SyntaxKind.IdentifierToken, "a");
                     e.AssertToken(op1, op1Text);
                     e.AssertNode(SyntaxKind.BinaryExpression);
                     e.AssertNode(SyntaxKind.NameExpression);
-                    e.AssertToken(SyntaxKind.IndentifierToken, "b");
+                    e.AssertToken(SyntaxKind.IdentifierToken, "b");
                     e.AssertToken(op2, op2Text);
                     e.AssertNode(SyntaxKind.NameExpression);
-                    e.AssertToken(SyntaxKind.IndentifierToken, "c");
+                    e.AssertToken(SyntaxKind.IdentifierToken, "c");
                 }
             }
         }
@@ -113,10 +113,10 @@ namespace MCompiler.Tests.CodeAnalysis.Syntax
                     e.AssertNode(SyntaxKind.UnaryExpression);
                     e.AssertToken(op1, op1Text);
                     e.AssertNode(SyntaxKind.NameExpression);
-                    e.AssertToken(SyntaxKind.IndentifierToken, "b");
+                    e.AssertToken(SyntaxKind.IdentifierToken, "b");
                     e.AssertToken(op2, op2Text);
                     e.AssertNode(SyntaxKind.NameExpression);
-                    e.AssertToken(SyntaxKind.IndentifierToken, "c");
+                    e.AssertToken(SyntaxKind.IdentifierToken, "c");
                 }
             }
             else
@@ -127,10 +127,10 @@ namespace MCompiler.Tests.CodeAnalysis.Syntax
                     e.AssertToken(op1, op1Text);
                     e.AssertNode(SyntaxKind.BinaryExpression);
                     e.AssertNode(SyntaxKind.NameExpression);
-                    e.AssertToken(SyntaxKind.IndentifierToken, "b");
+                    e.AssertToken(SyntaxKind.IdentifierToken, "b");
                     e.AssertToken(op2, op2Text);
                     e.AssertNode(SyntaxKind.NameExpression);
-                    e.AssertToken(SyntaxKind.IndentifierToken, "c");
+                    e.AssertToken(SyntaxKind.IdentifierToken, "c");
                 }
             }
         }

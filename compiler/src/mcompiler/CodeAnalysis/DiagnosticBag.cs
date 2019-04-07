@@ -69,5 +69,11 @@ namespace MCompiler.CodeAnalysis
             var message = $"Cannot convert from {type1} to {type2}";
             Report(span, message);
         }
+
+        internal void ReportCannotAssign(TextSpan span, string name)
+        {
+            var message = $"Cannot assign to readonly varaible '{name}'";
+            Report(span, message);
+        }
     }
 }

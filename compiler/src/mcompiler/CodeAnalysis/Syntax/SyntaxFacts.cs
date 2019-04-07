@@ -49,15 +49,19 @@ namespace MCompiler.CodeAnalysis.Syntax
                     return SyntaxKind.TrueKeyword;
                 case "false":
                     return SyntaxKind.FalseKeyword;
+                case "let":
+                    return SyntaxKind.LetKeyword;
+                case "var":
+                    return SyntaxKind.VarKeyword;
                 default:
-                    return SyntaxKind.IndentifierToken;
+                    return SyntaxKind.IdentifierToken;
             }
         }
 
         public static IEnumerable<SyntaxKind> GetUnaryOperatorKinds()
         {
             var kinds = (SyntaxKind[])Enum.GetValues(typeof(SyntaxKind));
-            foreach(var kind in kinds)
+            foreach (var kind in kinds)
             {
                 if (GetUnaryOperatorPrecedence(kind) > 0)
                     yield return kind;
@@ -67,7 +71,7 @@ namespace MCompiler.CodeAnalysis.Syntax
         public static IEnumerable<SyntaxKind> GetBinaryOperatorKinds()
         {
             var kinds = (SyntaxKind[])Enum.GetValues(typeof(SyntaxKind));
-            foreach(var kind in kinds)
+            foreach (var kind in kinds)
             {
                 if (GetBinaryOperatorPrecedence(kind) > 0)
                     yield return kind;
@@ -110,6 +114,10 @@ namespace MCompiler.CodeAnalysis.Syntax
                     return "true";
                 case SyntaxKind.FalseKeyword:
                     return "false";
+                case SyntaxKind.LetKeyword:
+                    return "let";
+                case SyntaxKind.VarKeyword:
+                    return "var";
                 default:
                     return null;
             }

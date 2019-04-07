@@ -70,14 +70,26 @@ namespace MCompiler.CodeAnalysis.Syntax
 
         private StatementSyntax ParseStatement()
         {
-            if (Current.Kind == SyntaxKind.OpenBraceToken)
+            switch (Current.Kind)
             {
-                return ParseBlockStatement();
+                case SyntaxKind.OpenBraceToken:
+                    return ParseBlockStatement();
+                case SyntaxKind.LetKeyword:
+                case SyntaxKind.VarKeyword:
+                    return ParseVariableDeclaration();
+                default:
+                    return ParseExpressionStatement();
             }
-            else
-            {
-                return ParseExpressionStatement();
-            }
+        }
+
+        private VariableDeclarationStatementSyntax ParseVariableDeclaration()
+        {
+            var expected = Current.Kind == SyntaxKind.LetKeyword ? SyntaxKind.LetKeyword : SyntaxKind.VarKeyword;
+            var keyword = MatchToken(expected);
+            var identifierToken = MatchToken(SyntaxKind.IdentifierToken);
+            var equalsToken = MatchToken(SyntaxKind.EqualsToken);
+            var initializer = ParseExpression();
+            return new VariableDeclarationStatementSyntax(keyword, identifierToken, equalsToken, initializer);
         }
 
         private BlockStatementSyntax ParseBlockStatement()
@@ -109,13 +121,13 @@ namespace MCompiler.CodeAnalysis.Syntax
         private ExpressionSyntax ParseAssignmentExpression()
         {
 
-            if (Peek(0).Kind == SyntaxKind.IndentifierToken
+            if (Peek(0).Kind == SyntaxKind.IdentifierToken
             && Peek(1).Kind == SyntaxKind.EqualsToken)
             {
-                var indentifierToken = NextToken();
+                var identifierToken = NextToken();
                 var operatorToken = NextToken();
                 var right = ParseAssignmentExpression();
-                return new AssignmentExpressionSyntax(indentifierToken, operatorToken, right);
+                return new AssignmentExpressionSyntax(identifierToken, operatorToken, right);
             }
 
             return ParseBinaryExpression();
@@ -160,7 +172,7 @@ namespace MCompiler.CodeAnalysis.Syntax
                     return ParseBooleanLiteral();
                 case SyntaxKind.NumberToken:
                     return ParseNumberLiteral();
-                case SyntaxKind.IndentifierToken:
+                case SyntaxKind.IdentifierToken:
                 default:
                     return ParseNameExpression();
             }
@@ -189,7 +201,7 @@ namespace MCompiler.CodeAnalysis.Syntax
 
         private ExpressionSyntax ParseNameExpression()
         {
-            var indentifierToken = MatchToken(SyntaxKind.IndentifierToken);
+            var indentifierToken = MatchToken(SyntaxKind.IdentifierToken);
             return new NameExpressionSyntax(indentifierToken);
         }
     }
