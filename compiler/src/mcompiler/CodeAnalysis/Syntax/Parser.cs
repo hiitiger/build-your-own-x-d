@@ -63,11 +63,45 @@ namespace MCompiler.CodeAnalysis.Syntax
         }
         public CompilationUnitSyntax ParseCompilationUnit()
         {
-            var expression = ParseExpression();
+            var statament = ParseStatement();
             var eof = MatchToken(SyntaxKind.EOFToken);
-            return new CompilationUnitSyntax(expression, eof);
+            return new CompilationUnitSyntax(statament, eof);
         }
 
+        private StatementSyntax ParseStatement()
+        {
+            if (Current.Kind == SyntaxKind.OpenBraceToken)
+            {
+                return ParseBlockStatement();
+            }
+            else
+            {
+                return ParseExpressionStatement();
+            }
+        }
+
+        private BlockStatementSyntax ParseBlockStatement()
+        {
+            var statements = ImmutableArray.CreateBuilder<StatementSyntax>();
+
+            var openBraceToken = MatchToken(SyntaxKind.OpenBraceToken);
+            while (Current.Kind != SyntaxKind.EOFToken
+                && Current.Kind != SyntaxKind.CloseBraceToken)
+            {
+                var statement = ParseStatement();
+                statements.Add(statement);
+            }
+
+            var closeBraceToken = MatchToken(SyntaxKind.CloseBraceToken);
+
+            return new BlockStatementSyntax(openBraceToken, statements.ToImmutable(), closeBraceToken);
+        }
+
+        private ExpressionStatementSyntax ParseExpressionStatement()
+        {
+            var expression = ParseExpression();
+            return new ExpressionStatementSyntax(expression);
+        }
         private ExpressionSyntax ParseExpression()
         {
             return ParseAssignmentExpression();

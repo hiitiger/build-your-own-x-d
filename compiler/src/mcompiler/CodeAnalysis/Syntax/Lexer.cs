@@ -70,6 +70,14 @@ namespace MCompiler.CodeAnalysis.Syntax
                     _kind = SyntaxKind.CloseParenthesisToken;
                     _position += 1;
                     break;
+                 case '{':
+                    _kind = SyntaxKind.OpenBraceToken;
+                    _position += 1;
+                    break;
+                case '}':
+                    _kind = SyntaxKind.CloseBraceToken;
+                    _position += 1;
+                    break;
                 case '&':
                     {
                         if (Lookahead == '&')

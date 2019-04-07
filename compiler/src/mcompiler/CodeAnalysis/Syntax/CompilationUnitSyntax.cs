@@ -4,12 +4,12 @@ namespace MCompiler.CodeAnalysis.Syntax
     {
         public override SyntaxKind Kind => SyntaxKind.CompilationUnit;
 
-        public ExpressionSyntax Exprssion { get; }
+        public StatementSyntax Statement { get; }
         public SyntaxToken EofToken { get; }
 
-        public CompilationUnitSyntax(ExpressionSyntax expression, SyntaxToken eofToken)
+        public CompilationUnitSyntax(StatementSyntax statement, SyntaxToken eofToken)
         {
-            Exprssion = expression;
+            Statement = statement;
             EofToken = eofToken;
         }
     }

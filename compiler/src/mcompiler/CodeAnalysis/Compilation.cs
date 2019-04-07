@@ -54,7 +54,7 @@
             {
                 return new EvaluationResult(diagnostics, null);
             }
-            var evaluator = new Evaluator(globalScope.Expression, variables);
+            var evaluator = new Evaluator(globalScope.Statement, variables);
             var value = evaluator.Evaluate();
             return new EvaluationResult(ImmutableArray<Diagnostic>.Empty, value);
         }

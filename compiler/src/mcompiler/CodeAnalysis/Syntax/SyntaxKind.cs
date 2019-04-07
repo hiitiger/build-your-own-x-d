@@ -13,7 +13,8 @@ namespace MCompiler.CodeAnalysis.Syntax
 
         OpenParenthesisToken,
         CloseParenthesisToken,
-
+        OpenBraceToken,
+        CloseBraceToken,
         BadToken,
         EOFToken,
 
@@ -44,6 +45,9 @@ namespace MCompiler.CodeAnalysis.Syntax
 
         //
         CompilationUnit,
+        BlockStatement,
+        ExpressionStatement,
+
     }
 
 }

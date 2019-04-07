@@ -6,6 +6,10 @@ namespace MCompiler.CodeAnalysis.Binding
         UnaryExpression,
         BinaryExpression,
         VariableExpression,
-        AssignmentExpression
+        AssignmentExpression,
+
+        //
+        BlockStatement,
+        ExpressionStatement
     }
 }
