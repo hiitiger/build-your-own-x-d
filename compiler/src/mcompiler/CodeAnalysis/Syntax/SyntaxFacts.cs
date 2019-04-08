@@ -31,6 +31,10 @@ namespace MCompiler.CodeAnalysis.Syntax
                     return 4;
                 case SyntaxKind.EqualsEqualsToken:
                 case SyntaxKind.BangEqualsToken:
+                case SyntaxKind.LessToken:
+                case SyntaxKind.LessEqualsToken:
+                case SyntaxKind.GreaterToken:
+                case SyntaxKind.GreaterEqualsToken:
                     return 3;
                 case SyntaxKind.AmpersandAmpersandToken:
                     return 2;
@@ -118,6 +122,14 @@ namespace MCompiler.CodeAnalysis.Syntax
                     return "let";
                 case SyntaxKind.VarKeyword:
                     return "var";
+                case SyntaxKind.LessToken:
+                    return "<";
+                case SyntaxKind.LessEqualsToken:
+                    return "<=";
+                case SyntaxKind.GreaterToken:
+                    return ">";
+                case SyntaxKind.GreaterEqualsToken:
+                    return ">=";
                 default:
                     return null;
             }

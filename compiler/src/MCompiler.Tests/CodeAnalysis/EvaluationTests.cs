@@ -27,6 +27,15 @@ namespace MCompiler.Tests.CodeAnalysis
         [InlineData("1 != 2", true)]
         [InlineData("1 != 1", false)]
 
+        [InlineData("2 > 1", true)]
+        [InlineData("2 > 2", false)]
+        [InlineData("2 >= 2", true)]
+        [InlineData("2 >= 3", false)]
+        [InlineData("1 < 2", true)]
+        [InlineData("1 < 1", false)]
+        [InlineData("1 <= 1", true)]
+        [InlineData("2 <= 1", false)]
+
         [InlineData("true && true", true)]
         [InlineData("true && false", false)]
         [InlineData("false && false", false)]

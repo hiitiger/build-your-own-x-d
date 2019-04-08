@@ -28,6 +28,10 @@ namespace MCompiler.CodeAnalysis.Syntax
 
         EqualsToken,
 
+        LessToken,
+        LessEqualsToken,
+        GreaterToken,
+        GreaterEqualsToken,
         //
         TrueKeyword,
         FalseKeyword,

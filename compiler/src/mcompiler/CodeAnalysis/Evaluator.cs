@@ -104,6 +104,14 @@
                     return object.Equals(left, right);
                 case BoundBinaryOperatorKind.NotEquals:
                     return !object.Equals(left, right);
+                case BoundBinaryOperatorKind.Less:
+                    return (int)left < (int)right;
+                case BoundBinaryOperatorKind.LessEquals:
+                    return (int)left <= (int)right;
+                case BoundBinaryOperatorKind.Greater:
+                    return (int)left > (int)right;
+                case BoundBinaryOperatorKind.GreaterEquals:
+                    return (int)left >= (int)right;
                 default:
                     throw new Exception($"Unexpected binary operator {b.Op.Kind}");
             }

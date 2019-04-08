@@ -10,6 +10,10 @@ namespace MCompiler.CodeAnalysis.Binding
         LogicalOr,
 
         Equals,
-        NotEquals
+        NotEquals,
+        Less,
+        LessEquals,
+        Greater,
+        GreaterEquals
     }
 }

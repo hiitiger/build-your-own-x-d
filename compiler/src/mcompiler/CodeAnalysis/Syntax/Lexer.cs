@@ -70,7 +70,7 @@ namespace MCompiler.CodeAnalysis.Syntax
                     _kind = SyntaxKind.CloseParenthesisToken;
                     _position += 1;
                     break;
-                 case '{':
+                case '{':
                     _kind = SyntaxKind.OpenBraceToken;
                     _position += 1;
                     break;
@@ -121,6 +121,34 @@ namespace MCompiler.CodeAnalysis.Syntax
                         {
                             _position += 1;
                             _kind = SyntaxKind.BangToken;
+                        }
+                    }
+                    break;
+                case '<':
+                    {
+                        if (Lookahead == '=')
+                        {
+                            _position += 2;
+                            _kind = SyntaxKind.LessEqualsToken;
+                        }
+                        else
+                        {
+                            _position += 1;
+                            _kind = SyntaxKind.LessToken;
+                        }
+                    }
+                    break;
+                case '>':
+                    {
+                        if (Lookahead == '=')
+                        {
+                            _position += 2;
+                            _kind = SyntaxKind.GreaterEqualsToken;
+                        }
+                        else
+                        {
+                            _position += 1;
+                            _kind = SyntaxKind.GreaterToken;
                         }
                     }
                     break;
