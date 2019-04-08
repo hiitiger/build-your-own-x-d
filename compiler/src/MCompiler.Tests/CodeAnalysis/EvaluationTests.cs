@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System;
 using MCompiler.CodeAnalysis;
 
-namespace MCompiler.Tests.CodeAnalysis.Syntax
+namespace MCompiler.Tests.CodeAnalysis
 {
     public class EvaluationTests
     {
@@ -37,6 +37,11 @@ namespace MCompiler.Tests.CodeAnalysis.Syntax
 
         public void EvaluationTests_GetText_RoundTrips(string text, object value)
         {
+            AssertValue(text, value);
+        }
+
+        private static void AssertValue(string text, object value)
+        {
             var variables = new Dictionary<VariableSymbol, object>();
 
             var compilation = new Compilation(SyntaxTree.Parse(text));
@@ -44,6 +49,115 @@ namespace MCompiler.Tests.CodeAnalysis.Syntax
 
             Assert.Empty(evaluatedResult.Diagnostics);
             Assert.Equal(evaluatedResult.Value, value);
+        }
+
+        [Fact]
+        public void Evaluation_VariableDeclaration_Reports_Redeclaration()
+        {
+            var text = @"
+                {
+                    var x = 10
+                    var y = 22
+                    {
+                        var x = 10
+                    }
+                    var [x] = 5
+                }";
+            var diagnostic = @"Variable name 'x' already declared";
+            
+            AssertHasDiagnostics(text, diagnostic);
+        }
+
+        [Fact]
+        public void Evaluation_Name_Reports_Undefined()
+        {
+            var text = @"[x] + 10";
+            var diagnostic = @"Undefined variable name 'x'";
+            
+            AssertHasDiagnostics(text, diagnostic);
+        }
+
+         [Fact]
+        public void Evaluation_Assignment_Reports_Undefined()
+        {
+            var text = @"[x] = 10";
+            var diagnostic = @"Undefined variable name 'x'";
+            
+            AssertHasDiagnostics(text, diagnostic);
+        }
+
+        [Fact]
+        public void Evaluation_Assignment_Reports_Readonly()
+        {
+            var text = @"
+                        {
+                            let x = 10
+                            x [=] 0
+                        }";
+            var diagnostic = @"Cannot assign to readonly varaible 'x'";
+            
+            AssertHasDiagnostics(text, diagnostic);
+        }
+
+        [Fact]
+        public void Evaluation_Assignment_Reports_Convert()
+        {
+            var text = @"
+                        {
+                            var x = 2
+                            x = [true]
+                        }";
+            var diagnostic = $"Cannot convert from {typeof(bool)} to {typeof(int)}";
+            
+            AssertHasDiagnostics(text, diagnostic);
+        }
+
+        [Fact]
+        public void Evaluation_UnaryOperator_Undefined()
+        {
+            var text = @"[+]true";
+            var diagnostic = $"Unary operator '+' is not defined for type {typeof(bool)}";
+            
+            AssertHasDiagnostics(text, diagnostic);
+        }
+
+        [Fact]
+        public void Evaluation_BinaryOperator_Undefined()
+        {
+            var text = @"true[+]false";
+            var diagnostic = $"Binary operator '+' is not defined for types {typeof(bool)} and {typeof(bool)}";
+            
+            AssertHasDiagnostics(text, diagnostic);
+        }
+
+        private static void AssertHasDiagnostics(string text, string diagnosticText)
+        {
+            var annotatedText = AnnotatedText.Parse(text);
+            var syntaxTree = SyntaxTree.Parse(annotatedText.Text);
+
+            var compilation = new Compilation(syntaxTree);
+            var result = compilation.Evaluate(new Dictionary<VariableSymbol, object>());
+
+            var expectedDiagnostics = AnnotatedText.UnindentLines(diagnosticText);
+            if(annotatedText.Spans.Length != expectedDiagnostics.Count)
+            {
+                throw new Exception("ERROR:Must mark as many spans as there are expected diagnostics");
+            }
+            
+            Assert.Equal(expectedDiagnostics.Count, result.Diagnostics.Length);
+
+            for(var i = 0; i < expectedDiagnostics.Count; ++i)
+            {
+                var expectedMessage = expectedDiagnostics[i];
+                var actualMessage = result.Diagnostics[i].Message;
+
+                Assert.Equal(expectedMessage, actualMessage);
+
+                var expectedSpan = annotatedText.Spans[i];
+                var actualSpan = result.Diagnostics[i].Span;
+
+                Assert.Equal(expectedSpan, actualSpan);
+            }
         }
     }
 }
