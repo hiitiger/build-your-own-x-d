@@ -37,6 +37,9 @@ namespace MCompiler.CodeAnalysis.Syntax
         FalseKeyword,
         LetKeyword,
         VarKeyword,
+        IfKeyword,
+        ElseKeyword,
+
         IdentifierToken,
 
         //
@@ -52,10 +55,13 @@ namespace MCompiler.CodeAnalysis.Syntax
         //
         CompilationUnit,
 
+        ElseClause,
+
         //statament
         BlockStatement,
         ExpressionStatement,
         VariableDeclarationStatement,
+        IfStatement,
         
     }
 

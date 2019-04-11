@@ -38,8 +38,24 @@
                 case BoundNodeKind.VariableDeclarationStatement:
                     EvaluateVariableDeclarationStatement((BoundVariableDeclarationStatement)statement);
                     break;
+                case BoundNodeKind.IfStatement:
+                    EvaluateIfStatement((BoundIfStatement)statement);
+                    break;
                 default:
                     throw new Exception($"Unexpected node {statement.Kind}");
+            }
+        }
+
+        private void EvaluateIfStatement(BoundIfStatement statement)
+        {
+            var condition = (bool)EvaluateExpression(statement.Condition);
+            if(condition)
+            {
+                EvaluateStatement(statement.Statement);
+            }
+            else if (statement.ElseStatement != null)
+            {
+                EvaluateStatement(statement.ElseStatement);
             }
         }
 
