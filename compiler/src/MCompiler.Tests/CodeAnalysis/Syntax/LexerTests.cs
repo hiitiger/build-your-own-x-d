@@ -45,10 +45,10 @@ namespace MCompiler.Tests.CodeAnalysis.Syntax
 
             Assert.Equal(2, tokens.Length);
 
-            Assert.Equal(tokens[0].Kind, kind1);
-            Assert.Equal(tokens[0].Text, text1);
-            Assert.Equal(tokens[1].Kind, kind2);
-            Assert.Equal(tokens[1].Text, text2);
+            Assert.Equal(kind1, tokens[0].Kind);
+            Assert.Equal(text1, tokens[0].Text);
+            Assert.Equal(kind2, tokens[1].Kind);
+            Assert.Equal(text2, tokens[1].Text);
         }
 
 
@@ -61,12 +61,12 @@ namespace MCompiler.Tests.CodeAnalysis.Syntax
 
             Assert.Equal(3, tokens.Length);
 
-            Assert.Equal(tokens[0].Kind, kind1);
-            Assert.Equal(tokens[0].Text, text1);
-            Assert.Equal(tokens[1].Kind, separatorKind);
-            Assert.Equal(tokens[1].Text, separatorText);
-            Assert.Equal(tokens[2].Kind, kind2);
-            Assert.Equal(tokens[2].Text, text2);
+            Assert.Equal(kind1, tokens[0].Kind);
+            Assert.Equal(text1, tokens[0].Text);
+            Assert.Equal(separatorKind, tokens[1].Kind);
+            Assert.Equal(separatorText, tokens[1].Text);
+            Assert.Equal(kind2, tokens[2].Kind);
+            Assert.Equal(text2, tokens[2].Text);
         }
 
 

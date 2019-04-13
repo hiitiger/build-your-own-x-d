@@ -109,6 +109,30 @@ namespace MCompiler.Tests.CodeAnalysis
             AssertHasDiagnostics(text, diagnostic);
         }
 
+    [Fact]
+        public void Evaluation_BlockStatement_Reports_NoInifiniteLoop()
+        {
+            var text = @"{
+                        [)]
+                        []";
+            var diagnostic = @"
+                    Unexpected token <CloseParenthesisToken>, expected <IdentifierToken>
+                    Unexpected token <EOFToken>, expected <CloseBraceToken>";
+
+            AssertHasDiagnostics(text, diagnostic);
+        }
+
+
+        [Fact]
+        public void Evaluation_Name_Reports_NoErrorForInsertedToken()
+        {
+            var text = @"[]";
+            var diagnostic = @"Unexpected token <EOFToken>, expected <IdentifierToken>";
+
+            AssertHasDiagnostics(text, diagnostic);
+        }
+
+
         [Fact]
         public void Evaluation_Name_Reports_Undefined()
         {

@@ -124,8 +124,13 @@ namespace MCompiler.CodeAnalysis.Syntax
             while (Current.Kind != SyntaxKind.EOFToken
                 && Current.Kind != SyntaxKind.CloseBraceToken)
             {
+                var startToken = Current;
                 var statement = ParseStatement();
-                statements.Add(statement);
+
+                if (Current == startToken)
+                    NextToken();
+                else
+                    statements.Add(statement);
             }
 
             var closeBraceToken = MatchToken(SyntaxKind.CloseBraceToken);
@@ -150,7 +155,7 @@ namespace MCompiler.CodeAnalysis.Syntax
 
         private ElseClauseSyntax ParseElseClause()
         {
-            if(Current.Kind != SyntaxKind.ElseKeyword)
+            if (Current.Kind != SyntaxKind.ElseKeyword)
                 return null;
             var keyword = NextToken();
             var statement = ParseStatement();

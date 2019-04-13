@@ -14,7 +14,7 @@ namespace MCompiler.Tests.CodeAnalysis.text
             var sourceText = SourceText.From(text);
             var lineCount = sourceText.Lines.Length;
 
-            Assert.Equal(lineCount, expectedLineCount);
+            Assert.Equal(expectedLineCount, lineCount);
         }
     }
 }

@@ -72,6 +72,8 @@ namespace MCompiler.Tests.CodeAnalysis
                     lines.Add(line);
                 }
             }
+            if(lines.Count == 0)
+                return lines;
 
             var minIndentLine = lines.Where(x => x.Trim().Length != 0)
                                     .Aggregate((agg, next) => next.Length - next.TrimStart().Length < agg.Length - agg.TrimStart().Length ? next : agg);
