@@ -77,12 +77,6 @@ namespace MCompiler.Tests.CodeAnalysis.Syntax
             }
         }
 
-        private static ExpressionSyntax ParseExpresssion(string text)
-        {
-            var statement = SyntaxTree.Parse(text).Root.Statement;
-            return Assert.IsType<ExpressionStatementSyntax>(statement).Expression;
-        }
-
         [Theory]
         [MemberData(nameof(GetUnaryOperatorPairsData))]
         public void Parser_UnaryExpression_HonorsPrecedences(SyntaxKind op1, SyntaxKind op2)
@@ -133,6 +127,12 @@ namespace MCompiler.Tests.CodeAnalysis.Syntax
                     e.AssertToken(SyntaxKind.IdentifierToken, "c");
                 }
             }
+        }
+
+        private static ExpressionSyntax ParseExpresssion(string text)
+        {
+            var statement = SyntaxTree.Parse(text).Root.Statement;
+            return Assert.IsType<ExpressionStatementSyntax>(statement).Expression;
         }
 
         public static IEnumerable<object[]> GetBinaryOperatorPairsData()

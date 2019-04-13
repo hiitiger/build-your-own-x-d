@@ -11,6 +11,7 @@ namespace MCompiler.CodeAnalysis.Syntax
             {
                 case SyntaxKind.PlusToken:
                 case SyntaxKind.MinusToken:
+                case SyntaxKind.TildeToken:
                     return 6;
                 case SyntaxKind.BangToken:
                     return 6;
@@ -37,8 +38,11 @@ namespace MCompiler.CodeAnalysis.Syntax
                 case SyntaxKind.GreaterEqualsToken:
                     return 3;
                 case SyntaxKind.AmpersandAmpersandToken:
+                case SyntaxKind.AmpersandToken:
                     return 2;
                 case SyntaxKind.PipePipeToken:
+                case SyntaxKind.PipeToken:
+                case SyntaxKind.HatToken:
                     return 1;
                 default:
                     return 0;
@@ -114,8 +118,16 @@ namespace MCompiler.CodeAnalysis.Syntax
                     return "!";
                 case SyntaxKind.AmpersandAmpersandToken:
                     return "&&";
+                case SyntaxKind.AmpersandToken:
+                    return "&";
                 case SyntaxKind.PipePipeToken:
                     return "||";
+                case SyntaxKind.PipeToken:
+                    return "|";
+                case SyntaxKind.TildeToken:
+                    return "~";
+                case SyntaxKind.HatToken:
+                    return "^";
                 case SyntaxKind.EqualsEqualsToken:
                     return "==";
                 case SyntaxKind.BangEqualsToken:

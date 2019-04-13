@@ -78,12 +78,25 @@ namespace MCompiler.CodeAnalysis.Syntax
                     _kind = SyntaxKind.CloseBraceToken;
                     _position += 1;
                     break;
+                case '~':
+                    _kind = SyntaxKind.TildeToken;
+                    _position += 1;
+                    break;
+                case '^':
+                    _kind = SyntaxKind.HatToken;
+                    _position += 1;
+                    break;
                 case '&':
                     {
                         if (Lookahead == '&')
                         {
                             _position += 2;
                             _kind = SyntaxKind.AmpersandAmpersandToken;
+                        }
+                        else 
+                        {
+                            _position += 1;
+                            _kind = SyntaxKind.AmpersandToken;
                         }
                         break;
                     }
@@ -93,6 +106,11 @@ namespace MCompiler.CodeAnalysis.Syntax
                         {
                             _position += 2;
                             _kind = SyntaxKind.PipePipeToken;
+                        }
+                        else
+                        {
+                            _position += 1;
+                            _kind = SyntaxKind.PipeToken;
                         }
                         break;
                     }

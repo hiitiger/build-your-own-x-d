@@ -41,7 +41,7 @@
                 case BoundNodeKind.IfStatement:
                     EvaluateIfStatement((BoundIfStatement)statement);
                     break;
-                 case BoundNodeKind.WhileStatement:
+                case BoundNodeKind.WhileStatement:
                     EvaluateWhileStatement((BoundWhileStatement)statement);
                     break;
                 case BoundNodeKind.ForStatement:
@@ -55,7 +55,7 @@
         private void EvaluateForStatement(BoundForStatement statement)
         {
             EvaluateExpression(statement.Initializer);
-            while((bool)EvaluateExpression(statement.Condition))
+            while ((bool)EvaluateExpression(statement.Condition))
             {
                 EvaluateStatement(statement.Body);
                 EvaluateExpression(statement.Loop);
@@ -64,14 +64,14 @@
 
         private void EvaluateWhileStatement(BoundWhileStatement statement)
         {
-            while((bool)EvaluateExpression(statement.Condition))
+            while ((bool)EvaluateExpression(statement.Condition))
                 EvaluateStatement(statement.Body);
         }
 
         private void EvaluateIfStatement(BoundIfStatement statement)
         {
             var condition = (bool)EvaluateExpression(statement.Condition);
-            if(condition)
+            if (condition)
             {
                 EvaluateStatement(statement.Statement);
             }
@@ -134,6 +134,21 @@
                     return (int)left * (int)right;
                 case BoundBinaryOperatorKind.Devision:
                     return (int)left / (int)right;
+                case BoundBinaryOperatorKind.BitwiseAnd:
+                    if (b.Type == typeof(int))
+                        return (int)left & (int)right;
+                    else
+                        return (bool)left & (bool)right;
+                case BoundBinaryOperatorKind.BitwiseOr:
+                    if (b.Type == typeof(int))
+                        return (int)left | (int)right;
+                    else
+                        return (bool)left | (bool)right;
+                case BoundBinaryOperatorKind.BitwiseXOr:
+                    if (b.Type == typeof(int))
+                        return (int)left ^ (int)right;
+                    else
+                        return (bool)left ^ (bool)right;
                 case BoundBinaryOperatorKind.LogicalAnd:
                     return (bool)left && (bool)right;
                 case BoundBinaryOperatorKind.LogicalOr:
@@ -166,6 +181,8 @@
                     return -(int)operand;
                 case BoundUnaryOperatorKind.LogicalNegation:
                     return !(bool)operand;
+                case BoundUnaryOperatorKind.OnesComplement:
+                    return ~(int)operand;
                 default:
                     throw new Exception($"Unexpected unary operator {u.Op.Kind}");
             }

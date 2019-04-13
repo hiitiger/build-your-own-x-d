@@ -12,6 +12,7 @@ namespace MCompiler.Tests.CodeAnalysis
         [InlineData("1", 1)]
         [InlineData("-1", -1)]
         [InlineData("+1", 1)]
+        [InlineData("~1", -2)]
         [InlineData("1 + 1", 2)]
         [InlineData("4 - 2", 2)]
         [InlineData("2 * 2", 4)]
@@ -35,6 +36,13 @@ namespace MCompiler.Tests.CodeAnalysis
         [InlineData("1 < 1", false)]
         [InlineData("1 <= 1", true)]
         [InlineData("2 <= 1", false)]
+        [InlineData("1 | 2", 3)]
+        [InlineData("1 | 0", 1)]
+        [InlineData("1 & 2", 0)]
+        [InlineData("1 & 0", 0)]
+        [InlineData("1 ^ 0", 1)]
+        [InlineData("1 ^ 1", 0)]
+        [InlineData("1 ^ 3", 2)]
 
         [InlineData("true && true", true)]
         [InlineData("true && false", false)]
@@ -42,6 +50,20 @@ namespace MCompiler.Tests.CodeAnalysis
         [InlineData("false || false", false)]
         [InlineData("true || false", true)]
         [InlineData("true || true", true)]
+        [InlineData("true | true", true)]
+        [InlineData("true | false", true)]
+        [InlineData("false | true", true)]
+        [InlineData("false | false", false)]
+        [InlineData("true & true", true)]
+        [InlineData("true & false", false)]
+        [InlineData("false & true", false)]
+        [InlineData("false & false", false)]
+        [InlineData("true ^ true", false)]
+        [InlineData("true ^ false", true)]
+        [InlineData("false ^ true", true)]
+        [InlineData("false ^ false", false)]
+        
+
         [InlineData("{var x = 10 (x = 5) * 5}", 25)]
         [InlineData("{var x = 0 if x == 0 x = 10 x}", 10)]
         [InlineData("{var x = 0 if x == 1 x = 10 else x = 20 x}", 20)]
@@ -61,7 +83,7 @@ namespace MCompiler.Tests.CodeAnalysis
             var evaluatedResult = compilation.Evaluate(variables);
 
             Assert.Empty(evaluatedResult.Diagnostics);
-            Assert.Equal(evaluatedResult.Value, value);
+            Assert.Equal(value, evaluatedResult.Value);
         }
 
         [Fact]
@@ -109,7 +131,7 @@ namespace MCompiler.Tests.CodeAnalysis
             AssertHasDiagnostics(text, diagnostic);
         }
 
-    [Fact]
+        [Fact]
         public void Evaluation_BlockStatement_Reports_NoInifiniteLoop()
         {
             var text = @"{

@@ -4,6 +4,7 @@ namespace MCompiler.CodeAnalysis.Binding
     {
         Indentity,
         Negation,
-        LogicalNegation
+        LogicalNegation,
+        OnesComplement
     }
 }

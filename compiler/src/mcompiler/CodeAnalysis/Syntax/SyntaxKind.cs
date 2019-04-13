@@ -22,7 +22,10 @@ namespace MCompiler.CodeAnalysis.Syntax
 
         AmpersandAmpersandToken,
         PipePipeToken,
-
+        AmpersandToken,
+        PipeToken,
+        HatToken,
+        TildeToken,
         EqualsEqualsToken,
         BangEqualsToken,
 

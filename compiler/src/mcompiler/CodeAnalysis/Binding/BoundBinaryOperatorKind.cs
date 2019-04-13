@@ -14,6 +14,9 @@ namespace MCompiler.CodeAnalysis.Binding
         Less,
         LessEquals,
         Greater,
-        GreaterEquals
+        GreaterEquals,
+        BitwiseAnd,
+        BitwiseOr,
+        BitwiseXOr
     }
 }
