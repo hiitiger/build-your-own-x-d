@@ -28,14 +28,17 @@ namespace MCompiler.CodeAnalysis.Syntax
             {
                 if (typeof(SyntaxNode).IsAssignableFrom(property.PropertyType))
                 {
-                    yield return (SyntaxNode)property.GetValue(this);
+                    var child = (SyntaxNode)property.GetValue(this);
+                    if (child != null)
+                        yield return child;
                 }
                 else if (typeof(IEnumerable<SyntaxNode>).IsAssignableFrom(property.PropertyType))
                 {
                     var values = (IEnumerable<SyntaxNode>)property.GetValue(this);
-                    foreach (var n in values)
+                    foreach (var child in values)
                     {
-                        yield return n;
+                        if (child != null)
+                            yield return child;
                     }
                 }
             }
@@ -77,7 +80,7 @@ namespace MCompiler.CodeAnalysis.Syntax
 
             if (node is SyntaxToken t && t.Value != null)
             {
-                if(isConsole)
+                if (isConsole)
                     Console.ForegroundColor = ConsoleColor.White;
                 writer.Write(" ");
                 writer.Write(t.Value);

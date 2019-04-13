@@ -66,9 +66,18 @@ namespace MCompiler.CodeAnalysis.Binding
                     return BindVariableDeclarationStatement((VariableDeclarationStatementSyntax)syntax);
                 case SyntaxKind.IfStatement:
                     return BindIfStatement((IfStatementSyntax)syntax);
+                case SyntaxKind.WhileStatement:
+                    return BindWhileStatement((WhileStatementSyntax)syntax);
                 default:
                     throw new Exception($"Unexpected syntax {syntax.Kind}");
             }
+        }
+
+        private BoundWhileStatement BindWhileStatement(WhileStatementSyntax syntax)
+        {
+            var condition = BindExpression(syntax.Condition, typeof(bool));
+            var body = BindStatement(syntax.Body);
+            return new BoundWhileStatement(condition, body);
         }
 
         private BoundIfStatement BindIfStatement(IfStatementSyntax syntax)

@@ -41,9 +41,18 @@
                 case BoundNodeKind.IfStatement:
                     EvaluateIfStatement((BoundIfStatement)statement);
                     break;
+                 case BoundNodeKind.WhileStatement:
+                    EvaluateWhileStatement((BoundWhileStatement)statement);
+                    break;
                 default:
                     throw new Exception($"Unexpected node {statement.Kind}");
             }
+        }
+
+        private void EvaluateWhileStatement(BoundWhileStatement statement)
+        {
+            while((bool)EvaluateExpression(statement.Condition))
+                EvaluateStatement(statement.Body);
         }
 
         private void EvaluateIfStatement(BoundIfStatement statement)

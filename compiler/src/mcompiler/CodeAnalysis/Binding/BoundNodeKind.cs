@@ -12,6 +12,7 @@ namespace MCompiler.CodeAnalysis.Binding
         BlockStatement,
         ExpressionStatement,
         VariableDeclarationStatement,
-        IfStatement
+        IfStatement,
+        WhileStatement
     }
 }
