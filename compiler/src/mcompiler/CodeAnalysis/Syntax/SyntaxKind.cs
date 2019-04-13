@@ -40,6 +40,7 @@ namespace MCompiler.CodeAnalysis.Syntax
         IfKeyword,
         ElseKeyword,
         WhileKeyword,
+        ForKeyword,
 
         IdentifierToken,
 
@@ -64,6 +65,7 @@ namespace MCompiler.CodeAnalysis.Syntax
         VariableDeclarationStatement,
         IfStatement,
         WhileStatement,
+        ForStatement,
     }
 
 }

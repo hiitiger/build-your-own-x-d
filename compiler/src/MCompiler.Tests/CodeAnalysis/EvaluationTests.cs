@@ -46,6 +46,8 @@ namespace MCompiler.Tests.CodeAnalysis
         [InlineData("{var x = 0 if x == 0 x = 10 x}", 10)]
         [InlineData("{var x = 0 if x == 1 x = 10 else x = 20 x}", 20)]
         [InlineData("{var x = 0 while x < 10 x = x+1 x}", 10)]
+        [InlineData("{var x = 0 var res = 0 for x = 1+1 x < 2 x = x+1 { res = x } res}", 0)]
+        [InlineData("{var x = 0 var res = 0 for x = 1 x < 10 x = x+x { res = x } res}", 8)]
         public void EvaluationTests_GetText_RoundTrips(string text, object value)
         {
             AssertValue(text, value);
@@ -63,6 +65,34 @@ namespace MCompiler.Tests.CodeAnalysis
         }
 
         [Fact]
+        public void Evaluation_IfStatement_Reports_Convert()
+        {
+            var text = @"
+                {
+                    var x = 0
+                    if [10]
+                        x = 10
+                }";
+            var diagnostic = $"Cannot convert from {typeof(int)} to {typeof(bool)}";
+
+            AssertHasDiagnostics(text, diagnostic);
+        }
+
+        [Fact]
+        public void Evaluation_WhileStatement_Reports_Convert()
+        {
+            var text = @"
+                {
+                    var x = 0
+                    while [10]
+                        x = 10
+                }";
+            var diagnostic = $"Cannot convert from {typeof(int)} to {typeof(bool)}";
+
+            AssertHasDiagnostics(text, diagnostic);
+        }
+
+        [Fact]
         public void Evaluation_VariableDeclaration_Reports_Redeclaration()
         {
             var text = @"
@@ -75,7 +105,7 @@ namespace MCompiler.Tests.CodeAnalysis
                     var [x] = 5
                 }";
             var diagnostic = @"Variable name 'x' already declared";
-            
+
             AssertHasDiagnostics(text, diagnostic);
         }
 
@@ -84,16 +114,16 @@ namespace MCompiler.Tests.CodeAnalysis
         {
             var text = @"[x] + 10";
             var diagnostic = @"Undefined variable name 'x'";
-            
+
             AssertHasDiagnostics(text, diagnostic);
         }
 
-         [Fact]
+        [Fact]
         public void Evaluation_Assignment_Reports_Undefined()
         {
             var text = @"[x] = 10";
             var diagnostic = @"Undefined variable name 'x'";
-            
+
             AssertHasDiagnostics(text, diagnostic);
         }
 
@@ -106,7 +136,7 @@ namespace MCompiler.Tests.CodeAnalysis
                             x [=] 0
                         }";
             var diagnostic = @"Cannot assign to readonly varaible 'x'";
-            
+
             AssertHasDiagnostics(text, diagnostic);
         }
 
@@ -119,7 +149,7 @@ namespace MCompiler.Tests.CodeAnalysis
                             x = [true]
                         }";
             var diagnostic = $"Cannot convert from {typeof(bool)} to {typeof(int)}";
-            
+
             AssertHasDiagnostics(text, diagnostic);
         }
 
@@ -128,7 +158,7 @@ namespace MCompiler.Tests.CodeAnalysis
         {
             var text = @"[+]true";
             var diagnostic = $"Unary operator '+' is not defined for type {typeof(bool)}";
-            
+
             AssertHasDiagnostics(text, diagnostic);
         }
 
@@ -137,7 +167,7 @@ namespace MCompiler.Tests.CodeAnalysis
         {
             var text = @"true[+]false";
             var diagnostic = $"Binary operator '+' is not defined for types {typeof(bool)} and {typeof(bool)}";
-            
+
             AssertHasDiagnostics(text, diagnostic);
         }
 
@@ -150,14 +180,14 @@ namespace MCompiler.Tests.CodeAnalysis
             var result = compilation.Evaluate(new Dictionary<VariableSymbol, object>());
 
             var expectedDiagnostics = AnnotatedText.UnindentLines(diagnosticText);
-            if(annotatedText.Spans.Length != expectedDiagnostics.Count)
+            if (annotatedText.Spans.Length != expectedDiagnostics.Count)
             {
                 throw new Exception("ERROR:Must mark as many spans as there are expected diagnostics");
             }
-            
+
             Assert.Equal(expectedDiagnostics.Count, result.Diagnostics.Length);
 
-            for(var i = 0; i < expectedDiagnostics.Count; ++i)
+            for (var i = 0; i < expectedDiagnostics.Count; ++i)
             {
                 var expectedMessage = expectedDiagnostics[i];
                 var actualMessage = result.Diagnostics[i].Message;

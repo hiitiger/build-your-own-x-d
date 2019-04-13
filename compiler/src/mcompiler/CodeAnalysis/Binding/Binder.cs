@@ -68,9 +68,22 @@ namespace MCompiler.CodeAnalysis.Binding
                     return BindIfStatement((IfStatementSyntax)syntax);
                 case SyntaxKind.WhileStatement:
                     return BindWhileStatement((WhileStatementSyntax)syntax);
+                case SyntaxKind.ForStatement:
+                    return BindForStatement((ForStatementSyntax)syntax);
                 default:
                     throw new Exception($"Unexpected syntax {syntax.Kind}");
             }
+        }
+
+        private BoundForStatement BindForStatement(ForStatementSyntax syntax)
+        {
+            _scope = new BoundScope(_scope);
+            var initializer = BindExpression(syntax.Initializer);
+            var condition = BindExpression(syntax.Condition);
+            var loop = BindExpression(syntax.Loop);
+            var body = BindStatement(syntax.Body);
+            _scope = _scope.Parent;
+            return new BoundForStatement(initializer, condition, loop, body);
         }
 
         private BoundWhileStatement BindWhileStatement(WhileStatementSyntax syntax)

@@ -81,9 +81,21 @@ namespace MCompiler.CodeAnalysis.Syntax
                     return ParseIfStatement();
                 case SyntaxKind.WhileKeyword:
                     return ParseWhileStatement();
+                case SyntaxKind.ForKeyword:
+                    return ParseForStatement();
                 default:
                     return ParseExpressionStatement();
             }
+        }
+
+        private ForStatementSyntax ParseForStatement()
+        {
+            var keyword = MatchToken(SyntaxKind.ForKeyword);
+            var initializer = ParseExpression();
+            var condition = ParseExpression();
+            var loop = ParseExpression();
+            var statement = ParseStatement();
+            return new ForStatementSyntax(keyword, initializer, condition, loop, statement);
         }
 
         private WhileStatementSyntax ParseWhileStatement()

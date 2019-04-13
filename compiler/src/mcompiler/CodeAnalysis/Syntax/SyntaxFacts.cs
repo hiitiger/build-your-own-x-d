@@ -63,6 +63,8 @@ namespace MCompiler.CodeAnalysis.Syntax
                     return SyntaxKind.ElseKeyword;
                 case "while":
                     return SyntaxKind.WhileKeyword;
+                case "for":
+                    return SyntaxKind.ForKeyword;
                 default:
                     return SyntaxKind.IdentifierToken;
             }
@@ -134,6 +136,8 @@ namespace MCompiler.CodeAnalysis.Syntax
                     return "else";
                 case SyntaxKind.WhileKeyword:
                     return "while";
+                case SyntaxKind.ForKeyword:
+                    return "for";
                 case SyntaxKind.LessToken:
                     return "<";
                 case SyntaxKind.LessEqualsToken:
