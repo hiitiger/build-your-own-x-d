@@ -12,6 +12,7 @@ namespace MCompiler
         static void Main(string[] args)
         {
             bool showTree = false;
+            bool showProgram = false;
             var variables = new Dictionary<VariableSymbol, object>();
             var textBuilder = new StringBuilder();
             Compilation previous = null;
@@ -37,7 +38,13 @@ namespace MCompiler
                     else if (input == "#showTree")
                     {
                         showTree = !showTree;
-                        Console.WriteLine($"showTree: {showTree}");
+                        Console.WriteLine($"show parse tree: {showTree}");
+                        continue;
+                    }
+                    else if (input == "#showProgram")
+                    {
+                        showProgram = !showProgram;
+                        Console.WriteLine($"show bound tree: {showProgram}");
                         continue;
                     }
                     else if (input == "#cls")
@@ -66,11 +73,10 @@ namespace MCompiler
                 var text = syntaxTree.Text;
 
                 if (showTree)
-                {
-                    Console.ForegroundColor = ConsoleColor.Cyan;
                     syntaxTree.Root.WriteTo(Console.Out);
-                    Console.ResetColor();
-                }
+
+                if (showProgram)
+                    complilation.EmitTree(Console.Out);
 
                 if (!diagnostics.Any())
                 {
