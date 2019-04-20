@@ -14,6 +14,9 @@ namespace MCompiler.CodeAnalysis.Binding
         VariableDeclarationStatement,
         IfStatement,
         WhileStatement,
-        ForStatement
+        ForStatement,
+        GotoStatement,
+        LabelStatement,
+        ConditionalGotoStatement
     }
 }

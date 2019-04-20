@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Threading;
     using MCompiler.CodeAnalysis.Binding;
+    using MCompiler.CodeAnalysis.Lowering;
     using MCompiler.CodeAnalysis.Syntax;
 
     public class Compilation
@@ -55,16 +56,22 @@
             {
                 return new EvaluationResult(diagnostics, null);
             }
-            var evaluator = new Evaluator(globalScope.Statement, variables);
+            var statement = GetStatement();
+            var evaluator = new Evaluator(statement, variables);
             var value = evaluator.Evaluate();
             return new EvaluationResult(ImmutableArray<Diagnostic>.Empty, value);
         }
 
         public void EmitTree(TextWriter writer)
         {
-            GlobalScope.Statement.WriteTo(writer);
+            var statement = GetStatement();
+            statement.WriteTo(writer);
+        }
+
+        private BoundBlockStatement GetStatement()
+        {
+            var statement = GlobalScope.Statement;
+            return Lowerer.Lower(statement);
         }
     }
-
-
 }

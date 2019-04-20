@@ -8,11 +8,11 @@
 
     internal class Evaluator
     {
-        private readonly BoundStatement _root;
+        private readonly BoundBlockStatement _root;
         private readonly Dictionary<VariableSymbol, object> _variables;
 
         private object _lastValue;
-        public Evaluator(BoundStatement root, Dictionary<VariableSymbol, object> variables)
+        public Evaluator(BoundBlockStatement root, Dictionary<VariableSymbol, object> variables)
         {
             _root = root;
             _variables = variables;
@@ -20,7 +20,48 @@
 
         public object Evaluate()
         {
-            EvaluateStatement(_root);
+            var labelToIndex = new Dictionary<LabelSymbol, int>();
+            for (var i = 0; i < _root.Statements.Length; ++i)
+            {
+                var s = _root.Statements[i];
+                if (s is BoundLabelStatement label)
+                    labelToIndex.Add(label.Symbol, i + 1);
+            }
+
+            var index = 0;
+
+            while (index < _root.Statements.Length)
+            {
+                var statement = _root.Statements[index];
+                switch (statement.Kind)
+                {
+                    case BoundNodeKind.ExpressionStatement:
+                        EvaluateExpressionStatement((BoundExpressionStatement)statement);
+                        index += 1;
+                        break;
+                    case BoundNodeKind.VariableDeclarationStatement:
+                        EvaluateVariableDeclarationStatement((BoundVariableDeclarationStatement)statement);
+                        index += 1;
+                        break;
+                    case BoundNodeKind.GotoStatement:
+                        var gs = (BoundGotoStatement)statement;
+                        index = labelToIndex[gs.Label];
+                        break;
+                    case BoundNodeKind.ConditionalGotoStatement:
+                        var cgs = (BoundConditionalGotoStatement)statement;
+                        var condition = (bool)EvaluateExpression(cgs.Condition);
+                        if (condition && !cgs.JumpIfFalse || !condition && cgs.JumpIfFalse)
+                            index = labelToIndex[cgs.Label];
+                        else
+                            index += 1;
+                        break;
+                    case BoundNodeKind.LabelStatement:
+                        index += 1;
+                        break;
+                    default:
+                        throw new Exception($"Unexpected node {statement.Kind}");
+                }
+            }
             return _lastValue;
         }
 
