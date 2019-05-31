@@ -40,7 +40,7 @@ namespace MCompiler
             private int _currentLineIndex;
             private int _currentCharacter;
 
-            public int CurrentLineIndex
+            public int CurrentLine
             {
                 get => _currentLineIndex;
                 set
@@ -49,7 +49,7 @@ namespace MCompiler
                     {
                         _currentLineIndex = value;
 
-                        var line = _submissionDocument[CurrentLineIndex];
+                        var line = _submissionDocument[CurrentLine];
                         if (_currentCharacter > line.Length)
                             _currentCharacter = line.Length;
                         UpdateCursorPosition();
@@ -92,9 +92,9 @@ namespace MCompiler
                     Console.SetCursorPosition(0, _cursorTop + lineCount);
                     Console.ForegroundColor = ConsoleColor.Green;
                     if (lineCount == 0)
-                        Console.Write("» ");
+                        Console.Write("> ");
                     else
-                        Console.Write("· ");
+                        Console.Write(". ");
 
                     Console.ResetColor();
                     _lineRenderer(line);
@@ -211,8 +211,8 @@ namespace MCompiler
             foreach (var line in lines)
                 document.Add(line);
 
-            view.CurrentLineIndex = document.Count - 1;
-            view.CurrentCharacter = document[view.CurrentLineIndex].Length;
+            view.CurrentLine = document.Count - 1;
+            view.CurrentCharacter = document[view.CurrentLine].Length;
         }
 
         private void HandlePageUp(ObservableCollection<string> document, SubmissionView view)
@@ -233,7 +233,7 @@ namespace MCompiler
 
         private void HandleEscape(ObservableCollection<string> document, SubmissionView view)
         {
-            document[view.CurrentLineIndex] = string.Empty;
+            document[view.CurrentLine] = string.Empty;
             view.CurrentCharacter = 0;
         }
 
@@ -242,15 +242,15 @@ namespace MCompiler
             const int TabWidth = 4;
             var start = view.CurrentCharacter;
             var spaces = TabWidth - start % TabWidth;
-            var line = document[view.CurrentLineIndex];
+            var line = document[view.CurrentLine];
             line = line.Insert(start, new string(' ', spaces));
-            document[view.CurrentLineIndex] = line;
+            document[view.CurrentLine] = line;
             view.CurrentCharacter += spaces;
         }
 
         private void HandleEnd(ObservableCollection<string> document, SubmissionView view)
         {
-            var line = document[view.CurrentLineIndex];
+            var line = document[view.CurrentLine];
             view.CurrentCharacter = line.Length;
         }
 
@@ -261,7 +261,7 @@ namespace MCompiler
 
         private void HandleDelete(ObservableCollection<string> document, SubmissionView view)
         {
-            var lineIndex = view.CurrentLineIndex;
+            var lineIndex = view.CurrentLine;
             var line = document[lineIndex];
             var start = view.CurrentCharacter;
             if (start > line.Length - 1)
@@ -273,44 +273,45 @@ namespace MCompiler
 
         private void HandleBackspace(ObservableCollection<string> document, SubmissionView view)
         {
-            var lineIndex = view.CurrentLineIndex;
-            var line = document[lineIndex];
             var start = view.CurrentCharacter;
-            if (start > line.Length)
-                return;
-
             if (start == 0)
             {
-                if (lineIndex == 0)
+                if (view.CurrentLine == 0)
                     return;
-                else
-                {
-                    view.CurrentLineIndex -= 1;
-                    line = document[lineIndex - 1];
-                    view.CurrentCharacter = document[view.CurrentLineIndex].Length;
-                    start = view.CurrentCharacter;
-                }
+
+                var currentLine = document[view.CurrentLine];
+                var previousLine = document[view.CurrentLine - 1];
+                document.RemoveAt(view.CurrentLine);
+                view.CurrentLine--;
+                document[view.CurrentLine] = previousLine + currentLine;
+                view.CurrentCharacter = previousLine.Length;
             }
-            var newLine = line.Substring(0, start - 1) + line.Substring(start);
-            document[lineIndex] = newLine;
-            view.CurrentCharacter -= 1;
+            else
+            {
+                var lineIndex = view.CurrentLine;
+                var line = document[lineIndex];
+                var before = line.Substring(0, start - 1);
+                var after = line.Substring(start);
+                document[lineIndex] = before + after;
+                view.CurrentCharacter--;
+            }
         }
 
         private void HandleDownArrow(ObservableCollection<string> document, SubmissionView view)
         {
-            if (view.CurrentLineIndex < document.Count - 1)
-                view.CurrentLineIndex += 1;
+            if (view.CurrentLine < document.Count - 1)
+                view.CurrentLine += 1;
         }
 
         private void HandleUpArrow(ObservableCollection<string> document, SubmissionView view)
         {
-            if (view.CurrentLineIndex > 0)
-                view.CurrentLineIndex -= 1;
+            if (view.CurrentLine > 0)
+                view.CurrentLine -= 1;
         }
 
         private void HandleRightArrow(ObservableCollection<string> document, SubmissionView view)
         {
-            var line = document[view.CurrentLineIndex];
+            var line = document[view.CurrentLine];
             if (view.CurrentCharacter < line.Length)
                 view.CurrentCharacter += 1;
         }
@@ -336,25 +337,24 @@ namespace MCompiler
 
         private void HandleControlEnter(ObservableCollection<string> document, SubmissionView view)
         {
-            InsertLine(document, view);
             _done = true;
         }
         private static void InsertLine(ObservableCollection<string> document, SubmissionView view)
         {
-            var remainder = document[view.CurrentLineIndex].Substring(view.CurrentCharacter);
-            document[view.CurrentLineIndex] = document[view.CurrentLineIndex].Substring(0, view.CurrentCharacter);
+            var remainder = document[view.CurrentLine].Substring(view.CurrentCharacter);
+            document[view.CurrentLine] = document[view.CurrentLine].Substring(0, view.CurrentCharacter);
 
-            if (view.CurrentLineIndex < document.Count - 1)
-                document.Insert(view.CurrentLineIndex + 1, remainder);
+            if (view.CurrentLine < document.Count - 1)
+                document.Insert(view.CurrentLine + 1, remainder);
             else
                 document.Add(remainder);
             view.CurrentCharacter = 0;
-            view.CurrentLineIndex += 1;
+            view.CurrentLine += 1;
         }
 
         private void HandleTyping(ObservableCollection<string> document, SubmissionView view, string text)
         {
-            var lineIndex = view.CurrentLineIndex;
+            var lineIndex = view.CurrentLine;
             var start = view.CurrentCharacter;
             document[lineIndex] = document[lineIndex].Insert(start, text);
             view.CurrentCharacter += text.Length;
