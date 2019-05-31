@@ -205,6 +205,9 @@ namespace MCompiler
 
         private void UpdateDocumentFromHistory(ObservableCollection<string> document, SubmissionView view)
         {
+            if(_submissionHistory.Count == 0)
+                return;
+
             document.Clear();
             var historyItem = _submissionHistory[_submissionHistoryIndex];
             var lines = historyItem.Split(Environment.NewLine);
@@ -265,7 +268,14 @@ namespace MCompiler
             var line = document[lineIndex];
             var start = view.CurrentCharacter;
             if (start > line.Length - 1)
+            {
+                if (view.CurrentLine == document.Count - 1)
+                    return;
+                var nextLine = document[view.CurrentLine + 1];
+                document[view.CurrentLine] += nextLine;
+                document.RemoveAt(view.CurrentLine + 1);
                 return;
+            }
 
             var newLine = line.Substring(0, start) + line.Substring(start + 1);
             document[lineIndex] = newLine;

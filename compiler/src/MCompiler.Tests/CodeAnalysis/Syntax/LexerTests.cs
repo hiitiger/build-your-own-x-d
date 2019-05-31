@@ -4,12 +4,29 @@ using Xunit;
 using MCompiler.CodeAnalysis.Syntax;
 using System.Collections.Generic;
 using System.Linq;
+using MCompiler.CodeAnalysis.Text;
 
 namespace MCompiler.Tests.CodeAnalysis.Syntax
 {
 
     public class LexerTests
     {
+
+        [Fact]
+        public void Lexer_Lexes_UnterminatedString()
+        {
+            var text = "\"text";
+
+            var tokens = SyntaxTree.ParseTokens(text, out var diagnostics);
+            var token = Assert.Single(tokens);
+            Assert.Equal(SyntaxKind.StringToken, token.Kind);
+            Assert.Equal(text, token.Text);
+
+            var diagnostic = Assert.Single(diagnostics);
+            Assert.Equal(new TextSpan(5, 1), diagnostic.Span);
+            Assert.Equal("Unterminated string literal", diagnostic.ToString());
+        }
+
         [Fact]
         public void Lexer_Lexes_AllTokens()
         {
@@ -100,6 +117,9 @@ namespace MCompiler.Tests.CodeAnalysis.Syntax
                 (SyntaxKind.NumberToken, "12"),
                 (SyntaxKind.IdentifierToken, "a"),
                 (SyntaxKind.IdentifierToken, "abc"),
+                (SyntaxKind.StringToken, "\"abc123\""),
+                (SyntaxKind.StringToken, "\"abc\"\"123\""),
+                (SyntaxKind.StringToken, "\"abc\\\"123\""),
             };
 
 
@@ -137,6 +157,9 @@ namespace MCompiler.Tests.CodeAnalysis.Syntax
             if (kind1 == SyntaxKind.NumberToken && kind2 == SyntaxKind.NumberToken)
                 return true;
 
+            if (kind1 == SyntaxKind.StringToken && kind2 == SyntaxKind.StringToken)
+                return true;
+
             if (kind1 == SyntaxKind.BangToken && kind2 == SyntaxKind.EqualsToken)
                 return true;
 
@@ -160,7 +183,7 @@ namespace MCompiler.Tests.CodeAnalysis.Syntax
 
             if (kind1 == SyntaxKind.GreaterToken && kind2 == SyntaxKind.EqualsEqualsToken)
                 return true;
-            
+
             if (kind1 == SyntaxKind.AmpersandToken && kind2 == SyntaxKind.AmpersandToken)
                 return true;
             if (kind1 == SyntaxKind.AmpersandToken && kind2 == SyntaxKind.AmpersandAmpersandToken)

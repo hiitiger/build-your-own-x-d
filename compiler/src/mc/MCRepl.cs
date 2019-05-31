@@ -17,26 +17,36 @@ namespace MCompiler
             if (string.IsNullOrEmpty(text))
                 return true;
 
+            var continuousBlankLines = text.Split(Environment.NewLine).Reverse()
+                                        .Where(s => string.IsNullOrEmpty(s))
+                                        .Take(2).Count() == 2;
+            if (continuousBlankLines)
+                return true;
+
             var syntaxTree = SyntaxTree.Parse(text);
-            if (syntaxTree.Diagnostics.Any())
+            if (syntaxTree.Root.Statement.GetLastToken().IsMissing)
                 return false;
 
             return true;
         }
 
+
         protected override void RenderLine(string text)
         {
             var tokens = SyntaxTree.ParseTokens(text);
-            foreach(var token in tokens)
+            foreach (var token in tokens)
             {
                 var isKeyword = token.Kind.ToString().EndsWith("Keyword");
                 var isOperator = SyntaxFacts.GetBinaryOperatorPrecedence(token.Kind) > 0 || SyntaxFacts.GetUnaryOperatorPrecedence(token.Kind) > 0;
                 var isNumber = token.Kind == SyntaxKind.NumberToken;
+                var isIdentifier = token.Kind == SyntaxKind.IdentifierToken;
 
-                if(isKeyword)
+                if (isKeyword)
                     Console.ForegroundColor = ConsoleColor.Blue;
+                else if (isIdentifier)
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
                 else if (isOperator)
-                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.ForegroundColor = ConsoleColor.Cyan;
                 else if (!isNumber)
                     Console.ForegroundColor = ConsoleColor.DarkGray;
 

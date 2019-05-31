@@ -54,7 +54,7 @@ namespace MCompiler.CodeAnalysis
 
         internal void ReportUndefinedName(TextSpan span, string name)
         {
-           var message = $"Undefined variable name '{name}'";
+            var message = $"Undefined variable name '{name}'";
             Report(span, message);
         }
 
@@ -73,6 +73,12 @@ namespace MCompiler.CodeAnalysis
         internal void ReportCannotAssign(TextSpan span, string name)
         {
             var message = $"Cannot assign to readonly varaible '{name}'";
+            Report(span, message);
+        }
+
+        internal void ReportUnterminatedString(TextSpan span)
+        {
+            var message = $"Unterminated string literal";
             Report(span, message);
         }
     }

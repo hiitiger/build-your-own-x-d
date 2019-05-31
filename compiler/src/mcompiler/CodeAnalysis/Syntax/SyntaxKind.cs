@@ -3,6 +3,7 @@ namespace MCompiler.CodeAnalysis.Syntax
     public enum SyntaxKind
     {
         NumberToken,
+        StringToken,
 
         WhiteSpaceToken,
 

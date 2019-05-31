@@ -34,21 +34,39 @@ namespace MCompiler.CodeAnalysis.Syntax
             return new SyntaxTree(text);
         }
 
-        public static IEnumerable<SyntaxToken> ParseTokens(string text)
+        public static ImmutableArray<SyntaxToken> ParseTokens(string text)
         {
             return ParseTokens(SourceText.From(text));
         }
 
-        public static IEnumerable<SyntaxToken> ParseTokens(SourceText text)
+        public static ImmutableArray<SyntaxToken> ParseTokens(string text, out ImmutableArray<Diagnostic> diagnostics)
         {
-            Lexer lexer = new Lexer(text);
-            while (true)
+            return ParseTokens(SourceText.From(text), out diagnostics);
+        }
+
+        public static ImmutableArray<SyntaxToken> ParseTokens(SourceText text)
+        {
+            return ParseTokens(text, out _);
+        }
+
+        public static ImmutableArray<SyntaxToken> ParseTokens(SourceText text, out ImmutableArray<Diagnostic> diagnostics)
+        {
+            IEnumerable<SyntaxToken> LexTokens(Lexer lexer)
             {
-                var token = lexer.Lex();
-                if (token.Kind == SyntaxKind.EOFToken)
-                    break;
-                yield return token;
+                while (true)
+                {
+                    var token = lexer.Lex();
+                    if (token.Kind == SyntaxKind.EOFToken)
+                        break;
+                    yield return token;
+                }
             }
+
+            Lexer l = new Lexer(text);
+            var result = LexTokens(l).ToImmutableArray();
+            diagnostics = l.Diagnostics.ToImmutableArray();
+            return result;
+
         }
     }
 

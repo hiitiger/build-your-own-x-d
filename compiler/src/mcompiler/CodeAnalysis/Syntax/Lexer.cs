@@ -1,6 +1,8 @@
 namespace MCompiler.CodeAnalysis.Syntax
 {
+    using System;
     using System.Collections.Generic;
+    using System.Text;
     using MCompiler.CodeAnalysis.Text;
 
     internal class Lexer
@@ -93,7 +95,7 @@ namespace MCompiler.CodeAnalysis.Syntax
                             _position += 2;
                             _kind = SyntaxKind.AmpersandAmpersandToken;
                         }
-                        else 
+                        else
                         {
                             _position += 1;
                             _kind = SyntaxKind.AmpersandToken;
@@ -170,6 +172,9 @@ namespace MCompiler.CodeAnalysis.Syntax
                         }
                     }
                     break;
+                case '"':
+                    ReadString();
+                    break;
                 default:
                     if (char.IsDigit(this.Current))
                     {
@@ -201,6 +206,56 @@ namespace MCompiler.CodeAnalysis.Syntax
             }
 
             return new SyntaxToken(_kind, _start, text, _value);
+        }
+
+        private void ReadString()
+        {
+            _position += 1;
+            var sb = new StringBuilder();
+            var done = false;
+            while (!done)
+            {
+                switch (Current)
+                {
+                    case '\0':
+                    case '\r':
+                    case '\n':
+                        var span = new TextSpan(_position, 1);
+                        _diagnostics.ReportUnterminatedString(span);
+                        done = true;
+                        break;
+                    case '"':
+                        if (Lookahead == '"')
+                        {
+                            _position += 2;
+                        }
+                        else
+                        {
+                            _position += 1;
+                            done = true;
+                        }
+                        break;
+                    case '\\':
+                        if (Lookahead == '"')
+                        {
+                            sb.Append("\"");
+                            _position += 2;
+                        }
+                        else
+                        {
+                            sb.Append(Current);
+                            _position += 1;
+                        }
+                        break;
+                    default:
+                        sb.Append(Current);
+                        _position += 1;
+                        break;
+                }
+            }
+
+            _kind = SyntaxKind.StringToken;
+            _value = sb.ToString();
         }
 
         private void ReadWhiteSpace()
