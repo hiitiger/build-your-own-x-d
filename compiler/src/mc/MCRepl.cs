@@ -47,9 +47,9 @@ namespace MCompiler
                 else if (isIdentifier)
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
                 else if (isOperator)
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                else if (!isNumber)
                     Console.ForegroundColor = ConsoleColor.DarkGray;
+                else if ( isNumber)
+                    Console.ForegroundColor = ConsoleColor.Cyan;
 
                 Console.Write(token.Text);
 

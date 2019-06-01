@@ -8,6 +8,8 @@ namespace MCompiler.CodeAnalysis.Binding
         VariableExpression,
         AssignmentExpression,
 
+        ErrorExpression,
+
         //
         BlockStatement,
         ExpressionStatement,
@@ -17,6 +19,6 @@ namespace MCompiler.CodeAnalysis.Binding
         ForStatement,
         GotoStatement,
         LabelStatement,
-        ConditionalGotoStatement
+        ConditionalGotoStatement,
     }
 }
