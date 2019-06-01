@@ -1,3 +1,5 @@
+using MCompiler.CodeAnalysis.Symbol;
+
 namespace MCompiler.CodeAnalysis.Binding
 {
     internal sealed class BoundVariableDeclarationStatement : BoundStatement

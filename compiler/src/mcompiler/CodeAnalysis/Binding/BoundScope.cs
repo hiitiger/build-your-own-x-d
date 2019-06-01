@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using MCompiler.CodeAnalysis.Symbol;
 
 namespace MCompiler.CodeAnalysis.Binding
 {

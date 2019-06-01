@@ -3,6 +3,7 @@ using MCompiler.CodeAnalysis.Syntax;
 using System.Collections.Generic;
 using System;
 using MCompiler.CodeAnalysis;
+using MCompiler.CodeAnalysis.Symbol;
 
 namespace MCompiler.Tests.CodeAnalysis
 {

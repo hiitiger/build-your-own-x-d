@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using MCompiler.CodeAnalysis.Binding;
+    using MCompiler.CodeAnalysis.Symbol;
     using MCompiler.CodeAnalysis.Syntax;
 
     internal class Evaluator
@@ -20,7 +21,7 @@
 
         public object Evaluate()
         {
-            var labelToIndex = new Dictionary<LabelSymbol, int>();
+            var labelToIndex = new Dictionary<BoundLabel, int>();
             for (var i = 0; i < _root.Statements.Length; ++i)
             {
                 var s = _root.Statements[i];

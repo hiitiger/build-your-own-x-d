@@ -12,10 +12,10 @@ namespace MCompiler.CodeAnalysis.Lowering
         {
         }
 
-        private LabelSymbol GenerateLabel()
+        private BoundLabel GenerateLabel()
         {
             var label = $"label{++_labelCount}";
-            return new LabelSymbol(label);
+            return new BoundLabel(label);
         }
 
         public static BoundBlockStatement Lower(BoundStatement statement)

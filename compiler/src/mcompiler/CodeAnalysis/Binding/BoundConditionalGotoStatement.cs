@@ -2,7 +2,7 @@ namespace MCompiler.CodeAnalysis.Binding
 {
     internal class BoundConditionalGotoStatement : BoundStatement
     {
-        public BoundConditionalGotoStatement(LabelSymbol label, BoundExpression condition, bool jumpIfFalse = false)
+        public BoundConditionalGotoStatement(BoundLabel label, BoundExpression condition, bool jumpIfFalse = false)
         {
             Label = label;
             Condition = condition;
@@ -10,7 +10,7 @@ namespace MCompiler.CodeAnalysis.Binding
         }
         public override BoundNodeKind Kind => BoundNodeKind.ConditionalGotoStatement;
 
-        public LabelSymbol Label { get; }
+        public BoundLabel Label { get; }
         public BoundExpression Condition { get; }
         public bool JumpIfFalse { get; }
     }

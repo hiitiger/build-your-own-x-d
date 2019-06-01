@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using MCompiler.CodeAnalysis.Symbol;
 using MCompiler.CodeAnalysis.Syntax;
 
 namespace MCompiler.CodeAnalysis.Binding

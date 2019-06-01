@@ -1,8 +1,8 @@
 namespace MCompiler.CodeAnalysis
 {
-    public class LabelSymbol
+    public class BoundLabel
     {
-        internal LabelSymbol(string name)
+        internal BoundLabel(string name)
         {
             Name = name;
         }
