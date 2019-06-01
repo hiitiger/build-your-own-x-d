@@ -2,7 +2,7 @@ namespace MCompiler.CodeAnalysis.Symbol
 {
     public abstract class Symbol
     {
-        private protected Symbol(string name)
+        internal Symbol(string name)
         {
             Name = name;
         }

@@ -104,17 +104,26 @@ namespace MCompiler.CodeAnalysis.Binding
 
         private BoundVariableDeclarationStatement BindVariableDeclarationStatement(VariableDeclarationStatementSyntax syntax)
         {
-            var name = syntax.IdentifierToken.Text;
             var isReadonly = syntax.KeywordToken.Kind == SyntaxKind.LetKeyword;
             var initializer = BindExpression(syntax.Initializer);
-            var variable = new VariableSymbol(name, isReadonly, initializer.Type);
-
-            if (!_scope.TryDeclare(variable))
-            {
-                _diagnostics.ReportVariableAlreadyDeclared(syntax.IdentifierToken.Span, name);
-            }
+            var variable = BindVariable(syntax.IdentifierToken, isReadonly, initializer.Type);
 
             return new BoundVariableDeclarationStatement(variable, initializer);
+        }
+
+        private VariableSymbol BindVariable(SyntaxToken identifierToken, bool isReadonly, TypeSymbol type)
+        {
+            var name = identifierToken.Text ?? "?";
+            var variable = new VariableSymbol(name, isReadonly, type);
+
+            var declared = !identifierToken.IsMissing;
+
+            if (declared && !_scope.TryDeclare(variable))
+            {
+                _diagnostics.ReportVariableAlreadyDeclared(identifierToken.Span, name);
+            }
+
+            return variable;
         }
 
         private BoundBlockStatement BindBlockstatement(BlockStatementSyntax syntax)
@@ -139,7 +148,9 @@ namespace MCompiler.CodeAnalysis.Binding
         private BoundExpression BindExpression(ExpressionSyntax syntax, TypeSymbol type)
         {
             var expression = BindExpression(syntax);
-            if (expression.Type != type)
+            if (expression.Type != type
+                && expression.Type != TypeSymbol.Error
+                && type != TypeSymbol.Error)
                 _diagnostics.ReportCannotConvert(syntax.Span, expression.Type, type);
 
             return expression;
@@ -200,7 +211,7 @@ namespace MCompiler.CodeAnalysis.Binding
         private BoundExpression BindNameExpression(NameExpressionSyntax syntax)
         {
             var name = syntax.IdentifierToken.Text;
-            if (string.IsNullOrEmpty(name))
+            if (syntax.IdentifierToken.IsMissing)
                 return new BoundErrorExpression();
 
             if (!_scope.TryLookup(name, out VariableSymbol variable))
