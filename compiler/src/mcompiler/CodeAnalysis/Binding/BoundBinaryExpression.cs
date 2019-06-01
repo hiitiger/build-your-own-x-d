@@ -1,4 +1,5 @@
 using System;
+using MCompiler.CodeAnalysis.Symbol;
 
 namespace MCompiler.CodeAnalysis.Binding
 {
@@ -13,7 +14,7 @@ namespace MCompiler.CodeAnalysis.Binding
         }
 
         public override BoundNodeKind Kind => BoundNodeKind.BinaryExpression;
-        public override Type Type => Op.Type;
+        public override TypeSymbol Type => Op.Type;
 
         public BoundExpression Left { get; }
         public BoundBinaryOperator Op { get; }

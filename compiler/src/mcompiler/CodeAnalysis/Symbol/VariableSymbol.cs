@@ -2,16 +2,17 @@ using System;
 
 namespace MCompiler.CodeAnalysis.Symbol
 {
-    public sealed class VariableSymbol
+    public sealed class VariableSymbol : Symbol
     {
-        internal VariableSymbol(string name, bool isReadonly, Type type)
+        internal VariableSymbol(string name, bool isReadonly, TypeSymbol type)
+        : base(name)
         {
-            Name = name;
             IsReadonly = isReadonly;
             Type = type;
         }
-        public string Name { get; }
         public bool IsReadonly { get; }
-        public Type Type { get; }
+        public TypeSymbol Type { get; }
+
+        public override SymbolKind Kind => SymbolKind.Variable;
     }
 }

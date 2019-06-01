@@ -1,4 +1,5 @@
 using System;
+using MCompiler.CodeAnalysis.Symbol;
 
 namespace MCompiler.CodeAnalysis.Binding
 {
@@ -11,7 +12,7 @@ namespace MCompiler.CodeAnalysis.Binding
         }
 
         public override BoundNodeKind Kind => BoundNodeKind.UnaryExpression;
-        public override Type Type => Operand.Type;
+        public override TypeSymbol Type => Operand.Type;
 
         public BoundUnaryOperator Op { get; }
         public BoundUnaryOperatorKind OperatorKind => Op.Kind;

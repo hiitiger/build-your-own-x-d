@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using MCompiler.CodeAnalysis.Symbol;
 using MCompiler.CodeAnalysis.Syntax;
 using MCompiler.CodeAnalysis.Text;
 
@@ -40,13 +41,13 @@ namespace MCompiler.CodeAnalysis
             Report(span, message);
         }
 
-        public void ReportUndefinedUnaryOperator(TextSpan span, string text, Type type)
+        public void ReportUndefinedUnaryOperator(TextSpan span, string text, TypeSymbol type)
         {
             var message = $"Unary operator '{text}' is not defined for type {type}";
             Report(span, message);
         }
 
-        public void ReportUndefinedBinaryOperator(TextSpan span, string text, Type type1, Type type2)
+        public void ReportUndefinedBinaryOperator(TextSpan span, string text, TypeSymbol type1, TypeSymbol type2)
         {
             var message = $"Binary operator '{text}' is not defined for types {type1} and {type2}";
             Report(span, message);
@@ -64,7 +65,7 @@ namespace MCompiler.CodeAnalysis
             Report(span, message);
         }
 
-        internal void ReportCannotConvert(TextSpan span, Type type1, Type type2)
+        internal void ReportCannotConvert(TextSpan span, TypeSymbol type1, TypeSymbol type2)
         {
             var message = $"Cannot convert from {type1} to {type2}";
             Report(span, message);

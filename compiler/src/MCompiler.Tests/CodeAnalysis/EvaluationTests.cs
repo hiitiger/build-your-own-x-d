@@ -96,7 +96,7 @@ namespace MCompiler.Tests.CodeAnalysis
                     if [10]
                         x = 10
                 }";
-            var diagnostic = $"Cannot convert from {typeof(int)} to {typeof(bool)}";
+            var diagnostic = $"Cannot convert from {TypeSymbol.Int} to {TypeSymbol.Bool}";
 
             AssertHasDiagnostics(text, diagnostic);
         }
@@ -110,7 +110,7 @@ namespace MCompiler.Tests.CodeAnalysis
                     while [10]
                         x = 10
                 }";
-            var diagnostic = $"Cannot convert from {typeof(int)} to {typeof(bool)}";
+            var diagnostic = $"Cannot convert from {TypeSymbol.Int} to {TypeSymbol.Bool}";
 
             AssertHasDiagnostics(text, diagnostic);
         }
@@ -195,7 +195,7 @@ namespace MCompiler.Tests.CodeAnalysis
                             var x = 2
                             x = [true]
                         }";
-            var diagnostic = $"Cannot convert from {typeof(bool)} to {typeof(int)}";
+            var diagnostic = $"Cannot convert from {TypeSymbol.Bool} to {TypeSymbol.Int}";
 
             AssertHasDiagnostics(text, diagnostic);
         }
@@ -204,7 +204,7 @@ namespace MCompiler.Tests.CodeAnalysis
         public void Evaluation_UnaryOperator_Undefined()
         {
             var text = @"[+]true";
-            var diagnostic = $"Unary operator '+' is not defined for type {typeof(bool)}";
+            var diagnostic = $"Unary operator '+' is not defined for type {TypeSymbol.Bool}";
 
             AssertHasDiagnostics(text, diagnostic);
         }
@@ -213,7 +213,7 @@ namespace MCompiler.Tests.CodeAnalysis
         public void Evaluation_BinaryOperator_Undefined()
         {
             var text = @"true[+]false";
-            var diagnostic = $"Binary operator '+' is not defined for types {typeof(bool)} and {typeof(bool)}";
+            var diagnostic = $"Binary operator '+' is not defined for types {TypeSymbol.Bool} and {TypeSymbol.Bool}";
 
             AssertHasDiagnostics(text, diagnostic);
         }
