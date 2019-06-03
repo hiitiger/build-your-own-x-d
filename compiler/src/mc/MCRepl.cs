@@ -39,8 +39,9 @@ namespace MCompiler
             {
                 var isKeyword = token.Kind.ToString().EndsWith("Keyword");
                 var isOperator = SyntaxFacts.GetBinaryOperatorPrecedence(token.Kind) > 0 || SyntaxFacts.GetUnaryOperatorPrecedence(token.Kind) > 0;
-                var isNumber = token.Kind == SyntaxKind.NumberToken;
                 var isIdentifier = token.Kind == SyntaxKind.IdentifierToken;
+                var isNumber = token.Kind == SyntaxKind.NumberToken;
+                var isString = token.Kind == SyntaxKind.StringToken;
 
                 if (isKeyword)
                     Console.ForegroundColor = ConsoleColor.Blue;
@@ -48,9 +49,10 @@ namespace MCompiler
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
                 else if (isOperator)
                     Console.ForegroundColor = ConsoleColor.DarkGray;
-                else if ( isNumber)
+                else if (isNumber)
                     Console.ForegroundColor = ConsoleColor.Cyan;
-
+                else if (isString)
+                    Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.Write(token.Text);
 
                 Console.ResetColor();
@@ -99,7 +101,7 @@ namespace MCompiler
 
             if (!diagnostics.Any())
             {
-                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine(result.Value);
                 Console.ResetColor();
                 //only when complile with no errors

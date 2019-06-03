@@ -169,7 +169,14 @@
             switch (b.Op.Kind)
             {
                 case BoundBinaryOperatorKind.Addition:
-                    return (int)left + (int)right;
+                    {
+                        if (b.Type == TypeSymbol.Int)
+                            return (int)left + (int)right;
+                        else if (b.Type == TypeSymbol.String)
+                            return (string)left + (string)right;
+                        else
+                            throw new Exception($"Addition not defined on {b.Type}");
+                    }
                 case BoundBinaryOperatorKind.Subtraction:
                     return (int)left - (int)right;
                 case BoundBinaryOperatorKind.Multiplication:

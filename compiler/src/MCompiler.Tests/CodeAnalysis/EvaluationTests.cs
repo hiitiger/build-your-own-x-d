@@ -19,6 +19,10 @@ namespace MCompiler.Tests.CodeAnalysis
         [InlineData("2 * 2", 4)]
         [InlineData("4 / 2", 2)]
         [InlineData("(4 + 2)", 6)]
+
+        [InlineData(@"""hello"" + ""242""", "hello242")]
+
+
         [InlineData("true", true)]
         [InlineData("false", false)]
         [InlineData("!false", true)]
