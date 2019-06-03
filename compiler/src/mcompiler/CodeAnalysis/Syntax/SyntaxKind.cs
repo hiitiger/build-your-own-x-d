@@ -12,6 +12,7 @@ namespace MCompiler.CodeAnalysis.Syntax
         StarToken,
         SlashToken,
 
+        CommaToken,
         OpenParenthesisToken,
         CloseParenthesisToken,
         OpenBraceToken,
@@ -70,6 +71,7 @@ namespace MCompiler.CodeAnalysis.Syntax
         IfStatement,
         WhileStatement,
         ForStatement,
+        CallExpression,
     }
 
 }

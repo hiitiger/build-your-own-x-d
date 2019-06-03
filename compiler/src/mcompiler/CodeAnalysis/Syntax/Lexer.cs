@@ -64,6 +64,10 @@ namespace MCompiler.CodeAnalysis.Syntax
                     _kind = SyntaxKind.SlashToken;
                     _position += 1;
                     break;
+                case ',':
+                    _kind = SyntaxKind.CommaToken;
+                    _position += 1;
+                    break;
                 case '(':
                     _kind = SyntaxKind.OpenParenthesisToken;
                     _position += 1;

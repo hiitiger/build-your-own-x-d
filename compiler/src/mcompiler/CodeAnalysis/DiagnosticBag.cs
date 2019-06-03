@@ -82,5 +82,23 @@ namespace MCompiler.CodeAnalysis
             var message = $"Unterminated string literal";
             Report(span, message);
         }
+
+        internal void ReportUndefinedFunction(TextSpan span, string name)
+        {
+            var message = $"Undefined function '{name}'";
+            Report(span, message);
+        }
+
+        internal void ReportWrongArgumentCount(TextSpan span, string name, int expectedCount, int count)
+        {
+            var message = $"Function '{name}' requires {expectedCount} arguments but was given {count}";
+            Report(span, message);
+        }
+
+        internal void ReportWrongArgumentType(TextSpan span, string name, TypeSymbol expectedType, TypeSymbol actualType)
+        {
+            var message = $"Function '{name}' requires type {expectedType} but was given type {actualType}";
+            Report(span, message);
+        }
     }
 }

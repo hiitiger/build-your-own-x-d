@@ -157,8 +157,28 @@
                     return EvaluateUnaryExpression((BoundUnaryExpression)root);
                 case BoundNodeKind.BinaryExpression:
                     return EvaluateBinaryExpression((BoundBinaryExpression)root);
+                case BoundNodeKind.CallExpression:
+                    return EvaluateCallExpression((BoundCallExpression)root);
                 default:
                     throw new Exception($"Unexpected node {root.Kind}");
+            }
+        }
+
+        private object EvaluateCallExpression(BoundCallExpression node)
+        {
+            if(node.Function == BuiltinFunctions.Input)
+            {
+                return Console.ReadLine();
+            }
+            else if (node.Function == BuiltinFunctions.Print)
+            {
+                var message = (string)EvaluateExpression(node.Arguments[0]);
+                Console.WriteLine(message);
+                return null;
+            }
+            else
+            {
+                throw new Exception($"Unexpected function {node.Function}");
             }
         }
 

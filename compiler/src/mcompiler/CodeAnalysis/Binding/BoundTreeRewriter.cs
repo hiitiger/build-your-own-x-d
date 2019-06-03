@@ -31,9 +31,9 @@ namespace MCompiler.CodeAnalysis.Binding
                     return RewriteWhileStatement((BoundWhileStatement)node);
                 case BoundNodeKind.ForStatement:
                     return RewriteForStatement((BoundForStatement)node);
-                  case BoundNodeKind.LabelStatement:
+                case BoundNodeKind.LabelStatement:
                     return RewriteLabelStatement((BoundLabelStatement)node);
-                  case BoundNodeKind.GotoStatement:
+                case BoundNodeKind.GotoStatement:
                     return RewriteGotoStatement((BoundGotoStatement)node);
                 case BoundNodeKind.ConditionalGotoStatement:
                     return RewriteConditionalGotoStatement((BoundConditionalGotoStatement)node);
@@ -112,21 +112,21 @@ namespace MCompiler.CodeAnalysis.Binding
             for (var i = 0; i < node.Statements.Length; ++i)
             {
                 var statement = RewriteStatement(node.Statements[i]);
-                if(statement != node.Statements[i])
+                if (statement != node.Statements[i])
                 {
-                    if(builder == null)
+                    if (builder == null)
                     {
                         builder = ImmutableArray.CreateBuilder<BoundStatement>(node.Statements.Length);
-                        for(var j =0; j < i; ++j)
+                        for (var j = 0; j < i; ++j)
                             builder.Add(node.Statements[j]);
                     }
                 }
 
-                if(builder != null) 
+                if (builder != null)
                     builder.Add(statement);
             }
 
-            if(builder == null)
+            if (builder == null)
                 return node;
             return new BoundBlockStatement(builder.MoveToImmutable());
         }
@@ -145,6 +145,8 @@ namespace MCompiler.CodeAnalysis.Binding
                     return RewriteVariableExpression((BoundVariableExpression)node);
                 case BoundNodeKind.AssignmentExpression:
                     return RewriteAssignmentExpression((BoundAssignmentExpression)node);
+                case BoundNodeKind.CallExpression:
+                    return RewriteCallExpression((BoundCallExpression)node);
                 case BoundNodeKind.ErrorExpression:
                     return RewriteErrorExpression((BoundErrorExpression)node);
                 default:
@@ -152,7 +154,32 @@ namespace MCompiler.CodeAnalysis.Binding
             }
         }
 
-        private BoundExpression RewriteErrorExpression(BoundErrorExpression node)
+        protected virtual BoundExpression RewriteCallExpression(BoundCallExpression node)
+        {
+            ImmutableArray<BoundExpression>.Builder builder = null;
+            for (var i = 0; i < node.Arguments.Length; ++i)
+            {
+                var expression = RewriteExpression(node.Arguments[i]);
+                if (expression != node.Arguments[i])
+                {
+                    if (builder == null)
+                    {
+                        builder = ImmutableArray.CreateBuilder<BoundExpression>(node.Arguments.Length);
+                        for (var j = 0; j < i; ++j)
+                            builder.Add(node.Arguments[j]);
+                    }
+                }
+
+                if (builder != null)
+                    builder.Add(expression);
+            }
+
+            if (builder == null)
+                return node;
+            return new BoundCallExpression(node.Function, builder.MoveToImmutable());
+        }
+
+        protected virtual BoundExpression RewriteErrorExpression(BoundErrorExpression node)
         {
             return node;
         }

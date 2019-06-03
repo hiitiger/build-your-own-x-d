@@ -20,5 +20,6 @@ namespace MCompiler.CodeAnalysis.Binding
         GotoStatement,
         LabelStatement,
         ConditionalGotoStatement,
+        CallExpression,
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using MCompiler.CodeAnalysis.Symbol;
 
 namespace MCompiler.CodeAnalysis.Binding

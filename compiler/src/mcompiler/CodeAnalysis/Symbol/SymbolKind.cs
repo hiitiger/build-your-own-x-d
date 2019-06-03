@@ -3,6 +3,8 @@ namespace MCompiler.CodeAnalysis.Symbol
     public enum SymbolKind
     {
         Variable,
-        Type
+        Type,
+        Function,
+        Parameter
     }
 }
