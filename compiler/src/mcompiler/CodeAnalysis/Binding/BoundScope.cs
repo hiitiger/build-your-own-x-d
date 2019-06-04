@@ -7,13 +7,14 @@ namespace MCompiler.CodeAnalysis.Binding
     internal sealed class BoundScope
     {
         private Dictionary<string, VariableSymbol> _variables = new Dictionary<string, VariableSymbol>();
+        private Dictionary<string, FunctionSymbol> _functions = new Dictionary<string, FunctionSymbol>();
         public BoundScope Parent { get; }
 
         public BoundScope(BoundScope parent)
         {
             Parent = parent;
         }
-        public bool TryDeclare(VariableSymbol variable)
+        public bool TryDeclareVariable(VariableSymbol variable)
         {
             if (!_variables.ContainsKey(variable.Name))
             {
@@ -26,7 +27,7 @@ namespace MCompiler.CodeAnalysis.Binding
             }
         }
 
-        public bool TryLookup(string name, out VariableSymbol variable)
+        public bool TryLookupVariable(string name, out VariableSymbol variable)
         {
             if (_variables.TryGetValue(name, out variable))
             {
@@ -37,13 +38,46 @@ namespace MCompiler.CodeAnalysis.Binding
                 if (Parent == null)
                     return false;
 
-                return Parent.TryLookup(name, out variable);
+                return Parent.TryLookupVariable(name, out variable);
+            }
+        }
+
+         public bool TryDeclareFunction(FunctionSymbol function)
+        {
+            if (!_functions.ContainsKey(function.Name))
+            {
+                _functions.Add(function.Name, function);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool TryLookupFunction(string name, out FunctionSymbol function)
+        {
+            if (_functions.TryGetValue(name, out function))
+            {
+                return true;
+            }
+            else
+            {
+                if (Parent == null)
+                    return false;
+
+                return Parent.TryLookupFunction(name, out function);
             }
         }
 
         public ImmutableArray<VariableSymbol> GetDeclaredVariables()
         {
             return _variables.Values.ToImmutableArray();
+        }
+
+        public ImmutableArray<FunctionSymbol> GetDeclaredFunctions()
+        {
+            return _functions.Values.ToImmutableArray();
         }
     }
 }

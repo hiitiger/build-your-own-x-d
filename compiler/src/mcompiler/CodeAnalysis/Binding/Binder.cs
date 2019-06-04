@@ -40,13 +40,14 @@ namespace MCompiler.CodeAnalysis.Binding
                 previous = previous.Previous;
             }
 
-            BoundScope parent = null;
+            var parent = CreateRootScope();
+
             while (stack.Count > 0)
             {
                 var prev = stack.Pop();
                 var scope = new BoundScope(parent);
                 foreach (var v in prev.Variables)
-                    scope.TryDeclare(v);
+                    scope.TryDeclareVariable(v);
 
                 parent = scope;
             }
@@ -54,6 +55,13 @@ namespace MCompiler.CodeAnalysis.Binding
             return parent;
         }
 
+        private static BoundScope CreateRootScope()
+        {
+            var scope = new BoundScope(null);
+            foreach(var f in BuiltinFunctions.GetAll())
+                scope.TryDeclareFunction(f);
+            return scope;
+        }
 
         public BoundStatement BindStatement(StatementSyntax syntax)
         {
@@ -118,7 +126,7 @@ namespace MCompiler.CodeAnalysis.Binding
 
             var declared = !identifierToken.IsMissing;
 
-            if (declared && !_scope.TryDeclare(variable))
+            if (declared && !_scope.TryDeclareVariable(variable))
             {
                 _diagnostics.ReportVariableAlreadyDeclared(identifierToken.Span, name);
             }
@@ -199,8 +207,7 @@ namespace MCompiler.CodeAnalysis.Binding
             }
 
             var functions = BuiltinFunctions.GetAll();
-            var function = functions.SingleOrDefault(f => f.Name == syntax.Identifier.Text);
-            if (function == null)
+            if (!_scope.TryLookupFunction(syntax.Identifier.Text, out var function))
             {
                 _diagnostics.ReportUndefinedFunction(syntax.Identifier.Span, syntax.Identifier.Text);
                 return new BoundErrorExpression();
@@ -237,7 +244,7 @@ namespace MCompiler.CodeAnalysis.Binding
             var name = syntax.IdentifierToken.Text;
             var boundExpression = BindExpression(syntax.Expression);
 
-            if (!_scope.TryLookup(name, out var variable))
+            if (!_scope.TryLookupVariable(name, out var variable))
             {
                 _diagnostics.ReportUndefinedName(syntax.IdentifierToken.Span, name);
                 return boundExpression;
@@ -264,7 +271,7 @@ namespace MCompiler.CodeAnalysis.Binding
             if (syntax.IdentifierToken.IsMissing)
                 return new BoundErrorExpression();
 
-            if (!_scope.TryLookup(name, out VariableSymbol variable))
+            if (!_scope.TryLookupVariable(name, out VariableSymbol variable))
             {
                 _diagnostics.ReportUndefinedName(syntax.IdentifierToken.Span, name);
                 return new BoundErrorExpression();
