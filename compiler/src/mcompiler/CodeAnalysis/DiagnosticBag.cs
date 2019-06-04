@@ -100,5 +100,11 @@ namespace MCompiler.CodeAnalysis
             var message = $"Function '{name}' requires type {expectedType} but was given type {actualType}";
             Report(span, message);
         }
+
+        internal void ReportExpressionMustHaveValue(TextSpan span)
+        {
+            var message = "Expression must have a value";
+            Report(span, message);
+        }
     }
 }

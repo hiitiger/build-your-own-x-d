@@ -141,7 +141,7 @@ namespace MCompiler.CodeAnalysis.Binding
 
         private BoundExpressionStatement BindExpressionStatement(ExpressionStatementSyntax syntax)
         {
-            var expression = BindExpression(syntax.Expression);
+            var expression = BindExpression(syntax.Expression, true);
             return new BoundExpressionStatement(expression);
         }
 
@@ -156,7 +156,18 @@ namespace MCompiler.CodeAnalysis.Binding
             return expression;
         }
 
-        public BoundExpression BindExpression(ExpressionSyntax syntax)
+        public BoundExpression BindExpression(ExpressionSyntax syntax, bool canBeVoid = false)
+        {
+            var result = BindExpressionInternal(syntax);
+            if (!canBeVoid && result.Type == TypeSymbol.Void)
+            {
+                _diagnostics.ReportExpressionMustHaveValue(syntax.Span);
+                return new BoundErrorExpression();
+            }
+            return result;
+        }
+
+        public BoundExpression BindExpressionInternal(ExpressionSyntax syntax)
         {
             switch (syntax.Kind)
             {
@@ -212,7 +223,6 @@ namespace MCompiler.CodeAnalysis.Binding
                     return new BoundErrorExpression();
                 }
             }
-
 
             return new BoundCallExpression(function, boundArguments.ToImmutable());
         }

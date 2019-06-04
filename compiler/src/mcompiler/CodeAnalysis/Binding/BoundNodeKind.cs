@@ -7,7 +7,7 @@ namespace MCompiler.CodeAnalysis.Binding
         BinaryExpression,
         VariableExpression,
         AssignmentExpression,
-
+        CallExpression,
         ErrorExpression,
 
         //
@@ -20,6 +20,5 @@ namespace MCompiler.CodeAnalysis.Binding
         GotoStatement,
         LabelStatement,
         ConditionalGotoStatement,
-        CallExpression,
     }
 }
