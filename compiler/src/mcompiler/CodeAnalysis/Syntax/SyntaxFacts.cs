@@ -152,6 +152,8 @@ namespace MCompiler.CodeAnalysis.Syntax
                     return "while";
                 case SyntaxKind.ForKeyword:
                     return "for";
+                case SyntaxKind.DoKeyword:
+                    return "do";
                 case SyntaxKind.LessToken:
                     return "<";
                 case SyntaxKind.LessEqualsToken:
@@ -160,6 +162,8 @@ namespace MCompiler.CodeAnalysis.Syntax
                     return ">";
                 case SyntaxKind.GreaterEqualsToken:
                     return ">=";
+                case SyntaxKind.CommaToken:
+                    return ",";
                 default:
                     return null;
             }
