@@ -15,6 +15,5 @@ namespace MCompiler.CodeAnalysis.Binding
             this.Loop = loop;
             this.Body = body;
         }
-
     }
 }

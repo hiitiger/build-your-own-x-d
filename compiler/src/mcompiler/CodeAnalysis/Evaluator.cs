@@ -68,61 +68,61 @@
         }
 
 
-        private void EvaluateStatement(BoundStatement statement)
-        {
-            switch (statement.Kind)
-            {
-                case BoundNodeKind.BlockStatement:
-                    EvaluateBoundBlockStatement((BoundBlockStatement)statement);
-                    break;
-                case BoundNodeKind.ExpressionStatement:
-                    EvaluateExpressionStatement((BoundExpressionStatement)statement);
-                    break;
-                case BoundNodeKind.VariableDeclarationStatement:
-                    EvaluateVariableDeclarationStatement((BoundVariableDeclarationStatement)statement);
-                    break;
-                case BoundNodeKind.IfStatement:
-                    EvaluateIfStatement((BoundIfStatement)statement);
-                    break;
-                case BoundNodeKind.WhileStatement:
-                    EvaluateWhileStatement((BoundWhileStatement)statement);
-                    break;
-                case BoundNodeKind.ForStatement:
-                    EvaluateForStatement((BoundForStatement)statement);
-                    break;
-                default:
-                    throw new Exception($"Unexpected node {statement.Kind}");
-            }
-        }
+        // private void EvaluateStatement(BoundStatement statement)
+        // {
+        //     switch (statement.Kind)
+        //     {
+        //         case BoundNodeKind.BlockStatement:
+        //             EvaluateBoundBlockStatement((BoundBlockStatement)statement);
+        //             break;
+        //         case BoundNodeKind.ExpressionStatement:
+        //             EvaluateExpressionStatement((BoundExpressionStatement)statement);
+        //             break;
+        //         case BoundNodeKind.VariableDeclarationStatement:
+        //             EvaluateVariableDeclarationStatement((BoundVariableDeclarationStatement)statement);
+        //             break;
+        //         case BoundNodeKind.IfStatement:
+        //             EvaluateIfStatement((BoundIfStatement)statement);
+        //             break;
+        //         case BoundNodeKind.WhileStatement:
+        //             EvaluateWhileStatement((BoundWhileStatement)statement);
+        //             break;
+        //         case BoundNodeKind.ForStatement:
+        //             EvaluateForStatement((BoundForStatement)statement);
+        //             break;
+        //         default:
+        //             throw new Exception($"Unexpected node {statement.Kind}");
+        //     }
+        // }
 
-        private void EvaluateForStatement(BoundForStatement statement)
-        {
-            EvaluateExpression(statement.Initializer);
-            while ((bool)EvaluateExpression(statement.Condition))
-            {
-                EvaluateStatement(statement.Body);
-                EvaluateExpression(statement.Loop);
-            }
-        }
+        // private void EvaluateForStatement(BoundForStatement statement)
+        // {
+        //     EvaluateExpression(statement.Initializer);
+        //     while ((bool)EvaluateExpression(statement.Condition))
+        //     {
+        //         EvaluateStatement(statement.Body);
+        //         EvaluateExpression(statement.Loop);
+        //     }
+        // }
 
-        private void EvaluateWhileStatement(BoundWhileStatement statement)
-        {
-            while ((bool)EvaluateExpression(statement.Condition))
-                EvaluateStatement(statement.Body);
-        }
+        // private void EvaluateWhileStatement(BoundWhileStatement statement)
+        // {
+        //     while ((bool)EvaluateExpression(statement.Condition))
+        //         EvaluateStatement(statement.Body);
+        // }
 
-        private void EvaluateIfStatement(BoundIfStatement statement)
-        {
-            var condition = (bool)EvaluateExpression(statement.Condition);
-            if (condition)
-            {
-                EvaluateStatement(statement.Statement);
-            }
-            else if (statement.ElseStatement != null)
-            {
-                EvaluateStatement(statement.ElseStatement);
-            }
-        }
+        // private void EvaluateIfStatement(BoundIfStatement statement)
+        // {
+        //     var condition = (bool)EvaluateExpression(statement.Condition);
+        //     if (condition)
+        //     {
+        //         EvaluateStatement(statement.Statement);
+        //     }
+        //     else if (statement.ElseStatement != null)
+        //     {
+        //         EvaluateStatement(statement.ElseStatement);
+        //     }
+        // }
 
         private void EvaluateVariableDeclarationStatement(BoundVariableDeclarationStatement statement)
         {
@@ -131,13 +131,13 @@
             _lastValue = value;
         }
 
-        private void EvaluateBoundBlockStatement(BoundBlockStatement node)
-        {
-            foreach (var statement in node.Statements)
-            {
-                EvaluateStatement(statement);
-            }
-        }
+        // private void EvaluateBoundBlockStatement(BoundBlockStatement node)
+        // {
+        //     foreach (var statement in node.Statements)
+        //     {
+        //         EvaluateStatement(statement);
+        //     }
+        // }
 
         private void EvaluateExpressionStatement(BoundExpressionStatement node)
         {

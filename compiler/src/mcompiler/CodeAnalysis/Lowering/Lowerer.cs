@@ -95,5 +95,24 @@ namespace MCompiler.CodeAnalysis.Lowering
                     gotoCheck, continueLabelStatement, node.Body, checkLabelStatement, gotoTrue, endLabelStatement));
             return RewriteStatement(result);
         }
+
+        protected override BoundStatement RewriteDoWhileStatement(BoundDoWhileStatement node)
+        {
+            // do
+            //      <body>
+            // while <condition>
+            //
+            // ----->
+            //
+            // continue:
+            // <body>
+            // gotoTrue <condition> continue
+            var continueLabel = GenerateLabel();
+
+            var continueLabelStatement = new BoundLabelStatement(continueLabel);
+            var gotoTrue = new BoundConditionalGotoStatement(continueLabel, node.Condition);
+            var result = new BoundBlockStatement(ImmutableArray.Create<BoundStatement>(continueLabelStatement, node.Body, gotoTrue));
+            return RewriteStatement(result);
+        }
     }
 }

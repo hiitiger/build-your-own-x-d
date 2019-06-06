@@ -31,6 +31,8 @@ namespace MCompiler.CodeAnalysis.Binding
                     return RewriteWhileStatement((BoundWhileStatement)node);
                 case BoundNodeKind.ForStatement:
                     return RewriteForStatement((BoundForStatement)node);
+                case BoundNodeKind.DoWhileStatement:
+                    return RewriteDoWhileStatement((BoundDoWhileStatement)node);
                 case BoundNodeKind.LabelStatement:
                     return RewriteLabelStatement((BoundLabelStatement)node);
                 case BoundNodeKind.GotoStatement:
@@ -40,6 +42,16 @@ namespace MCompiler.CodeAnalysis.Binding
                 default:
                     throw new Exception($"Unexpected node: {node.Kind}");
             }
+        }
+
+        protected virtual BoundStatement RewriteDoWhileStatement(BoundDoWhileStatement node)
+        {
+            var body = RewriteStatement(node.Body);
+            var condition = RewriteExpression(node.Condition);
+            if (body == node.Body && condition == node.Condition)
+                return node;
+
+            return new BoundDoWhileStatement(body, condition);
         }
 
         protected virtual BoundStatement RewriteConditionalGotoStatement(BoundConditionalGotoStatement node)

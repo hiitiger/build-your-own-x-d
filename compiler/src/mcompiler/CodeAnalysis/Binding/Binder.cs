@@ -79,9 +79,27 @@ namespace MCompiler.CodeAnalysis.Binding
                     return BindWhileStatement((WhileStatementSyntax)syntax);
                 case SyntaxKind.ForStatement:
                     return BindForStatement((ForStatementSyntax)syntax);
+                case SyntaxKind.DoWhileStatement:
+                    return BindDoWhileStatement((DoWhileStatementSyntax)syntax);
                 default:
                     throw new Exception($"Unexpected syntax {syntax.Kind}");
             }
+        }
+
+        private BoundStatement BindDoWhileStatement(DoWhileStatementSyntax syntax)
+        {
+            var statements = ImmutableArray.CreateBuilder<BoundStatement>();
+            _scope = new BoundScope(_scope);
+            foreach (var statementSyntax in syntax.Statament.Statements)
+            {
+                var statement = BindStatement(statementSyntax);
+                statements.Add(statement);
+            }
+
+            var condition = BindExpression(syntax.Condition, TypeSymbol.Bool);
+            _scope = _scope.Parent;
+            var body = new BoundBlockStatement(statements.ToImmutable());
+            return new BoundDoWhileStatement(body, condition);
         }
 
         private BoundForStatement BindForStatement(ForStatementSyntax syntax)
@@ -242,7 +260,7 @@ namespace MCompiler.CodeAnalysis.Binding
         private BoundExpression BindConversion(TypeSymbol type, ExpressionSyntax syntax)
         {
             var expression = BindExpression(syntax);
-            var conversion =  Conversion.Classify(expression.Type, type);
+            var conversion = Conversion.Classify(expression.Type, type);
             if (!conversion.Exists)
             {
                 _diagnostics.ReportCannotConvert(syntax.Span, expression.Type, type);

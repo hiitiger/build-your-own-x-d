@@ -46,7 +46,7 @@ namespace MCompiler.CodeAnalysis.Syntax
         ElseKeyword,
         WhileKeyword,
         ForKeyword,
-
+        DoKeyword,
         IdentifierToken,
 
         //
@@ -72,6 +72,7 @@ namespace MCompiler.CodeAnalysis.Syntax
         WhileStatement,
         ForStatement,
         CallExpression,
+        DoWhileStatement,
     }
 
 }

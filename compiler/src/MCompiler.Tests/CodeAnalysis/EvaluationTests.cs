@@ -75,6 +75,7 @@ namespace MCompiler.Tests.CodeAnalysis
         [InlineData("{var x = 0 while x < 10 x = x+1 x}", 10)]
         [InlineData("{var x = 0 var res = 0 for x = 1+1 x < 2 x = x+1 { res = x } res}", 0)]
         [InlineData("{var x = 0 var res = 0 for x = 1 x < 10 x = x+x { res = x } res}", 8)]
+        [InlineData("{var x = 0 var y = 0 do { y = x x = x + 1 } while (x < 10) y }", 9)]
         public void EvaluationTests_GetText_RoundTrips(string text, object value)
         {
             AssertValue(text, value);

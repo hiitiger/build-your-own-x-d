@@ -69,6 +69,8 @@ namespace MCompiler.CodeAnalysis.Syntax
                     return SyntaxKind.WhileKeyword;
                 case "for":
                     return SyntaxKind.ForKeyword;
+                case "do":
+                    return SyntaxKind.DoKeyword;
                 default:
                     return SyntaxKind.IdentifierToken;
             }
