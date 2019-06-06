@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using MCompiler.CodeAnalysis.Symbol;
+using MCompiler.CodeAnalysis.Symbols;
 using MCompiler.CodeAnalysis.Syntax;
 
 namespace MCompiler.CodeAnalysis.Binding
@@ -146,7 +146,7 @@ namespace MCompiler.CodeAnalysis.Binding
 
             if (declared && !_scope.TryDeclareVariable(variable))
             {
-                _diagnostics.ReportVariableAlreadyDeclared(identifierToken.Span, name);
+                _diagnostics.ReportSymbolAlreadyDeclared(identifierToken.Span, name);
             }
 
             return variable;

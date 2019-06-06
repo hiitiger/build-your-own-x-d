@@ -1,6 +1,6 @@
 using System;
 
-namespace MCompiler.CodeAnalysis.Symbol
+namespace MCompiler.CodeAnalysis.Symbols
 {
     public class VariableSymbol : Symbol
     {

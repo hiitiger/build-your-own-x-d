@@ -8,7 +8,7 @@
     using System.Threading;
     using MCompiler.CodeAnalysis.Binding;
     using MCompiler.CodeAnalysis.Lowering;
-    using MCompiler.CodeAnalysis.Symbol;
+    using MCompiler.CodeAnalysis.Symbols;
     using MCompiler.CodeAnalysis.Syntax;
 
     public class Compilation

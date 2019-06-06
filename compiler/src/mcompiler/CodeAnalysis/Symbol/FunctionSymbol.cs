@@ -1,6 +1,6 @@
 using System.Collections.Immutable;
 
-namespace MCompiler.CodeAnalysis.Symbol
+namespace MCompiler.CodeAnalysis.Symbols
 {
     public sealed class FunctionSymbol : Symbol
     {

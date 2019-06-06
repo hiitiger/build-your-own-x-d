@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using MCompiler.CodeAnalysis.Symbol;
+using MCompiler.CodeAnalysis.Symbols;
 using MCompiler.CodeAnalysis.Syntax;
 using MCompiler.CodeAnalysis.Text;
 
@@ -59,9 +59,9 @@ namespace MCompiler.CodeAnalysis
             Report(span, message);
         }
 
-        internal void ReportVariableAlreadyDeclared(TextSpan span, string name)
+        internal void ReportSymbolAlreadyDeclared(TextSpan span, string name)
         {
-            var message = $"Variable name '{name}' already declared";
+            var message = $"symbold '{name}' already declared";
             Report(span, message);
         }
 

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MCompiler.CodeAnalysis;
-using MCompiler.CodeAnalysis.Symbol;
+using MCompiler.CodeAnalysis.Symbols;
 using MCompiler.CodeAnalysis.Syntax;
 
 namespace MCompiler

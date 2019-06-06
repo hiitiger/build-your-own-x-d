@@ -1,4 +1,4 @@
-namespace MCompiler.CodeAnalysis.Symbol
+namespace MCompiler.CodeAnalysis.Symbols
 {
     public enum SymbolKind
     {

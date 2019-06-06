@@ -1,4 +1,4 @@
-namespace MCompiler.CodeAnalysis.Symbol
+namespace MCompiler.CodeAnalysis.Symbols
 {
     public sealed class ParameterSymbol : VariableSymbol
     {

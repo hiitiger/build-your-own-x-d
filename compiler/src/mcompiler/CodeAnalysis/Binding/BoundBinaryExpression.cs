@@ -1,5 +1,5 @@
 using System;
-using MCompiler.CodeAnalysis.Symbol;
+using MCompiler.CodeAnalysis.Symbols;
 
 namespace MCompiler.CodeAnalysis.Binding
 {

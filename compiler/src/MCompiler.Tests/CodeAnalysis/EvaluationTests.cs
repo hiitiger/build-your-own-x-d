@@ -3,7 +3,7 @@ using MCompiler.CodeAnalysis.Syntax;
 using System.Collections.Generic;
 using System;
 using MCompiler.CodeAnalysis;
-using MCompiler.CodeAnalysis.Symbol;
+using MCompiler.CodeAnalysis.Symbols;
 
 namespace MCompiler.Tests.CodeAnalysis
 {
@@ -132,9 +132,26 @@ namespace MCompiler.Tests.CodeAnalysis
                     }
                     var [x] = 5
                 }";
-            var diagnostic = @"Variable name 'x' already declared";
+            var diagnostic = @"symbold 'x' already declared";
 
             AssertHasDiagnostics(text, diagnostic);
+        }
+
+        [Fact]
+        public void Evaluation_Variables_Can_Shadow_Functions()
+        {
+            var text = @"
+                {
+                    let print = 42
+                    [print](""test"")
+                }
+            ";
+
+            var diagnostics = @"
+                Undefined function 'print'
+            ";
+
+            AssertHasDiagnostics(text, diagnostics);
         }
 
         [Fact]
