@@ -89,16 +89,8 @@ namespace MCompiler.CodeAnalysis.Binding
         private BoundStatement BindDoWhileStatement(DoWhileStatementSyntax syntax)
         {
             var statements = ImmutableArray.CreateBuilder<BoundStatement>();
-            _scope = new BoundScope(_scope);
-            foreach (var statementSyntax in syntax.Statament.Statements)
-            {
-                var statement = BindStatement(statementSyntax);
-                statements.Add(statement);
-            }
-
+            var body = BindBlockstatement(syntax.Statament);
             var condition = BindExpression(syntax.Condition, TypeSymbol.Bool);
-            _scope = _scope.Parent;
-            var body = new BoundBlockStatement(statements.ToImmutable());
             return new BoundDoWhileStatement(body, condition);
         }
 
