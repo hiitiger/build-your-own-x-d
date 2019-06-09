@@ -65,9 +65,9 @@ namespace MCompiler.CodeAnalysis
             Report(span, message);
         }
 
-        internal void ReportCannotConvert(TextSpan span, TypeSymbol type1, TypeSymbol type2)
+        internal void ReportCannotConvert(TextSpan span, TypeSymbol fromType, TypeSymbol toType)
         {
-            var message = $"Cannot convert from {type1} to {type2}";
+            var message = $"Cannot convert from {fromType} to {toType}";
             Report(span, message);
         }
 
@@ -104,6 +104,18 @@ namespace MCompiler.CodeAnalysis
         internal void ReportExpressionMustHaveValue(TextSpan span)
         {
             var message = "Expression must have a value";
+            Report(span, message);
+        }
+
+        internal void ReportUndefinedType(TextSpan span, string text)
+        {
+            var message = $"Undefined type '{text}'";
+            Report(span, message);
+        }
+
+        internal void ReportCannotConvertImplicit(TextSpan span, TypeSymbol fromType, TypeSymbol toType)
+        {
+            var message = $"Cannot convert from {fromType} to {toType}, an explicit version exist, are you missing a cast?";
             Report(span, message);
         }
     }
