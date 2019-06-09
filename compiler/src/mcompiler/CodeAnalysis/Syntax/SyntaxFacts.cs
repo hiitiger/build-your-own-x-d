@@ -164,6 +164,8 @@ namespace MCompiler.CodeAnalysis.Syntax
                     return ">=";
                 case SyntaxKind.CommaToken:
                     return ",";
+                case SyntaxKind.ColonToken:
+                    return ":";
                 default:
                     return null;
             }

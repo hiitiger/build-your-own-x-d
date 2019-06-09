@@ -37,6 +37,8 @@ namespace MCompiler.CodeAnalysis.Syntax
         LessEqualsToken,
         GreaterToken,
         GreaterEqualsToken,
+        ColonToken,
+
         //
         TrueKeyword,
         FalseKeyword,
@@ -63,6 +65,7 @@ namespace MCompiler.CodeAnalysis.Syntax
         CompilationUnit,
 
         ElseClause,
+        TypeClause,
 
         //statament
         BlockStatement,

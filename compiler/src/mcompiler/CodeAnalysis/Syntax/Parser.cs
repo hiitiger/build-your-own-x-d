@@ -122,9 +122,24 @@ namespace MCompiler.CodeAnalysis.Syntax
             var expected = Current.Kind == SyntaxKind.LetKeyword ? SyntaxKind.LetKeyword : SyntaxKind.VarKeyword;
             var keyword = MatchToken(expected);
             var identifierToken = MatchToken(SyntaxKind.IdentifierToken);
+            var typeClause = ParseOptionalTypeClause();
             var equalsToken = MatchToken(SyntaxKind.EqualsToken);
             var initializer = ParseExpression();
-            return new VariableDeclarationStatementSyntax(keyword, identifierToken, equalsToken, initializer);
+            return new VariableDeclarationStatementSyntax(keyword, identifierToken, typeClause, equalsToken, initializer);
+        }
+
+        private TypeClauseSyntax ParseOptionalTypeClause()
+        {
+            if (Current.Kind != SyntaxKind.ColonToken)
+                return null;
+            return ParseTypeClause();
+        }
+
+        private TypeClauseSyntax ParseTypeClause()
+        {
+            var colonToken = MatchToken(SyntaxKind.ColonToken);
+            var identifier = MatchToken(SyntaxKind.IdentifierToken);
+            return new TypeClauseSyntax(colonToken, identifier);
         }
 
         private BlockStatementSyntax ParseBlockStatement()
@@ -268,7 +283,7 @@ namespace MCompiler.CodeAnalysis.Syntax
 
         private ExpressionSyntax ParseNameOrCallExpression()
         {
-            if(Peek(0).Kind == SyntaxKind.IdentifierToken && Peek(1).Kind == SyntaxKind.OpenParenthesisToken)
+            if (Peek(0).Kind == SyntaxKind.IdentifierToken && Peek(1).Kind == SyntaxKind.OpenParenthesisToken)
                 return ParsCallExpression();
             else
                 return ParseNameExpression();
@@ -276,18 +291,18 @@ namespace MCompiler.CodeAnalysis.Syntax
 
         private ExpressionSyntax ParsCallExpression()
         {
-            var indentifierToken = MatchToken(SyntaxKind.IdentifierToken);
+            var identifierToken = MatchToken(SyntaxKind.IdentifierToken);
             var openParenthesisToken = MatchToken(SyntaxKind.OpenParenthesisToken);
             var arguments = ParseArguments();
             var closeParenthesisToken = MatchToken(SyntaxKind.CloseParenthesisToken);
-            return new CallExpressionSyntax(indentifierToken, openParenthesisToken, arguments, closeParenthesisToken);
+            return new CallExpressionSyntax(identifierToken, openParenthesisToken, arguments, closeParenthesisToken);
         }
 
         private SeparatedSyntaxList<ExpressionSyntax> ParseArguments()
         {
             var nodeAndSeparators = ImmutableArray.CreateBuilder<SyntaxNode>();
 
-            while(Current.Kind != SyntaxKind.CloseParenthesisToken && Current.Kind != SyntaxKind.EOFToken)
+            while (Current.Kind != SyntaxKind.CloseParenthesisToken && Current.Kind != SyntaxKind.EOFToken)
             {
                 var expression = ParseExpression();
                 nodeAndSeparators.Add(expression);

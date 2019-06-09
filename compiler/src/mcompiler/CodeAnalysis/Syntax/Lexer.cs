@@ -92,6 +92,10 @@ namespace MCompiler.CodeAnalysis.Syntax
                     _kind = SyntaxKind.HatToken;
                     _position += 1;
                     break;
+                case ':':
+                    _kind = SyntaxKind.ColonToken;
+                    _position += 1;
+                    break;
                 case '&':
                     {
                         if (Lookahead == '&')
