@@ -79,7 +79,17 @@
         private void EvaluateVariableDeclarationStatement(BoundVariableDeclarationStatement statement)
         {
             var value = EvaluateExpression(statement.Initializer);
-            _globals[statement.Variable] = value;
+
+            if (statement.Variable.Kind == SymbolKind.GlobalVariable)
+            {
+                _globals[statement.Variable] = value;
+            }
+            else
+            {
+                var locals = _locals.Peek();
+                locals[statement.Variable] = value;
+            }
+
             _lastValue = value;
         }
 
