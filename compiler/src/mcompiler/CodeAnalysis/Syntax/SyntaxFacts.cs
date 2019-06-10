@@ -71,6 +71,8 @@ namespace MCompiler.CodeAnalysis.Syntax
                     return SyntaxKind.ForKeyword;
                 case "do":
                     return SyntaxKind.DoKeyword;
+                case "function":
+                    return SyntaxKind.FunctionKeyword;
                 default:
                     return SyntaxKind.IdentifierToken;
             }
@@ -154,6 +156,8 @@ namespace MCompiler.CodeAnalysis.Syntax
                     return "for";
                 case SyntaxKind.DoKeyword:
                     return "do";
+                case SyntaxKind.FunctionKeyword:
+                    return "function";
                 case SyntaxKind.LessToken:
                     return "<";
                 case SyntaxKind.LessEqualsToken:

@@ -49,6 +49,8 @@ namespace MCompiler.CodeAnalysis.Syntax
         WhileKeyword,
         ForKeyword,
         DoKeyword,
+        FunctionKeyword,
+
         IdentifierToken,
 
         //
@@ -63,7 +65,9 @@ namespace MCompiler.CodeAnalysis.Syntax
 
         //
         CompilationUnit,
-
+        GlobalStatement,
+        FunctionDeclaration,
+        Parameter,
         ElseClause,
         TypeClause,
 

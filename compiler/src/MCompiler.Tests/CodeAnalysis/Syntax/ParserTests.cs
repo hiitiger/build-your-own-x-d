@@ -15,7 +15,7 @@ namespace MCompiler.Tests.CodeAnalysis.Syntax
             var op1Text = SyntaxFacts.GetText(op1);
             var op2Text = SyntaxFacts.GetText(op2);
             var text = $"a {op1Text} b {op2Text} c";
-            var expression = ParseExpresssion(text);
+            var expression = ParseExpression(text);
 
             if (op1Precedence >= op2Precedence)
             {
@@ -86,7 +86,7 @@ namespace MCompiler.Tests.CodeAnalysis.Syntax
             var op1Text = SyntaxFacts.GetText(op1);
             var op2Text = SyntaxFacts.GetText(op2);
             var text = $"{op1Text} b {op2Text} c";
-            var expression = ParseExpresssion(text);
+            var expression = ParseExpression(text);
 
             if (op1Precedence >= op2Precedence)
             {
@@ -129,10 +129,14 @@ namespace MCompiler.Tests.CodeAnalysis.Syntax
             }
         }
 
-        private static ExpressionSyntax ParseExpresssion(string text)
+        private static ExpressionSyntax ParseExpression(string text)
         {
-            var statement = SyntaxTree.Parse(text).Root.Statement;
-            return Assert.IsType<ExpressionStatementSyntax>(statement).Expression;
+            var members = SyntaxTree.Parse(text).Root.Members;
+            var member = Assert.Single(members);
+
+            var globalStatement = Assert.IsType<GlobalStatementSyntax>(member);
+
+            return Assert.IsType<ExpressionStatementSyntax>(globalStatement.Statement).Expression;
         }
 
         public static IEnumerable<object[]> GetBinaryOperatorPairsData()

@@ -61,13 +61,25 @@ namespace MCompiler.CodeAnalysis
 
         internal void ReportSymbolAlreadyDeclared(TextSpan span, string name)
         {
-            var message = $"symbold '{name}' already declared";
+            var message = $"Symbol '{name}' already declared";
+            Report(span, message);
+        }
+
+        internal void ReportParameterAlreadyDeclared(TextSpan span, string name)
+        {
+            var message = $"Parameter '{name}' already declared";
             Report(span, message);
         }
 
         internal void ReportCannotConvert(TextSpan span, TypeSymbol fromType, TypeSymbol toType)
         {
             var message = $"Cannot convert from {fromType} to {toType}";
+            Report(span, message);
+        }
+
+        internal void XXX_ReportFunctionsAreUnsupported(TextSpan span, string text)
+        {
+           var message = $"Function '{text}' with return values are unsupported";
             Report(span, message);
         }
 

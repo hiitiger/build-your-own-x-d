@@ -132,7 +132,7 @@ namespace MCompiler.Tests.CodeAnalysis
                     }
                     var [x] = 5
                 }";
-            var diagnostic = @"symbold 'x' already declared";
+            var diagnostic = @"Symbol 'x' already declared";
 
             AssertHasDiagnostics(text, diagnostic);
         }
