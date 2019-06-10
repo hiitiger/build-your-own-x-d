@@ -102,6 +102,16 @@ const init = async () => {
     requestAnimationFrame(renderLoop);
 
     button.innerText = "stop";
+
+    const wireframeButton = document.getElementById("wireframeButton") as HTMLButtonElement;
+    wireframeButton.addEventListener("click", () => {
+        device.renderState = RenderState.WireFrame
+    });
+
+    const textureButton = document.getElementById("textureButton") as HTMLButtonElement;
+    textureButton.addEventListener("click", () => {
+        device.renderState =  RenderState.Texture | RenderState.Color;
+    });
 };
 
 document.addEventListener("DOMContentLoaded", init, false);
