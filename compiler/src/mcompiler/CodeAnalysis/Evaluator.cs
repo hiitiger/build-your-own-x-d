@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.Linq;
     using MCompiler.CodeAnalysis.Binding;
     using MCompiler.CodeAnalysis.Symbols;
@@ -9,32 +10,40 @@
 
     internal class Evaluator
     {
+        private readonly ImmutableDictionary<FunctionSymbol, BoundBlockStatement> _functionBodies;
         private readonly BoundBlockStatement _root;
-        private readonly Dictionary<VariableSymbol, object> _variables;
+        private readonly Dictionary<VariableSymbol, object> _globals;
+        private readonly Stack<Dictionary<VariableSymbol, object>> _locals = new Stack<Dictionary<VariableSymbol, object>>();
         private Random _random;
 
         private object _lastValue;
-        public Evaluator(BoundBlockStatement root, Dictionary<VariableSymbol, object> variables)
+        public Evaluator(ImmutableDictionary<FunctionSymbol, BoundBlockStatement> functionBodies, BoundBlockStatement root, Dictionary<VariableSymbol, object> variables)
         {
+            _functionBodies = functionBodies;
             _root = root;
-            _variables = variables;
+            _globals = variables;
         }
 
         public object Evaluate()
         {
+            return EvaluateStatement(_root);
+        }
+
+        private object EvaluateStatement(BoundBlockStatement body)
+        {
             var labelToIndex = new Dictionary<BoundLabel, int>();
-            for (var i = 0; i < _root.Statements.Length; ++i)
+            for (var i = 0; i < body.Statements.Length; ++i)
             {
-                var s = _root.Statements[i];
+                var s = body.Statements[i];
                 if (s is BoundLabelStatement label)
                     labelToIndex.Add(label.Symbol, i + 1);
             }
 
             var index = 0;
 
-            while (index < _root.Statements.Length)
+            while (index < body.Statements.Length)
             {
-                var statement = _root.Statements[index];
+                var statement = body.Statements[index];
                 switch (statement.Kind)
                 {
                     case BoundNodeKind.ExpressionStatement:
@@ -67,77 +76,12 @@
             return _lastValue;
         }
 
-
-        // private void EvaluateStatement(BoundStatement statement)
-        // {
-        //     switch (statement.Kind)
-        //     {
-        //         case BoundNodeKind.BlockStatement:
-        //             EvaluateBoundBlockStatement((BoundBlockStatement)statement);
-        //             break;
-        //         case BoundNodeKind.ExpressionStatement:
-        //             EvaluateExpressionStatement((BoundExpressionStatement)statement);
-        //             break;
-        //         case BoundNodeKind.VariableDeclarationStatement:
-        //             EvaluateVariableDeclarationStatement((BoundVariableDeclarationStatement)statement);
-        //             break;
-        //         case BoundNodeKind.IfStatement:
-        //             EvaluateIfStatement((BoundIfStatement)statement);
-        //             break;
-        //         case BoundNodeKind.WhileStatement:
-        //             EvaluateWhileStatement((BoundWhileStatement)statement);
-        //             break;
-        //         case BoundNodeKind.ForStatement:
-        //             EvaluateForStatement((BoundForStatement)statement);
-        //             break;
-        //         default:
-        //             throw new Exception($"Unexpected node {statement.Kind}");
-        //     }
-        // }
-
-        // private void EvaluateForStatement(BoundForStatement statement)
-        // {
-        //     EvaluateExpression(statement.Initializer);
-        //     while ((bool)EvaluateExpression(statement.Condition))
-        //     {
-        //         EvaluateStatement(statement.Body);
-        //         EvaluateExpression(statement.Loop);
-        //     }
-        // }
-
-        // private void EvaluateWhileStatement(BoundWhileStatement statement)
-        // {
-        //     while ((bool)EvaluateExpression(statement.Condition))
-        //         EvaluateStatement(statement.Body);
-        // }
-
-        // private void EvaluateIfStatement(BoundIfStatement statement)
-        // {
-        //     var condition = (bool)EvaluateExpression(statement.Condition);
-        //     if (condition)
-        //     {
-        //         EvaluateStatement(statement.Statement);
-        //     }
-        //     else if (statement.ElseStatement != null)
-        //     {
-        //         EvaluateStatement(statement.ElseStatement);
-        //     }
-        // }
-
         private void EvaluateVariableDeclarationStatement(BoundVariableDeclarationStatement statement)
         {
             var value = EvaluateExpression(statement.Initializer);
-            _variables[statement.Variable] = value;
+            _globals[statement.Variable] = value;
             _lastValue = value;
         }
-
-        // private void EvaluateBoundBlockStatement(BoundBlockStatement node)
-        // {
-        //     foreach (var statement in node.Statements)
-        //     {
-        //         EvaluateStatement(statement);
-        //     }
-        // }
 
         private void EvaluateExpressionStatement(BoundExpressionStatement node)
         {
@@ -177,12 +121,12 @@
             else if (node.Type == TypeSymbol.String)
                 return Convert.ToString(value);
             else
-                throw  new Exception($"Unexpected type {node.Type}"); 
+                throw new Exception($"Unexpected type {node.Type}");
         }
 
         private object EvaluateCallExpression(BoundCallExpression node)
         {
-            if(node.Function == BuiltinFunctions.Input)
+            if (node.Function == BuiltinFunctions.Input)
             {
                 return Console.ReadLine();
             }
@@ -201,7 +145,19 @@
             }
             else
             {
-                throw new Exception($"Unexpected function {node.Function}");
+                var locals = new Dictionary<VariableSymbol, object>();
+                for (int i = 0; i < node.Arguments.Length; ++i)
+                {
+                    var parameter = node.Function.Parameters[i];
+                    var value = EvaluateExpression(node.Arguments[i]);
+                    locals.Add(parameter, value);
+                }
+
+                _locals.Push(locals);
+                var statement = _functionBodies[node.Function];
+                var result = EvaluateStatement(statement);
+                _locals.Pop();
+                return result;
             }
         }
 
@@ -283,13 +239,30 @@
         private object EvaluateAssignmentExpression(BoundAssignmentExpression a)
         {
             var value = EvaluateExpression(a.Expression);
-            _variables[a.Variable] = value;
+
+            if (a.Variable.Kind == SymbolKind.GlobalVariable)
+            {
+                _globals[a.Variable] = value;
+            }
+            else
+            {
+                var locals = _locals.Peek();
+                locals[a.Variable] = value; ;
+            }
             return value;
         }
 
         private object EvaluateVariableExpression(BoundVariableExpression v)
         {
-            return _variables[v.Variable];
+            if (v.Variable.Kind == SymbolKind.GlobalVariable)
+            {
+                return _globals[v.Variable];
+            }
+            else
+            {
+                var locals = _locals.Peek();
+                return locals[v.Variable];
+            }
         }
 
         private static object EvaluateLiteralExpression(BoundLiteralExpression n)

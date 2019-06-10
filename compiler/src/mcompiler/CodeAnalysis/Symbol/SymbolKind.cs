@@ -5,6 +5,8 @@ namespace MCompiler.CodeAnalysis.Symbols
         Variable,
         Type,
         Function,
-        Parameter
+        Parameter,
+        GlobalVariable,
+        LocalVariable
     }
 }

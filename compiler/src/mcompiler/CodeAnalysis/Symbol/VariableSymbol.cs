@@ -2,7 +2,7 @@ using System;
 
 namespace MCompiler.CodeAnalysis.Symbols
 {
-    public class VariableSymbol : Symbol
+    public abstract class VariableSymbol : Symbol
     {
         internal VariableSymbol(string name, bool isReadonly, TypeSymbol type)
         : base(name)
