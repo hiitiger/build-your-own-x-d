@@ -80,15 +80,7 @@
         {
             var value = EvaluateExpression(statement.Initializer);
 
-            if (statement.Variable.Kind == SymbolKind.GlobalVariable)
-            {
-                _globals[statement.Variable] = value;
-            }
-            else
-            {
-                var locals = _locals.Peek();
-                locals[statement.Variable] = value;
-            }
+            Assign(statement.Variable, value);
 
             _lastValue = value;
         }
@@ -250,16 +242,21 @@
         {
             var value = EvaluateExpression(a.Expression);
 
-            if (a.Variable.Kind == SymbolKind.GlobalVariable)
+            Assign(a.Variable, value);
+            return value;
+        }
+
+        private void Assign(VariableSymbol v, object value)
+        {
+            if (v.Kind == SymbolKind.GlobalVariable)
             {
-                _globals[a.Variable] = value;
+                _globals[v] = value;
             }
             else
             {
                 var locals = _locals.Peek();
-                locals[a.Variable] = value; ;
+                locals[v] = value; ;
             }
-            return value;
         }
 
         private object EvaluateVariableExpression(BoundVariableExpression v)
