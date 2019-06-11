@@ -28,7 +28,7 @@ namespace MCompiler
             if (syntaxTree.Root.Members.Last().GetLastToken().IsMissing)
                 return false;
 
-            return true; 
+            return true;
         }
 
 
@@ -114,7 +114,7 @@ namespace MCompiler
             else
             {
                 var text = syntaxTree.Text;
-                foreach (var diagnostic in diagnostics)
+                foreach (var diagnostic in diagnostics.OrderBy(d => d.Span, new TextSpanComparer()))
                 {
                     var lineIndex = text.GetLineIndex(diagnostic.Span.Start);
                     var lineNumber = lineIndex + 1;
