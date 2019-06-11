@@ -112,15 +112,22 @@ namespace MCompiler.CodeAnalysis.Syntax
         {
             var nodeAndSeparators = ImmutableArray.CreateBuilder<SyntaxNode>();
 
-            while (Current.Kind != SyntaxKind.CloseParenthesisToken && Current.Kind != SyntaxKind.EOFToken)
+            var parseNextParameter = true;
+            while ( parseNextParameter
+                 && Current.Kind != SyntaxKind.CloseParenthesisToken
+                 && Current.Kind != SyntaxKind.EOFToken)
             {
                 var parameter = ParseParameter();
                 nodeAndSeparators.Add(parameter);
 
-                if (Current.Kind != SyntaxKind.CloseParenthesisToken)
+                if (Current.Kind == SyntaxKind.CommaToken)
                 {
                     var comma = MatchToken(SyntaxKind.CommaToken);
                     nodeAndSeparators.Add(comma);
+                }
+                else
+                {
+                    parseNextParameter = false;
                 }
             }
 
@@ -375,15 +382,22 @@ namespace MCompiler.CodeAnalysis.Syntax
         {
             var nodeAndSeparators = ImmutableArray.CreateBuilder<SyntaxNode>();
 
-            while (Current.Kind != SyntaxKind.CloseParenthesisToken && Current.Kind != SyntaxKind.EOFToken)
+            var parseNextParameter = true;
+            while (parseNextParameter 
+                && Current.Kind != SyntaxKind.CloseParenthesisToken
+                 && Current.Kind != SyntaxKind.EOFToken)
             {
                 var expression = ParseExpression();
                 nodeAndSeparators.Add(expression);
 
-                if (Current.Kind != SyntaxKind.CloseParenthesisToken)
+                if (Current.Kind == SyntaxKind.CommaToken)
                 {
                     var comma = MatchToken(SyntaxKind.CommaToken);
                     nodeAndSeparators.Add(comma);
+                }
+                else
+                {
+                    parseNextParameter = false;
                 }
             }
 
