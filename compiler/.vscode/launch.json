@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/src/mc/bin/Debug/netcoreapp2.0/mc.dll",
+            "program": "${workspaceFolder}/src/mi/bin/Debug/netcoreapp2.0/mi.dll",
             "args": [],
             "cwd": "${workspaceFolder}",
             "console": "externalTerminal",

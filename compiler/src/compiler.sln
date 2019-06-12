@@ -4,7 +4,7 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "compiler", "mcompiler\compiler.csproj", "{D17372FB-0AC7-44B7-A2FF-5F1DA0DC8550}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mc", "mc\mc.csproj", "{1FD10425-1AD3-4B79-82F5-E321FD329264}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mc", "mi\mi.csproj", "{1FD10425-1AD3-4B79-82F5-E321FD329264}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MCompiler.Tests", "MCompiler.Tests\MCompiler.Tests.csproj", "{E2E21CD5-99C2-45C1-82BD-A0BFC0EF6FDE}"
 EndProject
