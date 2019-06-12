@@ -67,6 +67,12 @@ namespace MCompiler.Tests.CodeAnalysis
         [InlineData("true ^ false", true)]
         [InlineData("false ^ true", true)]
         [InlineData("false ^ false", false)]
+
+        [InlineData("\"ab\" == \"ab\"", true)]
+        [InlineData("\"ab\" != \"ab\"", false)]
+        [InlineData("\"abc\" == \"ab\"", false)]
+        [InlineData("\"abc\" != \"ab\"", true)]
+
         
 
         [InlineData("{var x = 10 (x = 5) * 5}", 25)]
@@ -171,7 +177,7 @@ namespace MCompiler.Tests.CodeAnalysis
         [Fact]
         public void Evaluation_Name_Reports_NoErrorForInsertedToken()
         {
-            var text = @"[]";
+            var text = @"1+[]";
             var diagnostic = @"Unexpected token <EOFToken>, expected <IdentifierToken>";
 
             AssertHasDiagnostics(text, diagnostic);
