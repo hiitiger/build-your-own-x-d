@@ -395,6 +395,7 @@ namespace MCompiler.CodeAnalysis.Binding
                 case "bool": return TypeSymbol.Bool;
                 case "int": return TypeSymbol.Int;
                 case "string": return TypeSymbol.String;
+                case "void": return TypeSymbol.Void;
                 default: return null;
             }
         }

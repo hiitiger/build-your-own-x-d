@@ -211,7 +211,7 @@ namespace MCompiler.CodeAnalysis.Syntax
         private TypeClauseSyntax ParseOptionalTypeClause()
         {
             if (Current.Kind != SyntaxKind.ColonToken)
-                return null;
+                return null; 
             return ParseTypeClause();
         }
 
