@@ -50,7 +50,8 @@ namespace MCompiler.CodeAnalysis.Syntax
         ForKeyword,
         DoKeyword,
         FunctionKeyword,
-
+        BreakKeyword,
+        ContinueKeyword,
         IdentifierToken,
 
         //
@@ -80,6 +81,8 @@ namespace MCompiler.CodeAnalysis.Syntax
         ForStatement,
         CallExpression,
         DoWhileStatement,
+        BreakStatement,
+        ContinueStatement,
     }
 
 }

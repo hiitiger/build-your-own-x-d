@@ -51,7 +51,7 @@ namespace MCompiler.CodeAnalysis.Binding
             if (body == node.Body && condition == node.Condition)
                 return node;
 
-            return new BoundDoWhileStatement(body, condition);
+            return new BoundDoWhileStatement(body, condition, node.BreakLabel, node.ContinueLabel);
         }
 
         protected virtual BoundStatement RewriteConditionalGotoStatement(BoundConditionalGotoStatement node)
@@ -80,7 +80,7 @@ namespace MCompiler.CodeAnalysis.Binding
             var body = RewriteStatement(node.Body);
             if (initializer == node.Initializer && condition == node.Condition && loop == node.Loop && body == node.Body)
                 return node;
-            return new BoundForStatement(initializer, condition, loop, body);
+            return new BoundForStatement(initializer, condition, loop, body, node.BreakLabel, node.ContinueLabel);
         }
 
         protected virtual BoundStatement RewriteWhileStatement(BoundWhileStatement node)
@@ -89,7 +89,7 @@ namespace MCompiler.CodeAnalysis.Binding
             var body = RewriteStatement(node.Body);
             if (condition == node.Condition && body == node.Body)
                 return node;
-            return new BoundWhileStatement(condition, body);
+            return new BoundWhileStatement(condition, body, node.BreakLabel, node.ContinueLabel);
         }
 
         protected virtual BoundStatement RewriteIfStatement(BoundIfStatement node)

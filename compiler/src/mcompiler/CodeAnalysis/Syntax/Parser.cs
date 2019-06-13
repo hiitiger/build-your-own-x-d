@@ -165,9 +165,25 @@ namespace MCompiler.CodeAnalysis.Syntax
                     return ParseForStatement();
                 case SyntaxKind.DoKeyword:
                     return ParseDoWhileStatement();
+                case SyntaxKind.BreakKeyword:
+                    return ParseBreakStatement();
+                case SyntaxKind.ContinueKeyword:
+                    return ParseContinueStatement();
                 default:
                     return ParseExpressionStatement();
             }
+        }
+
+        private StatementSyntax ParseContinueStatement()
+        {
+            var continueKeyword = MatchToken(SyntaxKind.ContinueKeyword);
+             return new ContinueStatementSyntax(continueKeyword);
+        }
+
+        private StatementSyntax ParseBreakStatement()
+        {
+            var breakKeyword = MatchToken(SyntaxKind.BreakKeyword);
+             return new BreakStatementSyntax(breakKeyword);
         }
 
         private DoWhileStatementSyntax ParseDoWhileStatement()

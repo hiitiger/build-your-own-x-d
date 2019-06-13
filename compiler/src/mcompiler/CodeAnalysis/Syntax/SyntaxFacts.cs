@@ -73,6 +73,10 @@ namespace MCompiler.CodeAnalysis.Syntax
                     return SyntaxKind.DoKeyword;
                 case "function":
                     return SyntaxKind.FunctionKeyword;
+                case "break":
+                    return SyntaxKind.BreakKeyword;
+                case "continue":
+                    return SyntaxKind.ContinueKeyword;
                 default:
                     return SyntaxKind.IdentifierToken;
             }
@@ -158,6 +162,10 @@ namespace MCompiler.CodeAnalysis.Syntax
                     return "do";
                 case SyntaxKind.FunctionKeyword:
                     return "function";
+                case SyntaxKind.BreakKeyword:
+                    return "break";
+                case SyntaxKind.ContinueKeyword:
+                    return "continue";
                 case SyntaxKind.LessToken:
                     return "<";
                 case SyntaxKind.LessEqualsToken:

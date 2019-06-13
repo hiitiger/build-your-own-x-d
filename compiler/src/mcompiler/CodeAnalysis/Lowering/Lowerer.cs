@@ -49,8 +49,10 @@ namespace MCompiler.CodeAnalysis.Lowering
         {
             var initializer = new BoundExpressionStatement(node.Initializer);
             var loop = new BoundExpressionStatement(node.Loop);
-            var whileBlock = new BoundBlockStatement(ImmutableArray.Create<BoundStatement>(node.Body, loop));
-            var whileStatement = new BoundWhileStatement(node.Condition, whileBlock);
+            var continueLabelStatement = new BoundLabelStatement(node.ContinueLabel);
+
+            var whileBlock = new BoundBlockStatement(ImmutableArray.Create<BoundStatement>(node.Body, continueLabelStatement, loop));
+            var whileStatement = new BoundWhileStatement(node.Condition, whileBlock, node.BreakLabel, GenerateLabel());
             var result = new BoundBlockStatement(ImmutableArray.Create<BoundStatement>(initializer, whileStatement));
             return RewriteStatement(result);
         }
@@ -82,17 +84,28 @@ namespace MCompiler.CodeAnalysis.Lowering
 
         protected override BoundStatement RewriteWhileStatement(BoundWhileStatement node)
         {
+            // while <condition>
+            //      <body>
+            //
+            // ----->
+            //
+            // goto check
+            // continue:
+            // <body>
+            // check:
+            // gotoTrue <condition> continue
+            // break:
+            var continueLabel = node.ContinueLabel;
             var checkLabel = GenerateLabel();
-            var continueLabel = GenerateLabel();
-            var endLabel = GenerateLabel();
+
             var gotoCheck = new BoundGotoStatement(checkLabel);
             var continueLabelStatement = new BoundLabelStatement(continueLabel);
             var checkLabelStatement = new BoundLabelStatement(checkLabel);
             var gotoTrue = new BoundConditionalGotoStatement(continueLabel, node.Condition, false);
-            var endLabelStatement = new BoundLabelStatement(endLabel);
+            var breakLabelStatement = new BoundLabelStatement(node.BreakLabel);
 
             var result = new BoundBlockStatement(ImmutableArray.Create<BoundStatement>(
-                    gotoCheck, continueLabelStatement, node.Body, checkLabelStatement, gotoTrue, endLabelStatement));
+                    gotoCheck, continueLabelStatement, node.Body, checkLabelStatement, gotoTrue, breakLabelStatement));
             return RewriteStatement(result);
         }
 
@@ -107,11 +120,14 @@ namespace MCompiler.CodeAnalysis.Lowering
             // continue:
             // <body>
             // gotoTrue <condition> continue
-            var continueLabel = GenerateLabel();
-
+            // break:
+            var continueLabel = node.ContinueLabel;
             var continueLabelStatement = new BoundLabelStatement(continueLabel);
+
             var gotoTrue = new BoundConditionalGotoStatement(continueLabel, node.Condition);
-            var result = new BoundBlockStatement(ImmutableArray.Create<BoundStatement>(continueLabelStatement, node.Body, gotoTrue));
+
+            var breakLabelStatement = new BoundLabelStatement(node.BreakLabel);
+            var result = new BoundBlockStatement(ImmutableArray.Create<BoundStatement>(continueLabelStatement, node.Body, gotoTrue, breakLabelStatement));
             return RewriteStatement(result);
         }
     }

@@ -130,5 +130,11 @@ namespace MCompiler.CodeAnalysis
             var message = $"Cannot convert from {fromType} to {toType}, an explicit version exist, are you missing a cast?";
             Report(span, message);
         }
+
+        internal void ReportInvalidBreakContinue(TextSpan span, string text)
+        {
+            var message = $"Invalid '{text}' keyword, not inside loop";
+            Report(span, message);
+        }
     }
 }
