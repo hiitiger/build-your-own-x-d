@@ -5,15 +5,17 @@ namespace MCompiler.CodeAnalysis.Binding
 {
     internal class BoundProgram
     {
-        public BoundGlobalScope GlobalScope;
-        public DiagnosticBag Diagnostics;
-        public ImmutableDictionary<FunctionSymbol, BoundBlockStatement> FunctionBodies;
 
-        public BoundProgram(BoundGlobalScope globalScope, DiagnosticBag diagnostics, ImmutableDictionary<FunctionSymbol, BoundBlockStatement> functionBodies)
+        public BoundProgram(BoundBlockStatement statement, DiagnosticBag diagnostics, ImmutableDictionary<FunctionSymbol, BoundBlockStatement> functionBodies)
         {
-            GlobalScope = globalScope;
+            Statement = statement;
             Diagnostics = diagnostics;
             FunctionBodies = functionBodies;
         }
+
+        public BoundBlockStatement Statement { get; }
+        public DiagnosticBag Diagnostics;
+        public ImmutableDictionary<FunctionSymbol, BoundBlockStatement> FunctionBodies;
+
     }
 }

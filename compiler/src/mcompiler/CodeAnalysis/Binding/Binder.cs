@@ -85,7 +85,9 @@ namespace MCompiler.CodeAnalysis.Binding
                 scope = scope.Previous;
             }
 
-            var boundProgram = new BoundProgram(globalScope, diagnostics, functionBodies.ToImmutable());
+            var statement = Lowerer.Lower(globalScope.Statement);
+
+            var boundProgram = new BoundProgram(statement, diagnostics, functionBodies.ToImmutable());
             return boundProgram;
         }
 
