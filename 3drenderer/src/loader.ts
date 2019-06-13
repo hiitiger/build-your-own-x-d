@@ -31,7 +31,7 @@ export function loadTexture(name: string): Promise<Texture> {
     });
 }
 
-export function loadMesh(name: string) {
+export function loadMesh(name: string): Promise<Mesh> {
     return fetch(`./mesh/${name}.obj`)
         .then(r => r.text())
         .then(objectData => {

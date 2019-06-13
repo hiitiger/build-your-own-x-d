@@ -3,6 +3,7 @@ import { Camera } from "./camera.js";
 
 import { Device, RenderState } from "./device.js";
 import { loadMesh, loadTexture } from "./loader.js";
+import { GameTimer } from "./gametimer.js";
 
 let canvas: HTMLCanvasElement;
 let device: Device;
@@ -10,12 +11,6 @@ let camera: Camera;
 let meshes: Mesh[] = [];
 
 let running = true;
-
-const button = document.getElementById("btn") as HTMLButtonElement;
-button.addEventListener("click", () => {
-    running = !running;
-    button.innerText = running ? "stop" : "start";
-});
 
 function testDawLine() {
     const points = [
@@ -34,21 +29,20 @@ function testDawLine() {
     }
 }
 
-const renderLoop = () => {
+const renderFrame = (delta: number) => {
     if (running) {
         device.clear();
 
         for (const mesh of meshes) {
             // mesh.roation.x += 0.01;
-            mesh.roation.y += 0.02;
+            mesh.roation.y += 0.002 * delta;
         }
 
         device.render(camera, meshes);
         device.present();
     }
 
-    requestAnimationFrame(renderLoop);
-};
+}
 
 const randomColor = () => {
     return new BABYLON.Color4(Math.random(), Math.random(), Math.random());
@@ -62,7 +56,7 @@ const init = async () => {
         { pos: new BABYLON.Vector3(-1, -1, -1), color: new BABYLON.Color4(1) },
         { pos: new BABYLON.Vector3(-1, 1, -1), color: new BABYLON.Color4(0, 1, 0) },
         { pos: new BABYLON.Vector3(1, 1, -1), color: new BABYLON.Color4(0, 0, 1) },
-        { pos: new BABYLON.Vector3(1, -1, -1), color: new BABYLON.Color4(1, 1, 1)  },
+        { pos: new BABYLON.Vector3(1, -1, -1), color: new BABYLON.Color4(1, 1, 1) },
         { pos: new BABYLON.Vector3(-1, -1, 1), color: randomColor() },
         { pos: new BABYLON.Vector3(-1, 1, 1), color: randomColor() },
         { pos: new BABYLON.Vector3(1, 1, 1), color: randomColor() },
@@ -83,12 +77,15 @@ const init = async () => {
         { verts: [3, 2, 6] },
         { verts: [3, 6, 7] }
     ]);
+
+    cubeMesh.position = new BABYLON.Vector3(0, -1, 3);
+
     meshes.push(cubeMesh);
 
     {
-        const model = await loadMesh("cat");
-        model.tex = await loadTexture("cat_d");
-        model.position = new BABYLON.Vector3(0, 1, -4)
+        const model = await loadMesh("head");
+        model.tex = await loadTexture("head_d");
+        model.position = new BABYLON.Vector3(0, 1, -4);
         meshes.push(model);
     }
 
@@ -99,7 +96,23 @@ const init = async () => {
     device = new Device(canvas);
     device.light = new BABYLON.Vector3(0, 1, -5.5);
     device.renderState = RenderState.Texture | RenderState.Color
-    requestAnimationFrame(renderLoop);
+
+    const gameTimer = new GameTimer(renderFrame);
+    gameTimer.start();
+
+
+    const button = document.getElementById("btn") as HTMLButtonElement;
+    button.addEventListener("click", () => {
+        running = !running;
+        button.innerText = running ? "stop" : "start";
+        if (running) {
+            gameTimer.start();
+        }
+        else {
+            gameTimer.stop();
+        }
+    });
+
 
     button.innerText = "stop";
 
@@ -110,14 +123,14 @@ const init = async () => {
 
     const textureButton = document.getElementById("textureButton") as HTMLButtonElement;
     textureButton.addEventListener("click", () => {
-        device.renderState =  RenderState.Texture | RenderState.Color;
+        device.renderState = RenderState.Texture | RenderState.Color;
     });
 };
 
 document.addEventListener("DOMContentLoaded", init, false);
 
 /*
-  
+
  y    z
 /|\ /
  | /
@@ -130,5 +143,5 @@ document.addEventListener("DOMContentLoaded", init, false);
  \  |      |
   \ |      |
    \|______|
-   
+
 */
