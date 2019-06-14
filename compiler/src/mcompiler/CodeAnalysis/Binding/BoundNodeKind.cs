@@ -22,5 +22,6 @@ namespace MCompiler.CodeAnalysis.Binding
         ConditionalGotoStatement,
         ConversionExpression,
         DoWhileStatement,
+        RetrunStatement,
     }
 }

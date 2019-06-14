@@ -136,5 +136,23 @@ namespace MCompiler.CodeAnalysis
             var message = $"Invalid '{text}' keyword, not inside loop";
             Report(span, message);
         }
+
+        internal void ReportInvalidReturnExpression(TextSpan span, string name)
+        {
+            var message = $"Invalid return type for function '{name}'";
+            Report(span, message);
+        }
+
+        internal void ReportMissingReturnExpression(TextSpan span, string name, TypeSymbol type)
+        {
+            var message = $"Missing return type '{type}' for function '{name}'";
+            Report(span, message);
+        }
+
+        internal void ReportInvalidReturn(TextSpan span)
+        {
+            var message = $"Invalid 'return' keyword, not in function scope";
+            Report(span, message);
+        }
     }
 }

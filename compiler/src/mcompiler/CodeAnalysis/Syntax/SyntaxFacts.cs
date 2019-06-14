@@ -77,6 +77,8 @@ namespace MCompiler.CodeAnalysis.Syntax
                     return SyntaxKind.BreakKeyword;
                 case "continue":
                     return SyntaxKind.ContinueKeyword;
+                case "return":
+                    return SyntaxKind.ReturnKeyword;
                 default:
                     return SyntaxKind.IdentifierToken;
             }
@@ -166,6 +168,8 @@ namespace MCompiler.CodeAnalysis.Syntax
                     return "break";
                 case SyntaxKind.ContinueKeyword:
                     return "continue";
+                case SyntaxKind.ReturnKeyword:
+                    return "return";
                 case SyntaxKind.LessToken:
                     return "<";
                 case SyntaxKind.LessEqualsToken:

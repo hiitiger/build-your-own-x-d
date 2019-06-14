@@ -38,6 +38,7 @@ namespace MCompiler.CodeAnalysis.Syntax
         GreaterToken,
         GreaterEqualsToken,
         ColonToken,
+        IdentifierToken,
 
         //
         TrueKeyword,
@@ -52,7 +53,7 @@ namespace MCompiler.CodeAnalysis.Syntax
         FunctionKeyword,
         BreakKeyword,
         ContinueKeyword,
-        IdentifierToken,
+        ReturnKeyword,
 
         //
         LiteralExpression,
@@ -83,6 +84,7 @@ namespace MCompiler.CodeAnalysis.Syntax
         DoWhileStatement,
         BreakStatement,
         ContinueStatement,
+        ReturnStatement,
     }
 
 }

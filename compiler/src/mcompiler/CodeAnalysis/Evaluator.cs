@@ -23,7 +23,7 @@
         }
 
         public object Evaluate()
-        {
+        { 
             return EvaluateStatement(_program.Statement);
         }
 
@@ -67,6 +67,10 @@
                     case BoundNodeKind.LabelStatement:
                         index += 1;
                         break;
+                    case BoundNodeKind.RetrunStatement:
+                        var rs = (BoundReturnStatement)statement;
+                        _lastValue = rs.Expression != null ? EvaluateExpression(rs.Expression) : null;
+                        return _lastValue;
                     default:
                         throw new Exception($"Unexpected node {statement.Kind}");
                 }

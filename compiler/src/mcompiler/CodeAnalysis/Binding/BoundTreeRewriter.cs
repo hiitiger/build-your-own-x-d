@@ -39,9 +39,19 @@ namespace MCompiler.CodeAnalysis.Binding
                     return RewriteGotoStatement((BoundGotoStatement)node);
                 case BoundNodeKind.ConditionalGotoStatement:
                     return RewriteConditionalGotoStatement((BoundConditionalGotoStatement)node);
+                case BoundNodeKind.RetrunStatement:
+                    return RewriteReturnStatement((BoundReturnStatement)node);
                 default:
                     throw new Exception($"Unexpected node: {node.Kind}");
             }
+        }
+
+        protected virtual BoundStatement RewriteReturnStatement(BoundReturnStatement node)
+        {
+            var expression = node.Expression != null ? RewriteExpression(node.Expression) : null;
+            if (expression == node.Expression)
+                return node;
+            return new BoundReturnStatement(expression);
         }
 
         protected virtual BoundStatement RewriteDoWhileStatement(BoundDoWhileStatement node)
