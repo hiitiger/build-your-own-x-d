@@ -57,6 +57,11 @@
                 return new EvaluationResult(diagnostics, null);
 
             var program = Binder.BindProgram(GlobalScope);
+
+            var cfgStatements = !program.Statement.Statements.Any() && program.FunctionBodies.Any()
+                              ? program.FunctionBodies.Last().Value
+                              : program.Statement;
+
             if (program.Diagnostics.Any())
                 return new EvaluationResult(program.Diagnostics.ToImmutableArray(), null);
 
