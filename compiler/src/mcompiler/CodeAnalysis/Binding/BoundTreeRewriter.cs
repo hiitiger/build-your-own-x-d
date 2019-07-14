@@ -39,7 +39,7 @@ namespace MCompiler.CodeAnalysis.Binding
                     return RewriteGotoStatement((BoundGotoStatement)node);
                 case BoundNodeKind.ConditionalGotoStatement:
                     return RewriteConditionalGotoStatement((BoundConditionalGotoStatement)node);
-                case BoundNodeKind.RetrunStatement:
+                case BoundNodeKind.ReturnStatement:
                     return RewriteReturnStatement((BoundReturnStatement)node);
                 default:
                     throw new Exception($"Unexpected node: {node.Kind}");

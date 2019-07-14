@@ -8,6 +8,8 @@ namespace MCompiler.CodeAnalysis.Binding
         VariableExpression,
         AssignmentExpression,
         CallExpression,
+        ConversionExpression,
+
         ErrorExpression,
 
         //
@@ -20,8 +22,7 @@ namespace MCompiler.CodeAnalysis.Binding
         GotoStatement,
         LabelStatement,
         ConditionalGotoStatement,
-        ConversionExpression,
         DoWhileStatement,
-        RetrunStatement,
+        ReturnStatement,
     }
 }

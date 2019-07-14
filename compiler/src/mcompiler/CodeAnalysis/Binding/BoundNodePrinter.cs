@@ -79,11 +79,13 @@ namespace MCompiler.CodeAnalysis.Binding
                 case BoundNodeKind.DoWhileStatement:
                     WriteDoWhileStatement((BoundDoWhileStatement)node, writer);
                     break;
+                 case BoundNodeKind.ReturnStatement:
+                    WriteReturnStatement((BoundReturnStatement)node, writer);
+                    break;
                 default:
                     throw new Exception($"Unexpected node {node.Kind}");
             }
         }
-
 
         public static void WriteNestedStatement(this IndentedTextWriter writer, BoundStatement node)
         {
@@ -126,6 +128,18 @@ namespace MCompiler.CodeAnalysis.Binding
             if (needsParenthesis)
                 writer.WritePunctuation(SyntaxKind.CloseParenthesisToken);
         }
+
+        private static void WriteReturnStatement(BoundReturnStatement node, IndentedTextWriter writer)
+        {
+            writer.WriteKeyword(SyntaxKind.ReturnKeyword);
+            if (node.Expression != null)
+            {
+                writer.WriteSpace();
+                node.Expression.WriteTo(writer);
+            }
+            writer.WriteLine();
+        }
+
         private static void WriteDoWhileStatement(BoundDoWhileStatement node, IndentedTextWriter writer)
         {
             writer.WriteKeyword(SyntaxKind.DoKeyword);

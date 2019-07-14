@@ -95,6 +95,12 @@ namespace MCompiler.CodeAnalysis
             Report(span, message);
         }
 
+        internal void ReportAllPathsMustReturn(TextSpan span)
+        {
+            var message = $"Function does not return from all paths";
+            Report(span, message);
+        }
+
         internal void ReportUndefinedFunction(TextSpan span, string name)
         {
             var message = $"Undefined function '{name}'";

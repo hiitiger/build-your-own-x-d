@@ -67,7 +67,7 @@
                     case BoundNodeKind.LabelStatement:
                         index += 1;
                         break;
-                    case BoundNodeKind.RetrunStatement:
+                    case BoundNodeKind.ReturnStatement:
                         var rs = (BoundReturnStatement)statement;
                         _lastValue = rs.Expression != null ? EvaluateExpression(rs.Expression) : null;
                         return _lastValue;

@@ -7,7 +7,7 @@ namespace MCompiler.CodeAnalysis.Binding
             Expression = expression;
         }
 
-        public override BoundNodeKind Kind => BoundNodeKind.RetrunStatement;
+        public override BoundNodeKind Kind => BoundNodeKind.ReturnStatement;
         public BoundExpression Expression { get; }
     }
 }
