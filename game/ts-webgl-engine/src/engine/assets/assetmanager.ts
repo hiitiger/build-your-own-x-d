@@ -1,4 +1,8 @@
-import { IAssetLoader, IAsset } from "./asset";
+import { IAssetLoader, IAsset } from "./asset.js";
+import { Message } from "../message/message.js";
+import { ImageAssetLoader } from "./imageassetloader.js";
+
+export const MESSAGE_ASSET_LOADED = "MESSAGE_ASSET_LOADED";
 
 export class AssetManager {
     private static _loaders: IAssetLoader[] = [];
@@ -6,13 +10,34 @@ export class AssetManager {
 
     private constructor() {}
 
-    public static initialize(): void {}
+    public static initialize(): void {
+        AssetManager.registerLoader(new ImageAssetLoader());
+    }
 
     public static registerLoader(loader: IAssetLoader): void {
         AssetManager._loaders.push(loader);
     }
 
-    public static loadAsset(assetName: string): void {}
+    public static onAssetLoaded(asset: IAsset): void {
+        AssetManager._loadedAssets[asset.name] = asset;
+        Message.send(MESSAGE_ASSET_LOADED + "." + asset.name, this, asset);
+    }
+
+    public static loadAsset(assetName: string): void {
+        const extension = assetName
+            .split(".")
+            .pop()
+            .toLocaleLowerCase();
+
+        for (const loader of AssetManager._loaders) {
+            if (loader.supportedExtensions.indexOf(extension) !== -1) {
+                loader.loadAsset(assetName);
+                return;
+            }
+        }
+
+        console.warn(`Cannot load asset with extension: ${extension}`);
+    }
 
     public static isAssetLoader(assetName: string): boolean {
         return AssetManager._loadedAssets[assetName] !== undefined;
