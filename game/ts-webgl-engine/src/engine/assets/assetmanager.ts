@@ -4,6 +4,10 @@ import { ImageAssetLoader } from "./imageassetloader.js";
 
 export const MESSAGE_ASSET_LOADED = "MESSAGE_ASSET_LOADED";
 
+export function assetLoadEventName(assetName: string) {
+    return MESSAGE_ASSET_LOADED + "." + assetName;
+}
+
 export class AssetManager {
     private static _loaders: IAssetLoader[] = [];
     private static _loadedAssets: { [name: string]: IAsset } = {};
@@ -20,7 +24,7 @@ export class AssetManager {
 
     public static onAssetLoaded(asset: IAsset): void {
         AssetManager._loadedAssets[asset.name] = asset;
-        Message.send(MESSAGE_ASSET_LOADED + "." + asset.name, this, asset);
+        Message.send(assetLoadEventName(asset.name), this, asset);
     }
 
     public static loadAsset(assetName: string): void {

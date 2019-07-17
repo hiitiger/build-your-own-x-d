@@ -1,5 +1,5 @@
-import { MessageBus } from "./messagebus";
-import { IMessageHandler } from "./messagehandler";
+import { MessageBus } from "./messagebus.js";
+import { IMessageHandler } from "./messagehandler.js";
 
 export enum MessagePriority {
     NORMAL,
@@ -30,11 +30,11 @@ export class Message {
         MessageBus.post(new Message(code, sender, context, MessagePriority.HIGH));
     }
 
-    public static subscibe(code: string, handler: IMessageHandler): void {
+    public static subscribe(code: string, handler: IMessageHandler): void {
         MessageBus.addSubScription(code, handler);
     }
 
-    public static unsubscibe(code: string, handler: IMessageHandler): void {
+    public static ubsubscribe(code: string, handler: IMessageHandler): void {
         MessageBus.removeSubScription(code, handler);
     }
 }

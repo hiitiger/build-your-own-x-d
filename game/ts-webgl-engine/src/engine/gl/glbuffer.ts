@@ -21,7 +21,12 @@ export class GLBuffer {
 
     private _attributes: AttributeInfo[] = [];
 
-    constructor(elementSize: number, dataType: GLenum = gl.FLOAT, targetBufferType: GLenum = gl.ARRAY_BUFFER, mode: GLenum = gl.TRIANGLES) {
+    constructor(
+        elementSize: number,
+        dataType: GLenum = gl.FLOAT,
+        targetBufferType: GLenum = gl.ARRAY_BUFFER,
+        mode: GLenum = gl.TRIANGLES
+    ) {
         this._elementSize = elementSize;
         this._dataType = dataType;
         this._targetBufferType = targetBufferType;
@@ -45,6 +50,8 @@ export class GLBuffer {
                 throw new Error(`Unrecognized data type: ${this._dataType}`);
         }
 
+        this._stride = this._elementSize * this._typeSize;
+
         this._buffer = gl.createBuffer();
     }
 
@@ -56,7 +63,14 @@ export class GLBuffer {
         gl.bindBuffer(this._targetBufferType, this._buffer);
         if (this._hasAttributeLocation) {
             this._attributes.forEach(att => {
-                gl.vertexAttribPointer(att.location, att.size, this._dataType, normalized, this._stride, att.offset * this._typeSize);
+                gl.vertexAttribPointer(
+                    att.location,
+                    att.size,
+                    this._dataType,
+                    normalized,
+                    this._stride,
+                    att.offset * this._typeSize
+                );
                 gl.enableVertexAttribArray(att.location);
             });
         }

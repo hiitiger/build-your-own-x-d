@@ -34,7 +34,14 @@ export class Matrix {
      *
      */
 
-    public static orthographic(left: number, right: number, bottom: number, top: number, near: number, far: number): Matrix {
+    public static orthographic(
+        left: number,
+        right: number,
+        bottom: number,
+        top: number,
+        near: number,
+        far: number
+    ): Matrix {
         const m = new Matrix();
 
         // prettier-ignore
