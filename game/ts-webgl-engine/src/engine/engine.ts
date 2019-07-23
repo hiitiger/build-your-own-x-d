@@ -1,13 +1,16 @@
 import { GLUtilities, gl } from "./gl/gl.js";
-import { Shader } from "./gl/shader.js";
 import { Sprite } from "./graphics/sprite.js";
 import { Matrix } from "./math/matrix.js";
 import { AssetManager } from "./assets/assetmanager.js";
 import { MessageBus } from "./message/messagebus.js";
+import { BasicShader } from "./gl/shaders/basicshader.js";
+import { MaterialManager } from "./graphics/materialmanager.js";
+import { Material } from "./graphics/material.js";
+import { Color } from "./graphics/color.js";
 
 export class Engine {
     private _canvas: HTMLCanvasElement;
-    private _shader: Shader;
+    private _basicShader: BasicShader;
     private _projection: Matrix;
 
     private _sprite: Sprite;
@@ -22,12 +25,14 @@ export class Engine {
 
         AssetManager.initialize();
 
-        this.loadShaders();
-        this._shader.use();
+        this._basicShader = new BasicShader();
+        this._basicShader.use();
+
+        MaterialManager.registerMaterial(new Material("crate", "assets/textures/crate.jpg", Color.white()));
 
         this._projection = Matrix.orthographic(0, this._canvas.width, 0, this._canvas.height, -100, 100);
 
-        this._sprite = new Sprite("square", "assets/textures/crate.jpg");
+        this._sprite = new Sprite("square", "crate");
         this._sprite.load();
 
         this.loop();
@@ -48,52 +53,16 @@ export class Engine {
 
         gl.clear(gl.COLOR_BUFFER_BIT);
 
-        gl.uniform4fv(this._shader.getUniformLocation("u_tint"), [1, 0.5, 0.5, 1]);
         gl.uniformMatrix4fv(
-            this._shader.getUniformLocation("u_projection"),
+            this._basicShader.getUniformLocation("u_projection"),
             false,
             new Float32Array(this._projection.data)
         );
-        gl.uniformMatrix4fv(
-            this._shader.getUniformLocation("u_model"),
-            false,
-            new Float32Array(Matrix.translation(this._sprite.postion).data)
-        );
 
-        // this._sprite.postion.x += 10;
+        this._sprite.postion.x += 10;
         this._sprite.postion.x %= this._canvas.width;
-        this._sprite.draw(this._shader);
+        this._sprite.draw(this._basicShader);
 
         requestAnimationFrame(this.loop.bind(this));
-    }
-
-    private loadShaders(): void {
-        const vertexShaderSource = `
-attribute vec3 a_position;
-attribute vec2 a_texCoord;
-
-uniform mat4 u_projection;
-uniform mat4 u_model;
-
-varying vec2 v_texCoord;
-
-void main() {
-    gl_Position = u_projection * u_model * vec4(a_position, 1.0);
-    v_texCoord = a_texCoord;
-}`;
-
-        const fragmentShaderSource = `
-precision mediump float;
-
-uniform vec4 u_tint;
-uniform sampler2D u_diffuse;
-
-varying vec2 v_texCoord;
-
-void main() {
-    gl_FragColor = u_tint * texture2D(u_diffuse, v_texCoord);
-}`;
-
-        this._shader = new Shader("basic", vertexShaderSource, fragmentShaderSource);
     }
 }

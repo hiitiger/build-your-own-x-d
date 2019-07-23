@@ -6,15 +6,8 @@ export class Shader {
     private _attribute: { [name: string]: number } = {};
     private _uniforms: { [name: string]: WebGLUniformLocation } = {};
 
-    public constructor(name: string, vertexSource: string, fragmentSource: string) {
+    public constructor(name: string) {
         this._name = name;
-        const vertexShader = this.loadShader(vertexSource, gl.VERTEX_SHADER);
-        const fragmentShader = this.loadShader(fragmentSource, gl.FRAGMENT_SHADER);
-
-        this.createProgram(vertexShader, fragmentShader);
-
-        this.detectAttributes();
-        this.detectUniforms();
     }
 
     public get name(): string {
@@ -39,6 +32,16 @@ export class Shader {
 
     public use(): void {
         gl.useProgram(this._program);
+    }
+
+    protected load(vertexSource: string, fragmentSource: string): void {
+        const vertexShader = this.loadShader(vertexSource, gl.VERTEX_SHADER);
+        const fragmentShader = this.loadShader(fragmentSource, gl.FRAGMENT_SHADER);
+
+        this.createProgram(vertexShader, fragmentShader);
+
+        this.detectAttributes();
+        this.detectUniforms();
     }
 
     private loadShader(source: string, shaderType: GLenum): WebGLShader {

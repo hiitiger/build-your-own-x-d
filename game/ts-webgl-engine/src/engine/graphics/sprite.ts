@@ -1,9 +1,11 @@
 import { GLBuffer, AttributeInfo } from "../gl/glbuffer.js";
 import { Vector3 } from "../math/vector3.js";
-import { Texture } from "./texture.js";
 import { TextureManager } from "./texturemanager.js";
 import { Shader } from "../gl/shader.js";
 import { gl } from "../gl/gl.js";
+import { Matrix } from "../math/matrix.js";
+import { Material } from "./material.js";
+import { MaterialManager } from "./materialmanager.js";
 
 export class Sprite {
     private _name: string;
@@ -11,15 +13,15 @@ export class Sprite {
     private _height: number;
 
     private _buffer: GLBuffer;
-    private _texture: Texture;
+    private _material: Material;
 
     public postion: Vector3 = new Vector3();
 
-    public constructor(name: string, textureName: string, width: number = 100, height: number = 100) {
+    public constructor(name: string, materialName: string, width: number = 100, height: number = 100) {
         this._name = name;
         this._width = width;
         this._height = height;
-        this._texture = TextureManager.getTexture(textureName);
+        this._material = MaterialManager.getMaterial(materialName);
     }
 
     public get name(): string {
@@ -28,7 +30,8 @@ export class Sprite {
 
     public destroy(): void {
         this._buffer.destroy();
-        TextureManager.releaseTexture(this._texture.name);
+        MaterialManager.releaseMaterial(this._material.name);
+        this._material = undefined;
     }
 
     public load(): void {
@@ -65,9 +68,18 @@ export class Sprite {
     public update(time: number): void {}
 
     public draw(shader: Shader): void {
-        this._texture.activateAndBind(0);
+        gl.uniformMatrix4fv(
+            shader.getUniformLocation("u_model"),
+            false,
+            new Float32Array(Matrix.translation(this.postion).data)
+        );
 
-        gl.uniform1i(shader.getUniformLocation("u_diffuse"), 0);
+        gl.uniform4fv(shader.getUniformLocation("u_tint"), this._material.tint.toFloatArray());
+
+        if (this._material.diffuseTexture) {
+            this._material.diffuseTexture.activateAndBind(0);
+            gl.uniform1i(shader.getUniformLocation("u_diffuse"), 0);
+        }
 
         this._buffer.bind();
         this._buffer.draw();
