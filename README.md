@@ -1,6 +1,6 @@
 # build-your-own-x-d
 
-Some implemetation of build-your-own-x, learn from great tutorials.
+Some implementation of build-your-own-x, learn from great tutorials.
 
 ### 3d Renderer
 
@@ -16,8 +16,8 @@ Implementation of [Immo Landwerth's Building a Compiler](https://www.youtube.com
 
 ![mcompiler](./screenshot/compiler1.jpg)
 
-
-
 ### Command line tools
 
-#### [cowsay](https://github.com/hiitiger/build-your-own-x-d/blob/master/command-line/cowsay.cc)
+#### [yodasay](https://github.com/hiitiger/build-your-own-x-d/blob/master/command-line/cowsay.cc)
+
+![yodasay](./screenshot/yodasay.png)
