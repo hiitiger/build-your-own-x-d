@@ -15,8 +15,6 @@ export class Sprite {
     private _buffer: GLBuffer;
     private _material: Material;
 
-    public postion: Vector3 = new Vector3();
-
     public constructor(name: string, materialName: string, width: number = 100, height: number = 100) {
         this._name = name;
         this._width = width;
@@ -51,7 +49,7 @@ export class Sprite {
 
         // prettier-ignore
         const vertices = [
-            //x,y,z, u,v
+            // x,y,z, u,v
             [0,                0,       0, 0, 0],
             [0,           this._height, 0, 0, 1],
             [this._width, this._height, 0, 1, 1],
@@ -67,12 +65,8 @@ export class Sprite {
 
     public update(time: number): void {}
 
-    public draw(shader: Shader): void {
-        gl.uniformMatrix4fv(
-            shader.getUniformLocation("u_model"),
-            false,
-            new Float32Array(Matrix.translation(this.postion).data)
-        );
+    public draw(shader: Shader, model: Matrix): void {
+        gl.uniformMatrix4fv(shader.getUniformLocation("u_model"), false, model.toFloat32Array());
 
         gl.uniform4fv(shader.getUniformLocation("u_tint"), this._material.tint.toFloatArray());
 

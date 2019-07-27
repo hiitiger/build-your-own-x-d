@@ -4,20 +4,24 @@ Some implementation of build-your-own-x, learn from great tutorials.
 
 ### 3d Renderer
 
-#### [typescript software renderer](https://github.com/hiitiger/build-your-own-x-d/tree/master/3drenderer)
+#### [mini software renderer](https://github.com/hiitiger/build-your-own-x-d/tree/master/3drenderer)
 
-![3d-renderer](./screenshot/renderer1.jpg)
+A mini software renderer written in TypeScript
+
+<img src="./screenshot/renderer1.jpg" width="380">
 
 ### Compiler
 
 #### [Building a Compiler](https://github.com/hiitiger/build-your-own-x-d/tree/master/compiler)
 
-Implementation of [Immo Landwerth's Building a Compiler](https://www.youtube.com/channel/UCaFP8iQMTuPXinXBMEXsSuw)
+Implementation of Immo Landwerth's [Building a Compiler](https://www.youtube.com/channel/UCaFP8iQMTuPXinXBMEXsSuw).
 
-![mcompiler](./screenshot/compiler1.jpg)
+<img src="./screenshot/compiler1.jpg" width="480">
 
 ### Command line tools
 
 #### [yodasay](https://github.com/hiitiger/build-your-own-x-d/blob/master/command-line/cowsay.cc)
 
-![yodasay](./screenshot/yodasay.png)
+A colorful `cowsay` command line.
+
+<img src="./screenshot/yodasay.png" width="380">

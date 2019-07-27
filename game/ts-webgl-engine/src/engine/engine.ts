@@ -7,13 +7,12 @@ import { BasicShader } from "./gl/shaders/basicshader.js";
 import { MaterialManager } from "./graphics/materialmanager.js";
 import { Material } from "./graphics/material.js";
 import { Color } from "./graphics/color.js";
+import { ZoneManager } from "./world/zonemanager.js";
 
 export class Engine {
     private _canvas: HTMLCanvasElement;
     private _basicShader: BasicShader;
     private _projection: Matrix;
-
-    private _sprite: Sprite;
 
     public constructor() {
         console.log("init...");
@@ -27,13 +26,13 @@ export class Engine {
 
         this._basicShader = new BasicShader();
         this._basicShader.use();
-
         MaterialManager.registerMaterial(new Material("crate", "assets/textures/crate.jpg", Color.white()));
+
+        const zoneId = ZoneManager.createTestZone();
 
         this._projection = Matrix.orthographic(0, this._canvas.width, 0, this._canvas.height, -100, 100);
 
-        this._sprite = new Sprite("square", "crate");
-        this._sprite.load();
+        ZoneManager.changeZone(zoneId);
 
         this.loop();
     }
@@ -51,17 +50,17 @@ export class Engine {
     public loop(): void {
         MessageBus.update(0);
 
+        ZoneManager.update(0);
+
         gl.clear(gl.COLOR_BUFFER_BIT);
+
+        ZoneManager.render(this._basicShader);
 
         gl.uniformMatrix4fv(
             this._basicShader.getUniformLocation("u_projection"),
             false,
             new Float32Array(this._projection.data)
         );
-
-        this._sprite.postion.x += 10;
-        this._sprite.postion.x %= this._canvas.width;
-        this._sprite.draw(this._basicShader);
 
         requestAnimationFrame(this.loop.bind(this));
     }

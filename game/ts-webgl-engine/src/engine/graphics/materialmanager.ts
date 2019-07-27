@@ -41,3 +41,4 @@ export class MaterialManager {
         }
     }
 }
+(window as any).MaterialManager = MaterialManager;
