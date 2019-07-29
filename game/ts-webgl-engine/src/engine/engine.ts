@@ -23,16 +23,15 @@ export class Engine {
         gl.clearColor(0, 0, 0, 1);
 
         AssetManager.initialize();
+        ZoneManager.initialize();
 
         this._basicShader = new BasicShader();
         this._basicShader.use();
         MaterialManager.registerMaterial(new Material("crate", "assets/textures/crate.jpg", Color.white()));
 
-        const zoneId = ZoneManager.createTestZone();
-
         this._projection = Matrix.orthographic(0, this._canvas.width, 0, this._canvas.height, -100, 100);
 
-        ZoneManager.changeZone(zoneId);
+        ZoneManager.changeZone(0);
 
         this.loop();
     }

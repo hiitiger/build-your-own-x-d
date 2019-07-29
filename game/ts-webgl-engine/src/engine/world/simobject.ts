@@ -2,7 +2,7 @@ import { Transform } from "../math/transform.js";
 import { Matrix } from "../math/matrix.js";
 import { Shader } from "../gl/shader.js";
 import { Scene } from "./scene.js";
-import { BaseComponent } from "../components/basecomponent.js";
+import { IComponent } from "../components/interface.js";
 
 export class SimObject {
     private _id: number;
@@ -10,7 +10,7 @@ export class SimObject {
     private _parent: SimObject;
     private _isLoaded: boolean = false;
     private _scene: Scene;
-    private _components: BaseComponent[] = [];
+    private _components: IComponent[] = [];
 
     private _localMatrix: Matrix = Matrix.identity();
     private _worldMatrix: Matrix = Matrix.identity();
@@ -68,7 +68,7 @@ export class SimObject {
         return null;
     }
 
-    public addComponent(component: BaseComponent): void {
+    public addComponent(component: IComponent): void {
         this._components.push(component);
         component.owner = this;
     }

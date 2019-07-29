@@ -12,6 +12,18 @@ export class Transform {
         this.scale.copyFrom(other.scale);
     }
 
+    public setFromJson(data: any): void {
+        if (data.position) {
+            this.position.setFromJson(data.position);
+        }
+        if (data.rotation) {
+            this.rotation.setFromJson(data.rotation);
+        }
+        if (data.scale) {
+            this.scale.setFromJson(data.scale);
+        }
+    }
+
     public getTransformationMatrix(): Matrix {
         const translation = Matrix.translation(this.position);
         const rotation = Matrix.rotationXYZ(this.rotation.x, this.rotation.y, this.rotation.z);

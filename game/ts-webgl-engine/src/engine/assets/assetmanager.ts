@@ -1,10 +1,11 @@
 import { IAssetLoader, IAsset } from "./asset.js";
 import { Message } from "../message/message.js";
 import { ImageAssetLoader } from "./imageassetloader.js";
+import { JsonAssetLoader } from "./jsonassetloader.js";
 
 export const MESSAGE_ASSET_LOADED = "MESSAGE_ASSET_LOADED";
 
-export function assetLoadEventName(assetName: string) {
+export function assetLoadEventName(assetName: string): string {
     return MESSAGE_ASSET_LOADED + "." + assetName;
 }
 
@@ -16,6 +17,7 @@ export class AssetManager {
 
     public static initialize(): void {
         AssetManager.registerLoader(new ImageAssetLoader());
+        AssetManager.registerLoader(new JsonAssetLoader());
     }
 
     public static registerLoader(loader: IAssetLoader): void {

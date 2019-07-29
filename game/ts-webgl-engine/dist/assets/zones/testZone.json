@@ -1,0 +1,40 @@
+{
+    "name": "testZone",
+    "description": "testZone",
+    "id": 0,
+    "objects": [{
+        "name": "parentObject",
+        "transform": {
+            "position": {
+                "x": 150,
+                "y": 250
+            }
+        },
+        "children": [{
+            "name": "testObject",
+            "transform": {
+                "position": {
+                    "x": 150,
+                    "y": 250
+                }
+            },
+            "components": [{
+                "name": "test ",
+                "type": "sprite",
+                "materialName": "crate"
+            }]
+        }],
+        "components": [{
+            "name": "test",
+            "type": "sprite",
+            "materialName": "crate"
+        }],
+        "behaviors": [{
+            "name": "rotateX",
+            "type": "rotation",
+            "rotation": {
+                "z": 0.01
+            }
+        }]
+    }]
+}

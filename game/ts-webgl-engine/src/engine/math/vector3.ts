@@ -47,11 +47,51 @@ export class Vector3 {
         this._z = other._z;
     }
 
+    public setFromJson(data: any): void {
+        if (data.x) {
+            this._x = data.x;
+        }
+        if (data.y) {
+            this._y = data.y;
+        }
+        if (data.z) {
+            this._z = data.z;
+        }
+    }
+
     public static get zero(): Vector3 {
         return new Vector3();
     }
 
     public static get one(): Vector3 {
         return new Vector3(1, 1, 1);
+    }
+
+    public add(v: Vector3): Vector3 {
+        this._x += v._x;
+        this._y += v._y;
+        this._z += v._z;
+        return this;
+    }
+
+    public subtract(v: Vector3): Vector3 {
+        this._x -= v._x;
+        this._y -= v._y;
+        this._z -= v._z;
+        return this;
+    }
+
+    public multiply(v: Vector3): Vector3 {
+        this._x *= v._x;
+        this._y *= v._y;
+        this._z *= v._z;
+        return this;
+    }
+
+    public device(v: Vector3): Vector3 {
+        this._x /= v._x;
+        this._y /= v._y;
+        this._z /= v._z;
+        return this;
     }
 }
