@@ -3,6 +3,7 @@ import { Matrix } from "../math/matrix.js";
 import { Shader } from "../gl/shader.js";
 import { Scene } from "./scene.js";
 import { IComponent } from "../components/interface.js";
+import { IBehavior } from "../behaviors/interface.js";
 
 export class SimObject {
     private _id: number;
@@ -11,6 +12,7 @@ export class SimObject {
     private _isLoaded: boolean = false;
     private _scene: Scene;
     private _components: IComponent[] = [];
+    private _behaviors: IBehavior[] = [];
 
     private _localMatrix: Matrix = Matrix.identity();
     private _worldMatrix: Matrix = Matrix.identity();
@@ -73,6 +75,11 @@ export class SimObject {
         component.owner = this;
     }
 
+    public addBehavior(behavior: IBehavior): void {
+        this._behaviors.push(behavior);
+        behavior.setOwner(this);
+    }
+
     public load(): void {
         this._components.forEach(c => c.load());
         this._children.forEach(c => c.load());
@@ -85,6 +92,7 @@ export class SimObject {
         this.updateWorldMatrix(this._parent && this._parent.worldMatrix);
 
         this._components.forEach(c => c.update(time));
+        this._behaviors.forEach(c => c.update(time));
         this._children.forEach(c => c.update(time));
     }
 

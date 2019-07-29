@@ -2,7 +2,6 @@ import { Sprite } from "../graphics/sprite.js";
 import { BaseComponent } from "./basecomponent.js";
 import { Shader } from "../gl/shader.js";
 import { IComponentData, IComponentBuilder, IComponent } from "./interface.js";
-import { ComponentManager } from "./componentmanager.js";
 
 export class SpriteComponentData implements IComponentData {
     public name: string;

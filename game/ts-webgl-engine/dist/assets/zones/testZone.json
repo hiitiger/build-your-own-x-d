@@ -6,7 +6,7 @@
         "name": "parentObject",
         "transform": {
             "position": {
-                "x": 150,
+                "x": 250,
                 "y": 250
             }
         },
@@ -14,14 +14,21 @@
             "name": "testObject",
             "transform": {
                 "position": {
-                    "x": 150,
-                    "y": 250
+                    "x": 50,
+                    "y": 50
                 }
             },
             "components": [{
                 "name": "test ",
                 "type": "sprite",
                 "materialName": "crate"
+            }],
+            "behaviors": [{
+                "name": "rotateZ",
+                "type": "rotation",
+                "rotation": {
+                    "z": 0.02
+                }
             }]
         }],
         "components": [{
@@ -29,8 +36,9 @@
             "type": "sprite",
             "materialName": "crate"
         }],
+
         "behaviors": [{
-            "name": "rotateX",
+            "name": "rotateZ",
             "type": "rotation",
             "rotation": {
                 "z": 0.01

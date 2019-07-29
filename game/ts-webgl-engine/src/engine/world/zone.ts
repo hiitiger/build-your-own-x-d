@@ -2,7 +2,7 @@ import { Scene } from "./scene.js";
 import { Shader } from "../gl/shader.js";
 import { SimObject } from "./simobject.js";
 import { ComponentManager } from "../components/componentmanager.js";
-import { BaseComponent } from "../components/basecomponent.js";
+import { BehaviorManager } from "../behaviors/bahaviormanager.js";
 
 export enum ZoneState {
     UNINITIALIZED,
@@ -88,10 +88,17 @@ export class Zone {
         }
 
         if (data.components && Array.isArray(data.components)) {
-            for (const c of data.components) {
+            data.components.forEach(c => {
                 const component = ComponentManager.extractComponent(c);
                 simObject.addComponent(component);
-            }
+            });
+        }
+
+        if (data.behaviors && Array.isArray(data.behaviors)) {
+            data.behaviors.forEach(c => {
+                const behavior = BehaviorManager.extractBehavior(c);
+                simObject.addBehavior(behavior);
+            });
         }
 
         if (data.children && Array.isArray(data.children)) {
