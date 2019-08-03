@@ -8,6 +8,7 @@ import { Material } from "./graphics/material.js";
 import { Color } from "./graphics/color.js";
 import { ZoneManager } from "./world/zonemanager.js";
 import { InputManager } from "./input/inputmanager.js";
+import { AudioManager } from "./audio/audiomanager.js";
 
 export class Engine {
     private _canvas: HTMLCanvasElement;
@@ -31,8 +32,12 @@ export class Engine {
 
         this._basicShader = new BasicShader();
         this._basicShader.use();
+
         MaterialManager.registerMaterial(new Material("crate", "assets/textures/crate.jpg", Color.white()));
         MaterialManager.registerMaterial(new Material("flybird", "assets/textures/flybird.png", Color.white()));
+
+        AudioManager.loadSoundFile("flap", "assets/sounds/flap.mp3", true);
+        // AudioManager.playSound("flap");
 
         this.resize();
         ZoneManager.changeZone(0);
