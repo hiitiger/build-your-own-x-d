@@ -26,7 +26,7 @@ export class Engine {
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
         AssetManager.initialize();
-        InputManager.initialize();
+        InputManager.initialize(this._canvas);
         ZoneManager.initialize();
 
         this._basicShader = new BasicShader();

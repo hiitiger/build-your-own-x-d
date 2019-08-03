@@ -1,6 +1,6 @@
 import { IBehaviorBuilder, IBehavior } from "./interface.js";
 import { RotationBehaviorBuilder } from "./rotationbehavior.js";
-import { KeyboardMovementBehaviorBuilder } from "./KeyboardMovementBehavior.js";
+import { KeyboardMovementBehaviorBuilder } from "./keyboardmovementbehavior.js";
 
 export class BehaviorManager {
     private static _registeredBuilders: { [type: string]: IBehaviorBuilder } = {};
