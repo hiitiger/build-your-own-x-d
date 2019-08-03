@@ -2,11 +2,12 @@ import { Sprite } from "../graphics/sprite.js";
 import { BaseComponent } from "./basecomponent.js";
 import { Shader } from "../gl/shader.js";
 import { IComponentData, IComponentBuilder, IComponent } from "./interface.js";
+import { Vector3 } from "../math/vector3.js";
 
 export class SpriteComponentData implements IComponentData {
     public name: string;
     public materialName: string;
-
+    public origin: Vector3 = Vector3.zero;
     public setFromJson(data: any): void {
         if ("name" in data) {
             this.name = data.name;
@@ -14,6 +15,10 @@ export class SpriteComponentData implements IComponentData {
 
         if ("materialName" in data) {
             this.materialName = data.materialName;
+        }
+
+        if ("origin" in data) {
+            this.origin.setFromJson(data.origin);
         }
     }
 }

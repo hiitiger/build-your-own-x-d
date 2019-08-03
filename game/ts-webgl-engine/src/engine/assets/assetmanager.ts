@@ -45,7 +45,7 @@ export class AssetManager {
         console.warn(`Cannot load asset with extension: ${extension}`);
     }
 
-    public static isAssetLoader(assetName: string): boolean {
+    public static isAssetLoaded(assetName: string): boolean {
         return AssetManager._loadedAssets[assetName] !== undefined;
     }
 

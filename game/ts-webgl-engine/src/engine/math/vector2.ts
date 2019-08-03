@@ -30,4 +30,17 @@ export class Vector2 {
     public toFloat32Array(): Float32Array {
         return new Float32Array(this.toArray());
     }
+
+    public copyFrom(other: Vector2): void {
+        this._x = other._x;
+        this._y = other._y;
+    }
+
+    static get zero(): Vector2 {
+        return new Vector2();
+    }
+
+    static get one(): Vector2 {
+        return new Vector2(1, 1);
+    }
 }

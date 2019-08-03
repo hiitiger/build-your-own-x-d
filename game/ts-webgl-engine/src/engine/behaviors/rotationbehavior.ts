@@ -22,7 +22,7 @@ export class RotationBehaviorBuilder implements IBehaviorBuilder {
     }
 
     public buildFromJson(json: any): IBehavior {
-        let data = new RotationBehaviorData();
+        const data = new RotationBehaviorData();
         data.setFromJson(json);
         return new RotationBehavior(data);
     }

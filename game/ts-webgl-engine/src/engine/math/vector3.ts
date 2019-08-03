@@ -33,6 +33,19 @@ export class Vector3 {
         this._z = value;
     }
 
+    public set(x?: number, y?: number, z?: number): void {
+        if (x !== undefined) {
+            this._x = x;
+        }
+
+        if (y !== undefined) {
+            this._y = y;
+        }
+
+        if (z !== undefined) {
+            this._z = z;
+        }
+    }
     public toArray(): number[] {
         return [this._x, this._y, this._z];
     }
@@ -93,5 +106,9 @@ export class Vector3 {
         this._y /= v._y;
         this._z /= v._z;
         return this;
+    }
+
+    public equals(other: Vector3): boolean {
+        return this._x === other._x && this._y === other._y && this._z === other._z;
     }
 }

@@ -26,7 +26,7 @@ export class ZoneManager implements IMessageHandler {
         }
         if (id in ZoneManager._registeredZones) {
             const assetName = ZoneManager._registeredZones[id];
-            if (AssetManager.isAssetLoader(assetName)) {
+            if (AssetManager.isAssetLoaded(assetName)) {
                 const asset = AssetManager.getAsset(assetName);
                 ZoneManager.loadZone(asset);
             } else {

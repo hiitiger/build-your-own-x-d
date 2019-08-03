@@ -3,7 +3,7 @@ import { gl } from "./gl.js";
 export class AttributeInfo {
     public location: number;
     public size: number;
-    public offset: number;
+    public offset: number = 0;
 }
 
 export class GLBuffer {
@@ -21,13 +21,8 @@ export class GLBuffer {
 
     private _attributes: AttributeInfo[] = [];
 
-    constructor(
-        elementSize: number,
-        dataType: GLenum = gl.FLOAT,
-        targetBufferType: GLenum = gl.ARRAY_BUFFER,
-        mode: GLenum = gl.TRIANGLES
-    ) {
-        this._elementSize = elementSize;
+    constructor(dataType: GLenum = gl.FLOAT, targetBufferType: GLenum = gl.ARRAY_BUFFER, mode: GLenum = gl.TRIANGLES) {
+        this._elementSize = 0;
         this._dataType = dataType;
         this._targetBufferType = targetBufferType;
         this._mode = mode;
@@ -49,8 +44,6 @@ export class GLBuffer {
             default:
                 throw new Error(`Unrecognized data type: ${this._dataType}`);
         }
-
-        this._stride = this._elementSize * this._typeSize;
 
         this._buffer = gl.createBuffer();
     }
@@ -82,12 +75,25 @@ export class GLBuffer {
     }
 
     public addAttributeLocation(info: AttributeInfo): void {
+        info.offset = this._elementSize;
         this._hasAttributeLocation = true;
         this._attributes.push(info);
+
+        this._elementSize += info.size;
+        this._stride = this._elementSize * this._typeSize;
+    }
+
+    public setData(data: number[]): void {
+        this.clearData();
+        this.pushBackData(data);
     }
 
     public pushBackData(data: number[]): void {
         this._data = this._data.concat(data);
+    }
+
+    public clearData(): void {
+        this._data = [];
     }
 
     public upload(): void {

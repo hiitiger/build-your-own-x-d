@@ -1,5 +1,6 @@
 import { IComponentBuilder, IComponent } from "./interface.js";
 import { SpriteComponentBuilder } from "./spritecomponent.js";
+import { AnimatedSpriteComponentBuilder } from "./animtedspritecomponent.js";
 
 export class ComponentManager {
     private static _registeredBuilders: { [type: string]: IComponentBuilder } = {};
@@ -19,3 +20,4 @@ export class ComponentManager {
 }
 
 ComponentManager.registerBuilder(new SpriteComponentBuilder());
+ComponentManager.registerBuilder(new AnimatedSpriteComponentBuilder());

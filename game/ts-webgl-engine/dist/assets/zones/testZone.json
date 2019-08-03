@@ -3,46 +3,77 @@
     "description": "testZone",
     "id": 0,
     "objects": [{
-        "name": "parentObject",
-        "transform": {
-            "position": {
-                "x": 250,
-                "y": 250
-            }
-        },
-        "children": [{
-            "name": "testObject",
+            "name": "parentObject",
             "transform": {
                 "position": {
-                    "x": 50,
-                    "y": 50
+                    "x": 250,
+                    "y": 250
                 }
             },
+            "children": [{
+                "name": "testObject",
+                "transform": {
+                    "position": {
+                        "x": 150,
+                        "y": 150
+                    }
+                },
+                "components": [{
+                    "name": "test ",
+                    "type": "sprite",
+                    "materialName": "crate"
+                }],
+                "behaviors": [{
+                    "name": "rotateZ",
+                    "type": "rotation",
+                    "rotation": {
+                        "z": 0.02
+                    }
+                }]
+            }],
             "components": [{
-                "name": "test ",
+                "name": "test",
                 "type": "sprite",
                 "materialName": "crate"
             }],
+
             "behaviors": [{
                 "name": "rotateZ",
                 "type": "rotation",
                 "rotation": {
-                    "z": 0.02
+                    "z": 0.01
                 }
             }]
-        }],
-        "components": [{
-            "name": "test",
-            "type": "sprite",
-            "materialName": "crate"
-        }],
-
-        "behaviors": [{
-            "name": "rotateZ",
-            "type": "rotation",
-            "rotation": {
-                "z": 0.01
-            }
-        }]
-    }]
+        },
+        {
+            "name": "duck",
+            "transform": {
+                "position": {
+                    "x": 300,
+                    "y": 300
+                },
+                "scale": {
+                    "x": 4,
+                    "y": 4
+                }
+            },
+            "behaviors": [{
+                "name": "movement",
+                "type": "keyboardMovement",
+                "speed": 0.1
+            }],
+            "components": [{
+                "name": "duckAnimatedSprite",
+                "type": "animatedSprite",
+                "materialName": "flybird",
+                "imageWidth": 42,
+                "imageHeigth": 12,
+                "frameWidth": 14,
+                "frameHeight": 12,
+                "frameCount": 3,
+                "frameTime": 200,
+                "frameSequence": [0, 1, 2, 1]
+            }]
+        }
+    ]
 }
