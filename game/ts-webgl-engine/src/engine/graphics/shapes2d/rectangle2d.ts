@@ -5,13 +5,22 @@ import { gl2d } from "../../gl/gl.js";
 
 export class Rectangle2D implements IShape2D {
     public position: Vector2 = Vector2.zero;
+    public origin: Vector2 = Vector2.zero;
 
     public width: number;
     public height: number;
 
+    public get offset(): Vector2 {
+        return new Vector2(-this.width * this.origin.x, -this.height * this.origin.y);
+    }
+
     public setFromJson(data: any): void {
         if ("position" in data) {
             this.position.setFromJson(data.position);
+        }
+
+        if ("origin" in data) {
+            this.origin.setFromJson(data.origin);
         }
 
         ["width", "height"]
@@ -35,12 +44,11 @@ export class Rectangle2D implements IShape2D {
                 return true;
             }
         } else if (other instanceof Circle2D) {
-            if (
-                other.pointInShape(this.position) ||
-                other.pointInShape(new Vector2(this.position.x + this.width, this.position.y)) ||
-                other.pointInShape(new Vector2(this.position.x + this.width, this.position.y + this.height)) ||
-                other.pointInShape(new Vector2(this.position.x, this.position.y + this.height))
-            ) {
+            const deltaX =
+                other.position.x - Math.max(this.position.x, Math.min(other.position.x, this.position.x + this.width));
+            const deltaY =
+                other.position.y - Math.max(this.position.y, Math.min(other.position.y, this.position.y + this.height));
+            if (deltaX * deltaX + deltaY * deltaY < other.radius * other.radius) {
                 return true;
             }
         }

@@ -66,7 +66,7 @@ export class CollisionComponent extends BaseComponent {
     public load(): void {
         super.load();
 
-        this._shape.position.copyFrom(this.owner.transform.position.toVector2());
+        this._shape.position.copyFrom(this.owner.transform.position.toVector2().add(this._shape.offset));
 
         CollisionManager.registerCollisionComponent(this);
     }
@@ -74,7 +74,7 @@ export class CollisionComponent extends BaseComponent {
     public update(time: number): void {
         super.update(time);
 
-        this._shape.position.copyFrom(this.owner.transform.position.toVector2());
+        this._shape.position.copyFrom(this.owner.transform.position.toVector2().add(this._shape.offset));
     }
 
     public render(shader: Shader): void {

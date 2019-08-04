@@ -27,7 +27,11 @@
                     "shape": {
                         "type": "rectangle",
                         "width": 40,
-                        "height": 40
+                        "height": 40,
+                        "origin": {
+                            "x": 0.5,
+                            "y": 0.5
+                        }
                     }
                 }
             ],
@@ -79,7 +83,11 @@
                     "type": "collision",
                     "shape": {
                         "type": "circle",
-                        "radius": 40
+                        "radius": 40,
+                        "origin": {
+                            "x": 0.5,
+                            "y": 0.5
+                        }
                     }
                 }
             ]

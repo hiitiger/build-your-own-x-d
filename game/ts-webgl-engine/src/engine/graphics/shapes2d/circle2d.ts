@@ -5,11 +5,24 @@ import { gl2d } from "../../gl/gl.js";
 
 export class Circle2D implements IShape2D {
     public position: Vector2 = Vector2.zero;
+    public origin: Vector2 = Vector2.zero;
+
     public radius: number;
+
+    public get offset(): Vector2 {
+        return new Vector2(
+            this.radius - this.radius * this.origin.x * 2,
+            this.radius - this.radius * this.origin.y * 2
+        );
+    }
 
     public setFromJson(data: any): void {
         if ("position" in data) {
             this.position.setFromJson(data.position);
+        }
+
+        if ("origin" in data) {
+            this.origin.setFromJson(data.origin);
         }
 
         if (!("radius" in data)) {
