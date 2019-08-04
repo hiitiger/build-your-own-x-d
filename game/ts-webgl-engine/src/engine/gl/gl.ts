@@ -1,4 +1,5 @@
 export var gl: WebGLRenderingContext;
+export var gl2d: CanvasRenderingContext2D;
 
 export class GLUtilities {
     public static Initialize(elementId?: string): HTMLCanvasElement {
@@ -22,6 +23,7 @@ export class GLUtilities {
             }
         }
 
+        gl2d = (document.getElementById("layerCanvas") as HTMLCanvasElement).getContext("2d");
         return canvas;
     }
 }

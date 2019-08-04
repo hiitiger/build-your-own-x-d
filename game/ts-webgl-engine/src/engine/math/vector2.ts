@@ -36,11 +36,53 @@ export class Vector2 {
         this._y = other._y;
     }
 
+    public setFromJson(data: any): void {
+        if ("x" in data) {
+            this._x = data.x;
+        }
+        if ("y" in data) {
+            this._y = data.y;
+        }
+    }
+
+    public clone(): Vector2 {
+        return new Vector2(this._x, this._y);
+    }
+
+    public add(v: Vector2): Vector2 {
+        this._x += v._x;
+        this._y += v._y;
+        return this;
+    }
+
+    public subtract(v: Vector2): Vector2 {
+        this._x -= v._x;
+        this._y -= v._y;
+        return this;
+    }
+
+    public multiply(v: Vector2): Vector2 {
+        this._x *= v._x;
+        this._y *= v._y;
+        return this;
+    }
+
+    public devide(v: Vector2): Vector2 {
+        this._x /= v._x;
+        this._y /= v._y;
+        return this;
+    }
+
     static get zero(): Vector2 {
         return new Vector2();
     }
 
     static get one(): Vector2 {
         return new Vector2(1, 1);
+    }
+
+    public static distance(a: Vector2, b: Vector2): number {
+        const diff = a.clone().subtract(b);
+        return Math.sqrt(diff.x * diff.x + diff.y * diff.y);
     }
 }

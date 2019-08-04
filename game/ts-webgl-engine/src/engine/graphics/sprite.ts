@@ -56,16 +56,21 @@ export class Sprite {
         texCoordAttribute.size = 2;
         this._buffer.addAttributeLocation(texCoordAttribute);
 
+        const minX = -(this._width * this._origin.x);
+        const maxX = this._width * (1.0 - this._origin.x);
+
+        const minY = -(this._height * this._origin.y);
+        const maxY = this._height * (1.0 - this._origin.y);
         // prettier-ignore
         const vertices = [
             // x,y,z, u,v
-            [0,                0,       0, 0, 0],
-            [0,           this._height, 0, 0, 1],
-            [this._width, this._height, 0, 1, 1],
+            [minX,          minY,       0, 0, 0],
+            [minX,          maxY,       0, 0, 1],
+            [maxX,          maxY,       0, 1, 1],
 
-            [this._width, this._height, 0, 1, 1],
-            [this._width,      0,       0, 1, 0],
-            [0,                0,       0, 0, 0],
+            [maxX,          maxY,       0, 1, 1],
+            [maxX,          minY,       0, 1, 0],
+            [minX,          minY,       0, 0, 0],
         ];
 
         this._vertices = vertices.map(v => new Vertex(...v));
@@ -91,26 +96,28 @@ export class Sprite {
     }
 
     protected recalculateVertices(): void {
-        const minX = -(this._width * this._origin.x);
-        const maxX = this._width * (1.0 - this._origin.x);
+        if (this._vertices.length !== 0) {
+            const minX = -(this._width * this._origin.x);
+            const maxX = this._width * (1.0 - this._origin.x);
 
-        const minY = -(this._height * this._origin.y);
-        const maxY = this._height * (1.0 - this._origin.y);
+            const minY = -(this._height * this._origin.y);
+            const maxY = this._height * (1.0 - this._origin.y);
 
-        this._vertices[0].position.set(minX, minY);
-        this._vertices[1].position.set(minX, maxY);
-        this._vertices[2].position.set(maxX, maxY);
+            this._vertices[0].position.set(minX, minY);
+            this._vertices[1].position.set(minX, maxY);
+            this._vertices[2].position.set(maxX, maxY);
 
-        this._vertices[3].position.set(maxX, maxY);
-        this._vertices[4].position.set(maxX, minY);
-        this._vertices[5].position.set(minX, minY);
+            this._vertices[3].position.set(maxX, maxY);
+            this._vertices[4].position.set(maxX, minY);
+            this._vertices[5].position.set(minX, minY);
 
-        this._buffer.clearData();
-        for (const v of this._vertices) {
-            this._buffer.pushBackData(v.toArray());
+            this._buffer.clearData();
+            for (const v of this._vertices) {
+                this._buffer.pushBackData(v.toArray());
+            }
+
+            this._buffer.upload();
+            this._buffer.unbind();
         }
-
-        this._buffer.upload();
-        this._buffer.unbind();
     }
 }

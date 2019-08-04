@@ -10,32 +10,27 @@
                     "y": 250
                 }
             },
-            "children": [{
-                "name": "testObject",
-                "transform": {
-                    "position": {
-                        "x": 150,
-                        "y": 150
-                    }
-                },
-                "components": [{
-                    "name": "test ",
-                    "type": "sprite",
-                    "materialName": "crate"
-                }],
-                "behaviors": [{
-                    "name": "rotateZ",
-                    "type": "rotation",
-                    "rotation": {
-                        "z": 0.02
-                    }
-                }]
-            }],
             "components": [{
-                "name": "test",
-                "type": "sprite",
-                "materialName": "crate"
-            }],
+                    "name": "test",
+                    "type": "sprite",
+                    "materialName": "crate",
+                    "origin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    },
+                    "width": 40,
+                    "height": 40
+                },
+                {
+                    "name": "crateCllision",
+                    "type": "collision",
+                    "shape": {
+                        "type": "rectangle",
+                        "width": 40,
+                        "height": 40
+                    }
+                }
+            ],
 
             "behaviors": [{
                 "name": "rotateZ",
@@ -57,23 +52,37 @@
                     "y": 4
                 }
             },
+
             "behaviors": [{
                 "name": "movement",
                 "type": "keyboardMovement",
-                "speed": 1.0
+                "speed": 2.0
             }],
             "components": [{
-                "name": "duckAnimatedSprite",
-                "type": "animatedSprite",
-                "materialName": "flybird",
-                "imageWidth": 60,
-                "imageHeigth": 17,
-                "frameWidth": 20,
-                "frameHeight": 17,
-                "frameCount": 3,
-                "frameTime": 200,
-                "frameSequence": [0, 1, 2, 1]
-            }]
+                    "name": "duckAnimatedSprite",
+                    "type": "animatedSprite",
+                    "materialName": "flybird",
+                    "imageWidth": 60,
+                    "imageHeigth": 17,
+                    "frameWidth": 20,
+                    "frameHeight": 17,
+                    "frameCount": 3,
+                    "frameTime": 200,
+                    "frameSequence": [0, 1, 2, 1],
+                    "origin": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "name": "duckCollision",
+                    "type": "collision",
+                    "shape": {
+                        "type": "circle",
+                        "radius": 40
+                    }
+                }
+            ]
         }
     ]
 }

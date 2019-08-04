@@ -1,4 +1,4 @@
-import { GLUtilities, gl } from "./gl/gl.js";
+import { GLUtilities, gl, gl2d } from "./gl/gl.js";
 import { Matrix } from "./math/matrix.js";
 import { AssetManager } from "./assets/assetmanager.js";
 import { MessageBus } from "./message/messagebus.js";
@@ -9,9 +9,11 @@ import { Color } from "./graphics/color.js";
 import { ZoneManager } from "./world/zonemanager.js";
 import { InputManager } from "./input/inputmanager.js";
 import { AudioManager } from "./audio/audiomanager.js";
+import { CollisionManager } from "./collision/collisionmanager.js";
 
 export class Engine {
     private _canvas: HTMLCanvasElement;
+    private _layerCanvas: HTMLCanvasElement;
     private _basicShader: BasicShader;
     private _projection: Matrix;
     private _time: number = 0;
@@ -21,6 +23,7 @@ export class Engine {
     }
 
     public start(): void {
+        this._layerCanvas = document.getElementById("layerCanvas") as HTMLCanvasElement;
         this._canvas = GLUtilities.Initialize("renderCanvas");
         gl.clearColor(0, 0, 0, 1);
         gl.enable(gl.BLEND);
@@ -47,8 +50,10 @@ export class Engine {
 
     public resize(): void {
         if (this._canvas !== null) {
-            this._canvas.width = window.innerWidth * 0.8;
-            this._canvas.height = window.innerHeight * 0.8;
+            this._canvas.width = window.innerWidth;
+            this._canvas.height = window.innerHeight;
+            this._layerCanvas.width = window.innerWidth;
+            this._layerCanvas.height = window.innerHeight;
             this._projection = Matrix.orthographic(0, this._canvas.width, this._canvas.height, 0, -100, 100);
 
             gl.viewport(0, 0, this._canvas.width, this._canvas.height);
@@ -67,10 +72,14 @@ export class Engine {
 
         MessageBus.update(delta);
         ZoneManager.update(delta);
+        CollisionManager.update(delta);
         this._time = time;
     }
 
     private render(): void {
+        gl2d.fillStyle = "#00000000";
+        gl2d.clearRect(0, 0, this._layerCanvas.width, this._layerCanvas.height);
+
         gl.clear(gl.COLOR_BUFFER_BIT);
 
         ZoneManager.render(this._basicShader);

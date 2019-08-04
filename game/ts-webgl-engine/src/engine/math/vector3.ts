@@ -1,3 +1,5 @@
+import { Vector2 } from "./vector2.js";
+
 export class Vector3 {
     private _x: number;
     private _y: number;
@@ -61,13 +63,13 @@ export class Vector3 {
     }
 
     public setFromJson(data: any): void {
-        if (data.x) {
+        if ("x" in data) {
             this._x = data.x;
         }
-        if (data.y) {
+        if ("y" in data) {
             this._y = data.y;
         }
-        if (data.z) {
+        if ("z" in data) {
             this._z = data.z;
         }
     }
@@ -101,7 +103,7 @@ export class Vector3 {
         return this;
     }
 
-    public device(v: Vector3): Vector3 {
+    public devide(v: Vector3): Vector3 {
         this._x /= v._x;
         this._y /= v._y;
         this._z /= v._z;
@@ -110,5 +112,18 @@ export class Vector3 {
 
     public equals(other: Vector3): boolean {
         return this._x === other._x && this._y === other._y && this._z === other._z;
+    }
+
+    public clone(): Vector3 {
+        return new Vector3(this._x, this._y, this._z);
+    }
+
+    public toVector2(): Vector2 {
+        return new Vector2(this._x, this._y);
+    }
+
+    public static distance(a: Vector3, b: Vector3): number {
+        const diff = a.subtract(b);
+        return Math.sqrt(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z);
     }
 }

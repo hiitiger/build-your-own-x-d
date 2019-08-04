@@ -32,7 +32,7 @@ export class InputManager {
     private static _leftMouseDown: boolean = false;
     private static _rightMouseDown: boolean = false;
 
-    public static initialize(canvas: HTMLCanvasElement) {
+    public static initialize(canvas: HTMLCanvasElement): void {
         InputManager._keys = Array(255).fill(false);
 
         window.addEventListener("keydown", InputManager.onKeyDown);
@@ -80,7 +80,6 @@ export class InputManager {
         const rect = (event.target as HTMLElement).getBoundingClientRect();
         InputManager._mouseX = event.clientX - rect.left;
         InputManager._mouseY = event.clientY - rect.top;
-        console.log(`x:${InputManager._mouseX} y:${InputManager._mouseY}`);
     }
 
     private static onMouseDown(event: MouseEvent): void {

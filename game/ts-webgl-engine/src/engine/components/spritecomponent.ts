@@ -8,6 +8,9 @@ export class SpriteComponentData implements IComponentData {
     public name: string;
     public materialName: string;
     public origin: Vector3 = Vector3.zero;
+    public width: number = 100;
+    public height: number = 100;
+
     public setFromJson(data: any): void {
         if ("name" in data) {
             this.name = data.name;
@@ -19,6 +22,14 @@ export class SpriteComponentData implements IComponentData {
 
         if ("origin" in data) {
             this.origin.setFromJson(data.origin);
+        }
+
+        if ("width" in data) {
+            this.width = data.width;
+        }
+
+        if ("height" in data) {
+            this.height = data.height;
         }
     }
 }
@@ -42,7 +53,10 @@ export class SpriteComponent extends BaseComponent {
     public constructor(data: SpriteComponentData) {
         super(data);
 
-        this._sprite = new Sprite(data.name, data.materialName);
+        this._sprite = new Sprite(data.name, data.materialName, data.width, data.height);
+        if (!data.origin.equals(Vector3.zero)) {
+            this._sprite.origin = data.origin;
+        }
     }
 
     public load(): void {
