@@ -56,6 +56,38 @@ export class SimObject {
         }
     }
 
+    public getComponentByName(name: string): IComponent {
+        for (const component of this._components) {
+            if (component.name === name) {
+                return component;
+            }
+        }
+        for (const child of this._children) {
+            const component = child.getComponentByName(name);
+            if (component) {
+                return component;
+            }
+        }
+
+        return null;
+    }
+
+    public getBehaviorByName(name: string): IBehavior {
+        for (const behavior of this._behaviors) {
+            if (behavior.name === name) {
+                return behavior;
+            }
+        }
+        for (const child of this._children) {
+            const behavior = child.getBehaviorByName(name);
+            if (behavior) {
+                return behavior;
+            }
+        }
+
+        return null;
+    }
+
     public getObjectByName(name: string): SimObject {
         if (this.name === name) {
             return this;
@@ -85,6 +117,12 @@ export class SimObject {
         this._children.forEach(c => c.load());
 
         this._isLoaded = true;
+    }
+
+    public updateReady(): void {
+        this._components.forEach(c => c.updateReady());
+        this._behaviors.forEach(c => c.updateReady());
+        this._children.forEach(c => c.updateReady());
     }
 
     public update(time: number): void {

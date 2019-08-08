@@ -1,3 +1,5 @@
+import { Vector3 } from "./vector3.js";
+
 export class Vector2 {
     private _x: number;
     private _y: number;
@@ -45,6 +47,16 @@ export class Vector2 {
         }
     }
 
+    public set(x?: number, y?: number): void {
+        if (x !== undefined) {
+            this._x = x;
+        }
+
+        if (y !== undefined) {
+            this._y = y;
+        }
+    }
+
     public clone(): Vector2 {
         return new Vector2(this._x, this._y);
     }
@@ -73,6 +85,12 @@ export class Vector2 {
         return this;
     }
 
+    public scale(scale: number): Vector2 {
+        this._x *= scale;
+        this._y *= scale;
+        return this;
+    }
+
     static get zero(): Vector2 {
         return new Vector2();
     }
@@ -84,5 +102,9 @@ export class Vector2 {
     public static distance(a: Vector2, b: Vector2): number {
         const diff = a.clone().subtract(b);
         return Math.sqrt(diff.x * diff.x + diff.y * diff.y);
+    }
+
+    public toVector3(): Vector3 {
+        return new Vector3(this._x, this._y, 0);
     }
 }

@@ -50,9 +50,11 @@ export class AnimatedSpriteComponentBuilder implements IComponentBuilder {
 
 export class AnimatedSpriteComponent extends BaseComponent {
     private _sprite: AnimatedSprite;
+    private _autoPlay: boolean;
 
     public constructor(data: AnimatedSpriteComponentData) {
         super(data);
+        this._autoPlay = data.autoPlay;
 
         const spriteInfo = new AnimatedSpriteInfo();
         spriteInfo.name = name;
@@ -75,6 +77,14 @@ export class AnimatedSpriteComponent extends BaseComponent {
         return this._sprite.isPlaying;
     }
 
+    public play(): void {
+        this._sprite.play();
+    }
+
+    public stop(): void {
+        this._sprite.stop();
+    }
+
     public load(): void {
         this._sprite.load();
     }
@@ -88,5 +98,15 @@ export class AnimatedSpriteComponent extends BaseComponent {
     public render(shader: Shader): void {
         super.render(shader);
         this._sprite.draw(shader, this.owner.worldMatrix);
+    }
+
+    public updateReady(): void {
+        if (!this._autoPlay) {
+            this._sprite.stop();
+        }
+    }
+
+    public setFrame(frameNumber: number): void {
+        this._sprite.setFrame(frameNumber);
     }
 }

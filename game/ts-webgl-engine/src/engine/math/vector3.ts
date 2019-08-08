@@ -48,6 +48,7 @@ export class Vector3 {
             this._z = z;
         }
     }
+
     public toArray(): number[] {
         return [this._x, this._y, this._z];
     }

@@ -6,6 +6,8 @@ export interface IBehavior {
     setOwner(owner: SimObject): void;
     update(time: number): void;
     apply(userData: any): void;
+
+    updateReady(): void;
 }
 
 export interface IBehaviorData {

@@ -69,15 +69,32 @@ export class AnimatedSprite extends Sprite implements IMessageHandler {
         return this._isPlaying;
     }
 
+    public play(): void {
+        this._isPlaying = true;
+    }
+
+    public stop(): void {
+        this._isPlaying = false;
+    }
+
+    public setFrame(frameNumber: number): void {
+        if (frameNumber > this._frameCount) {
+            throw new Error(`setFrame error`);
+        }
+        this._currentFrame = frameNumber;
+    }
+
     public destroy(): void {
         super.destroy();
     }
 
     public update(time: number): void {
         if (!this._assetLoaded) {
-            if (!this._assetLoaded) {
-                this.setupFromMaterial();
-            }
+            this.setupFromMaterial();
+            return;
+        }
+
+        if (!this.isPlaying) {
             return;
         }
 

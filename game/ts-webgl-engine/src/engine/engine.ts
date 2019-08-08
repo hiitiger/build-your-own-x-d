@@ -18,29 +18,42 @@ export class Engine {
     private _projection: Matrix;
     private _time: number = 0;
 
-    public constructor() {
+    private _gameWidth: number;
+    private _gameHeight: number;
+
+    public constructor(width?: number, height?: number) {
         console.log("init...");
+        this._gameWidth = width;
+        this._gameHeight = height;
     }
 
     public start(): void {
         this._layerCanvas = document.getElementById("layerCanvas") as HTMLCanvasElement;
         this._canvas = GLUtilities.Initialize("renderCanvas");
-        gl.clearColor(0, 0, 0, 1);
+        if (this._gameWidth && this._gameHeight) {
+            this._canvas.width = this._gameWidth;
+            this._canvas.height = this._gameHeight;
+            this._layerCanvas.width = this._gameWidth;
+            this._layerCanvas.height = this._gameHeight;
+        }
+
+        gl.clearColor(146 / 255, 206 / 255, 247 / 255, 1);
         gl.enable(gl.BLEND);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
         AssetManager.initialize();
-        InputManager.initialize(this._canvas);
+        InputManager.initialize(this._layerCanvas);
         ZoneManager.initialize();
 
         this._basicShader = new BasicShader();
         this._basicShader.use();
 
-        MaterialManager.registerMaterial(new Material("crate", "assets/textures/crate.jpg", Color.white()));
+        MaterialManager.registerMaterial(new Material("grass", "assets/textures/grass.png", Color.white()));
         MaterialManager.registerMaterial(new Material("flybird", "assets/textures/flybird.png", Color.white()));
 
-        AudioManager.loadSoundFile("flap", "assets/sounds/flap.mp3", true);
-        // AudioManager.playSound("flap");
+        AudioManager.loadSoundFile("flap", "assets/sounds/flap.mp3", false);
+        AudioManager.loadSoundFile("ting", "assets/sounds/ting.mp3", false);
+        AudioManager.loadSoundFile("dead", "assets/sounds/dead.mp3", false);
 
         this.resize();
         ZoneManager.changeZone(0);
@@ -50,10 +63,13 @@ export class Engine {
 
     public resize(): void {
         if (this._canvas !== null) {
-            this._canvas.width = window.innerWidth;
-            this._canvas.height = window.innerHeight;
-            this._layerCanvas.width = window.innerWidth;
-            this._layerCanvas.height = window.innerHeight;
+            if (!this._gameWidth || !this._gameHeight) {
+                this._canvas.width = window.innerWidth;
+                this._canvas.height = window.innerHeight;
+                this._layerCanvas.width = window.innerWidth;
+                this._layerCanvas.height = window.innerHeight;
+            }
+
             this._projection = Matrix.orthographic(0, this._canvas.width, this._canvas.height, 0, -100, 100);
 
             gl.viewport(0, 0, this._canvas.width, this._canvas.height);

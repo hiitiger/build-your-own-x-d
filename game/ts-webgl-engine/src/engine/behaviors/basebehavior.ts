@@ -19,4 +19,6 @@ export abstract class BaseBehavior implements IBehavior {
 
     public update(time: number): void {}
     public apply(userData: any): void {}
+
+    public updateReady(): void {}
 }

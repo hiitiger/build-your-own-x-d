@@ -24,4 +24,6 @@ export abstract class BaseComponent implements IComponent {
 
     public update(time: number) {}
     public render(shader: Shader) {}
+
+    public updateReady(): void {}
 }
