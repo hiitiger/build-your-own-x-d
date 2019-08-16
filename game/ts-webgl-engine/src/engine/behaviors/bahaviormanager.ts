@@ -2,6 +2,7 @@ import { IBehaviorBuilder, IBehavior } from "./interface.js";
 import { RotationBehaviorBuilder } from "./rotationbehavior.js";
 import { KeyboardMovementBehaviorBuilder } from "./keyboardmovementbehavior.js";
 import { PlayerBehaviorBuilder } from "./playerbehavior.js";
+import { ScrollBehaviorBuilder } from "./scrollbahavior.js";
 
 export class BehaviorManager {
     private static _registeredBuilders: { [type: string]: IBehaviorBuilder } = {};
@@ -23,3 +24,4 @@ export class BehaviorManager {
 BehaviorManager.registerBuilder(new RotationBehaviorBuilder());
 BehaviorManager.registerBuilder(new KeyboardMovementBehaviorBuilder());
 BehaviorManager.registerBuilder(new PlayerBehaviorBuilder());
+BehaviorManager.registerBuilder(new ScrollBehaviorBuilder());

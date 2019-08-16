@@ -50,6 +50,9 @@ export class Engine {
 
         MaterialManager.registerMaterial(new Material("grass", "assets/textures/grass.png", Color.white()));
         MaterialManager.registerMaterial(new Material("flybird", "assets/textures/flybird.png", Color.white()));
+        MaterialManager.registerMaterial(new Material("bg", "assets/textures/bg.png", Color.white()));
+        MaterialManager.registerMaterial(new Material("end", "assets/textures/end.png", Color.white()));
+        MaterialManager.registerMaterial(new Material("middle", "assets/textures/middle.png", Color.white()));
 
         AudioManager.loadSoundFile("flap", "assets/sounds/flap.mp3", false);
         AudioManager.loadSoundFile("ting", "assets/sounds/ting.mp3", false);

@@ -8,6 +8,7 @@ import { MESSAGE_MOUSE_DOWN } from "../input/inputmanager.js";
 import { MESSAGE_COLLISION_ENTER, CollisionData } from "../collision/collisionmanager.js";
 import { AudioManager } from "../audio/audiomanager.js";
 import "../math/mathextension.js";
+import { Vector3 } from "../math/vector3.js";
 
 export class PlayerBehaviorData implements IBehaviorData {
     public name: string;
@@ -51,6 +52,15 @@ export class PlayerBehavior extends BaseBehavior implements IMessageHandler {
     private _groundCollisionComponent: string;
 
     private _sprite: AnimatedSpriteComponent;
+    private _isPlaying: boolean = false;
+    private _initialPosition: Vector3 = Vector3.zero;
+
+    private _pipeNames: string[] = [
+        "pipeCollision_end",
+        "pipeCollision_middle_top",
+        "pipeCollision_bottom",
+        "pipeCollision_middle_bottom"
+    ];
 
     public constructor(data: PlayerBehaviorData) {
         super(data);
@@ -62,6 +72,8 @@ export class PlayerBehavior extends BaseBehavior implements IMessageHandler {
 
         Message.subscribe(MESSAGE_MOUSE_DOWN, this);
         Message.subscribe(MESSAGE_COLLISION_ENTER, this);
+        Message.subscribe("GAME_RESET", this);
+        Message.subscribe("GAME_START", this);
     }
 
     public updateReady(): void {
@@ -70,15 +82,22 @@ export class PlayerBehavior extends BaseBehavior implements IMessageHandler {
         if (!this._sprite) {
             throw new Error(`AnimatedSpriteComponent ${this._animatedSpriteName} does not exist on the owner`);
         }
+
+        this._sprite.setFrame(0);
+        this._initialPosition.copyFrom(this._owner.transform.position);
+        this.start();
     }
 
     public update(time: number): void {
-        if (!this._isAlive) {
-            return;
-        }
+        // if (!this._isAlive) {
+        //     return;
+        // }
 
         const seconds = time / 1000;
-        this._velocity.add(this._acceleration.clone().scale(seconds));
+
+        if (this._isPlaying) {
+            this._velocity.add(this._acceleration.clone().scale(seconds));
+        }
 
         this._velocity.y = Math.min(this._velocity.y, 400);
 
@@ -130,9 +149,32 @@ export class PlayerBehavior extends BaseBehavior implements IMessageHandler {
             if (data.a.name === this._groundCollisionComponent || data.b.name === this._groundCollisionComponent) {
                 this.die();
                 this.decelerate();
-                Message.send("PLAYER_DEAD", this);
             }
+
+            if (this._pipeNames.indexOf(data.a.name) !== -1 || this._pipeNames.indexOf(data.b.name) !== -1) {
+                this.die();
+            }
+        } else if (message.code === "GAME_RESET") {
+            this.reset();
+        } else if (message.code === "GAME_START") {
+            this.start();
         }
+    }
+
+    private start(): void {
+        this._isPlaying = true;
+        Message.send("PLAYER_RESET", this);
+    }
+
+    private reset(): void {
+        this._isAlive = true;
+        this._isPlaying = false;
+        this._sprite.owner.transform.position.copyFrom(this._initialPosition);
+        this._sprite.owner.transform.rotation.z = 0;
+
+        this._velocity.set(0, 0);
+        this._acceleration.set(0, 920);
+        this._sprite.play();
     }
 
     private isFalling(): boolean {
@@ -140,13 +182,22 @@ export class PlayerBehavior extends BaseBehavior implements IMessageHandler {
     }
 
     private shouldNotFlap(): boolean {
-        return this._velocity.y > 220 || !this._isAlive;
+        return !this._isPlaying || this._velocity.y > 220 || !this._isAlive;
     }
 
     private die(): void {
-        this._isAlive = false;
+        if (this._isAlive) {
+            this._isAlive = false;
 
-        AudioManager.playSound("dead");
+            AudioManager.playSound("dead");
+
+            Message.send("PLAYER_DIED", this);
+
+            setTimeout(() => {
+                Message.send("GAME_RESET", null);
+                Message.send("GAME_START", null);
+            }, 2000);
+        }
     }
 
     private decelerate(): void {
@@ -155,7 +206,7 @@ export class PlayerBehavior extends BaseBehavior implements IMessageHandler {
     }
 
     private onFlap(): void {
-        if (this._isAlive) {
+        if (this._isPlaying && this._isAlive) {
             this._velocity.y = -280;
             AudioManager.playSound("flap");
         }

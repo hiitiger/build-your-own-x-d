@@ -46,6 +46,10 @@ export class CollisionManager {
                     continue;
                 }
 
+                if (comp.static && other.static) {
+                    continue;
+                }
+
                 if (comp.shape.intersects(other.shape)) {
                     let exists: boolean = false;
                     for (const data of CollisionManager._collisionData) {

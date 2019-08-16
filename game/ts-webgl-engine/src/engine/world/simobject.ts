@@ -4,6 +4,8 @@ import { Shader } from "../gl/shader.js";
 import { Scene } from "./scene.js";
 import { IComponent } from "../components/interface.js";
 import { IBehavior } from "../behaviors/interface.js";
+import { Vector2 } from "../math/vector2.js";
+import { Vector3 } from "../math/vector3.js";
 
 export class SimObject {
     private _id: number;
@@ -137,6 +139,10 @@ export class SimObject {
     public render(shader: Shader): void {
         this._components.forEach(c => c.render(shader));
         this._children.forEach(c => c.render(shader));
+    }
+
+    public getWorldPosition(): Vector3 {
+        return new Vector3(this._worldMatrix.data[12], this._worldMatrix.data[13], this._worldMatrix.data[14]);
     }
 
     protected onAdded(scene: Scene): void {
