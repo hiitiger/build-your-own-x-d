@@ -1,9 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace chip8sharp
 {
+    public struct OutputState
+    {
+        public bool vramUpdated;
+        public bool beep;
+    }
+
     public class CPU
     {
         public byte[] RAM = new byte[CHIP8Spec.CHIP8_RAM];
@@ -11,16 +18,18 @@ namespace chip8sharp
         public ushort PC = 0;
         public ushort I = 0;// address register
         public Stack<ushort> Stack = new Stack<ushort>();
-        public byte DelayTimer;
-        public byte SoundTimer;
+        public byte DelayTimer = 0;
+        public byte SoundTimer = 0;
         public bool[] Keyboard = new bool[16];
         public bool AwaitKey = false;
-        public byte[,] VRam = new byte[CHIP8Spec.CHIP8_WIDTH, CHIP8Spec.CHIP8_HEIGHT];
+        public byte[,] VRam = new byte[CHIP8Spec.CHIP8_HEIGHT, CHIP8Spec.CHIP8_WIDTH];
         Random rnd = new Random();
 
         public void Load(byte[] data)
         {
             Array.Clear(RAM, 0, RAM.Length);
+
+            Array.Copy(CHIP8Spec.FONT_SET, RAM, CHIP8Spec.FONT_SET.Length);
             for (int i = 0; i < data.Length; ++i)
             {
                 var addr = 0x200 + i;
@@ -31,15 +40,15 @@ namespace chip8sharp
             PC = 0x200;
         }
 
-        public void Step()
+        public OutputState Step()
         {
             var opcode = (ushort)((RAM[PC] << 8) | RAM[PC + 1]);
             PC += 2;
-
-            ExecuteOpcode(opcode);
+            return ExecuteOpcode(opcode);
         }
-        public void ExecuteOpcode(ushort opcode)
+        public OutputState ExecuteOpcode(ushort opcode)
         {
+            var vramUpdated = false;
             if (AwaitKey)
             {
                 throw new Exception("wait for key");
@@ -140,6 +149,7 @@ namespace chip8sharp
                     break;
                 case var _ when nibble == 0x0d:
                     DrawSprite(V[x], V[y], (byte)n);
+                    vramUpdated = true;
                     break;
                 case var _ when (nibble, y, n) == (0x0e, 0x09, 0x0e):
                     SkipIf(Keyboard[V[x]]);
@@ -190,6 +200,11 @@ namespace chip8sharp
                 default:
                     throw new Exception($"Unexpect opcode:{opcode.ToString("X4")}");
             }
+
+            var outputState = new OutputState();
+            outputState.vramUpdated = vramUpdated;
+            outputState.beep = SoundTimer > 0;
+            return outputState;
         }
 
 
@@ -209,14 +224,14 @@ namespace chip8sharp
             V[0xf] = 0;
             for (int height = 0; height < n; ++height)
             {
-                y = (byte)((y + height) % CHIP8Spec.CHIP8_HEIGHT);
+                var yi = (byte)((y + height) % CHIP8Spec.CHIP8_HEIGHT);
                 for (int bit = 0; bit < 8; ++bit)
                 {
-                    x = (byte)((x + bit) % CHIP8Spec.CHIP8_WIDTH);
+                    var xi = (byte)((x + bit) % CHIP8Spec.CHIP8_WIDTH);
                     var color = (RAM[I + height] >> (7 - bit)) & 1;
-                    if (color == 1 && VRam[x, y] != 0)
+                    if (color == 1 && VRam[yi, xi] != 0)
                         V[0x0f] = 1;
-                    VRam[x, y] ^= (byte)color;
+                    VRam[yi, xi] ^= (byte)color;
                 }
             }
         }
