@@ -9,6 +9,12 @@ namespace chip8sharp
     {
         public bool vramUpdated;
         public bool beep;
+
+        public OutputState(bool vramUpdated, bool beep)
+        {
+            this.vramUpdated = vramUpdated;
+            this.beep = beep;
+        }
     }
 
     public class CPU
@@ -42,17 +48,42 @@ namespace chip8sharp
 
         public OutputState Step()
         {
-            var opcode = (ushort)((RAM[PC] << 8) | RAM[PC + 1]);
-            PC += 2;
-            return ExecuteOpcode(opcode);
+            if (AwaitKey)
+            {
+                for (var i = 0; i < Keyboard.Length; ++i)
+                {
+                    if (Keyboard[i])
+                    {
+                        AwaitKey = false;
+                        var opcode = GetOpcode();
+                        V[(opcode & 0x0F00) >> 8] = (byte)i;
+                        break;
+                    }
+                }
+
+                return new OutputState(false, SoundTimer > 0);
+            }
+            else
+            {
+                if (DelayTimer > 0)
+                    DelayTimer--;
+                if (SoundTimer > 0)
+                    SoundTimer--;
+
+                var opcode = GetOpcode();
+                PC += 2;
+                return ExecuteOpcode(opcode);
+            }
         }
+
+        private ushort GetOpcode()
+        {
+            return (ushort)((RAM[PC] << 8) | RAM[PC + 1]);
+        }
+
         public OutputState ExecuteOpcode(ushort opcode)
         {
             var vramUpdated = false;
-            if (AwaitKey)
-            {
-                throw new Exception("wait for key");
-            }
 
             var nibbles = (nibble: (opcode & 0xF000) >> 12,
                            x: (opcode & 0x0F00) >> 8,
