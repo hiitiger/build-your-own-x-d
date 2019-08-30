@@ -12,7 +12,7 @@ namespace chip8sharp
             Console.WriteLine(Directory.GetCurrentDirectory());
 
             var cpu = new CPU();
-            using (var reader = new BinaryReader(new FileStream("roms/TETRIS.ch8", FileMode.Open)))
+            using (var reader = new BinaryReader(new FileStream("roms/pong.ch8", FileMode.Open)))
             {
                 List<byte> program = new List<byte>();
 
@@ -25,13 +25,20 @@ namespace chip8sharp
             }
 
             var display = new ConsoleDisplay();
+            var input = new InputDriver();
+
             while (true)
             {
+                input.HandleKey();
+                cpu.Keyboard = input.keyboard;
+
                 try
                 {
                     var s = cpu.Step();
                     if (s.vramUpdated)
+                    {
                         display.Draw(cpu.VRam);
+                    }
                     Thread.Sleep(10);
                 }
                 catch (System.Exception e)

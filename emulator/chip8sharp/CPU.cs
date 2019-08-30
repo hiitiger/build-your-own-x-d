@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 namespace chip8sharp
 {
@@ -57,6 +55,7 @@ namespace chip8sharp
                         AwaitKey = false;
                         var opcode = GetOpcode();
                         V[(opcode & 0x0F00) >> 8] = (byte)i;
+                        PC += 2;
                         break;
                     }
                 }
