@@ -41,3 +41,9 @@ A colorful `cowsay` command line.
 A direct UI library that demostrates how common GUI framework works, including GUI control tree, GUI controls, event dispatch, drawing, reflection and stuffs, implemetation in C++, works on Windows platform.
 
 <img src="./screenshot/gui1-min.jpg" width="500">
+
+### Emulator
+
+#### [CHIP-8](./emulator/chip8sharp)
+
+<img src="./screenshot/chip8-console.jpg" width="320">
